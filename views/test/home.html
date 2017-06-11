@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <!-- html头的内容 -->
+    {{template "test/header.html" .}}
+</head>
+<body>
+    <div class="container main-nav">
+        <div class="top-bar">
+            <div class="top-bar-inner">
+                <ul class="ul-nav ">
+                    <!-- home变量 -->
+                    <li class="{{.home}}">
+                        <a href="/" >Home</a>
+                        {{if .recentCnt}}
+                        {{if gt .recentCnt 0}}
+                        <span class="navbar-news " title="最近1小时有{{.recentCnt}}个更新">{{.recentCnt}}</span>
+                        {{end}}
+                        {{end}}
+                    </li>
+                    <li class="{{.write}}">
+                        <a href="/write" title="Put up your blogs">投稿</a>
+                    </li>
+                    <li class="{{.mess}}">
+                        <a href="/message" title="Message Boards">留言</a>
+                    </li>
+                    <li class="{{.history}}">
+                        <a href="/history" title="History blogs">归档</a>
+                    </li>
+                    <li class="{{.about}}">
+                        <a href="/about" title="About Me">About Me</a>
+                    </li>
+                    <li class="{{.ema}}">
+                        <a href="/email" title="The emails of the blog's author">Email</a>
+                    </li>
+                    <li>
+                        <a href="#" title="">RSS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content">
+            {{if .blogs}}
+            {{range $blog := .blogs}}
+            <div class="cell">
+                <div class="cell-subject">
+                    <div>
+                        <a href="/bloginfor/{{$blog.Id.Hex}}/{{$blog.ReadCnt}}" class="cell-subject-title" title="{{$blog.Title}}"><strang>{{$blog.GetShortTitle }}</strang></a>
+                        <a href="#" class="comment-num" title="Comments">{{$blog.CommentCnt}}</a>
+                    </div>
+                    <div class="subject-infor">
+                        <span class="label label-success">Author</span> &nbsp;&nbsp;<span>{{$blog.Email}}
+                    </span>&nbsp;&nbsp;
+                        <span class="label label-default">Date</span>&nbsp;&nbsp;{{$blog.CDate.Format "2006-01-02 15:04" }}&nbsp;&nbsp;
+                        <span class="label label-info">Read</span>&nbsp;&nbsp;{{$blog.ReadCnt}}
+                    </div>
+                </div>
+                <div class="cell-text">
+                    <pre><code>{{$blog.GetShortContent }}</code></pre>
+                </div>
+            </div>
+            {{end}}
+            {{end}}
+        </div>
+    </div>
+</body>
+
+</html>
