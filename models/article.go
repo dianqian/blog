@@ -33,6 +33,19 @@ type TagInfo struct {
 }
 
 /**
+ 文章内容信息
+ */
+type ArticleContent struct {
+    Id          int
+    ArticleId   int                     // 文章id，是ArticleInfo中的Id值
+    Content     string                  // 文章内容，采用markdown方式，longText的类型
+
+    Create      int64
+    Updated     int64
+    Status      int
+}
+
+/**
  分类信息
  */
 type Category struct {
@@ -48,19 +61,6 @@ type Category struct {
     Status      int
 }
 
-
-/**
- 文章内容信息
- */
-type ArticleContent struct {
-    Id          int
-    ArticleId   int                     // 文章id，是ArticleInfo中的Id值
-    Content     string                  // 文章内容，采用markdown方式，longText的类型
-
-    Create      int64
-    Updated     int64
-    Status      int
-}
 
 /**
   文章的统计信息

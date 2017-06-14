@@ -17,7 +17,6 @@ func (this *CommonCtr) PreBase() {
     this.Data["Title"] = "我的蘑菇鸡"
 
     /* 获取 */
-    this.Data["Socials"] = models.FindAllSocial()
     this.Data["CopyTime"] = time.Now().Year()
 }
 
@@ -32,6 +31,8 @@ type HomeCommonCtr struct {
  预处理
  */
 func (this *HomeCommonCtr) Prepare() {
+    this.Data["Socials"] = models.FindAllSocial()
+
     this.Layout = "blog/home_layout.html"
 }
 
