@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/twitter-bootstrap-v2.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/admin/style.css">
+
+    <script src="/static/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="/static/js/admin/timepicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--网页标题，图标-->
+    <link rel="icon" href="/static/img/jiaoshou.jpg">
+    <title>{{.Title}}</title>
+</head>
+<body>
+<!--上边导航栏-->
+<div class="typecho-head-nav clearfix" role="navigation">
+    <!--控制导航栏-->
+    <nav id="typecho-nav-list">
+        <ul class="root {{if .Console}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">控制台</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">个人设置</a>
+                </li>
+            </ul>
+        </ul>
+        <ul class="root {{if .Post}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">撰写</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">新建文章</a>
+                </li>
+            </ul>
+        </ul>
+        <ul class="root {{if .Manage}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">管理</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">文章</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">专题</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">{{if .Edit}}编辑专题{{else}}新增主题{{end}}</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">标签</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">草稿箱</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">回收箱</a>
+                </li>
+            </ul>
+        </ul>
+        <ul class="root {{if .Setting}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">设置</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">基本</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">阅读</a>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+    <!--右侧导航内容-->
+    <div class="operate">
+        <a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a>
+        <a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a>
+        <a target="_self" href="#">网站</a>
+    </div>
+</div>
+
+<!--主要内容-->
+<div class="typecho-page-main main">
+    <!--LayoutContent begin-->
+    <div class="body-100 container">
+        <div class="typecho-page-title">
+            {{if .Edit}}
+            <h2>编辑 {{.Edit.Title}}</h2>
+            {{else}}
+            <h2>撰写文章</h2>
+            {{end}}
+        </div>
+        <div class="row typecho-page-main typecho-post-area" role="form">
+            <form action="#" method="post" name="write-post">
+                <!---->
+                <div class="col-mb-12 col-tb-9" role="main">
+                    <!--可能是草稿文件-->
+                    {{if .Edit.IsDraft}}
+                    <cite class="edit-draft-notice">
+                        你正在编辑的是草稿，你也可以
+                        <a href="#">删除它</a>
+                    </cite>
+                    {{end}}
+                    <p class="title">
+                        <label for="title" class="sr-only">标题</label>
+                        <!--<input type="text" id="title" name="title" autocomplete="off" {{with .Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">-->
+                        <input type="text" id="title" name="title" autocomplete="off" placeholder="标题" class="w-100 text title"/>
+                    </p>
+                    <p>
+                        <label for="slug" class="sr-only">网址缩略名</label>
+                        https://{{.Domain}}/post/
+                        <input type="text" id="slug" name="slug" autocomplete="off" class="mono"/>
+                        .html
+                    </p>
+                    <p>
+                        <label for="text" class="sr-only">文章内容</label>
+                        <textarea style="..." autocomplete="off" id="text" name="text" class="w-100 mono">
+                            {{with .Edit}}
+                                {{.Content}}
+                            {{end}}
+                        </textarea>
+                    </p>
+                    <!--确认处-->
+                    <p class="submit clearfix">
+                        <span class="right">
+                            <input type="hidden" name="cid" value="#"/>
+                            <button type="submit" name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+                            <button type="submit" name="do" value="publish" id="btn-submit" class="btn primary">发布文章</button>
+                        </span>
+                    </p>
+                </div>
+                <!---->
+                <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+                    <ul class="typecho-option-tabs clearfix">
+                        <!--href的值对应下面的div中的id的跳转-->
+                        <li class="active w-50"><a href="#tab-advance">选项</a></li>
+                        <li class="w-50"><a href="#tab-files" id="tab-files-btn">上传</a></li>
+                    </ul>
+                    <div id="tab-advance" class="tab-content">
+                        <section class="typecho-post-option" role="application">
+                            <label for="date" class="typecho-label">发布日期</label>
+                            <p>
+                                <!--<input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .CreateTime "2006-01-02 15:04"}}"{{end}}/>-->
+                                <input class="typecho-date w-100" type="text" name="date" id="date"/>
+                            </p>
+                        </section>
+                        <section class="typecho-post-option category-option">
+                            <label class="typecho-label">专题</label>
+                            <ul>
+                                <li>
+                                    <input type="radio" id="serie-0" value="0" name="serie" checked="checked"/>
+                                    <label for="serie-0">默认专题</label>
+                                </li>
+                                <!--专题是基于db中的数据动态获取-->
+                                {{range $k,$v:=.Series}}
+                                <li>
+                                    <input type="radio" id="serie-{{$v.Id}}" value="{{$v.Id}}" name="serie" {{with $.Edit}}{{if eq .SerieID $v.ID}}checked="true"{{end}}{{end}}/>
+                                    <label for="serie-{{$v.Id}}">{{$v.Name}}</label>
+                                </li>
+                                {{end}}
+                            </ul>
+                        </section>
+                        <section class="typecho-post-option category-option">
+                            <label class="typecho-label">其他选项</label>
+                            <ul>
+                                <li>
+                                    <input type="checkbox" id="update" value="true" name="update"/>
+                                    <label for="update">变动很大(更新时间)?</label>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <div id="tab-files" class="tab-content hidden">
+                        <div id="upload-panel" class="p">
+                            <div class="upload-area" draggable="true">
+                                拖动文件到这里
+                                <br>
+                                或者
+                                <a href="#" class="upload-file">选择文件上传</a>
+                            </div>
+                            <ul id="file-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--LayoutContent end-->
+</div>
+
+<!--footer-->
+{{template "footer.html" .}}
+
+<script>
+    $(document).ready(function () {
+        // 日期时间控件
+        $('#date').mask('9999-99-99 99:99').datetimepicker({
+            currentText: '现在',
+            prevText: '上一月',
+            nextText: '下一月',
+            monthNames: ['一月', '二月', '三月', '四月',
+                '五月', '六月', '七月', '八月',
+                '九月', '十月', '十一月', '十二月'
+            ],
+            dayNames: ['星期日', '星期一', '星期二',
+                '星期三', '星期四', '星期五', '星期六'
+            ],
+            dayNamesShort: ['周日', '周一', '周二', '周三',
+                '周四', '周五', '周六'
+            ],
+            dayNamesMin: ['日', '一', '二', '三',
+                '四', '五', '六'
+            ],
+            closeText: '完成',
+            timeOnlyTitle: '选择时间',
+            timeText: '时间',
+            hourText: '时',
+            amNames: ['上午', 'A'],
+            pmNames: ['下午', 'P'],
+            minuteText: '分',
+            secondText: '秒',
+
+            dateFormat: 'yy-mm-dd',
+            hour: (new Date()).getHours(),
+            minute: (new Date()).getMinutes()
+        });
+    })
+</script>
+
+</body>
+</html>

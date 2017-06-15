@@ -12,8 +12,8 @@ type AdminController struct {
 func (this *AdminController) Get ()  {
     this.PreBase()
 
-    //this.Prepare()
-    this.TplName = "admin/admin_layout.html"
+    this.Prepare()
+    //this.TplName = "admin/admin_layout.html"
     this.TplName = "admin/editor.html"
     return
 }

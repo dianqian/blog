@@ -13,6 +13,7 @@ func (this *EditorController) Get ()  {
     this.PreBase()
 
     //this.Prepare()
-    this.TplName = "admin/editor.html"
+    //this.TplName = "admin/editor.html"
+    this.TplName = "admin/example.html"
     return
 }
