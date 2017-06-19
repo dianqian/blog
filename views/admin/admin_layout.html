@@ -5,20 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/twitter-bootstrap-v2.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/editor.css">
     <link rel="stylesheet" type="text/css" href="/static/css/admin/style.css">
 
-    <script src="/static/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/js/admin/jquery.js"></script>
+    <script src="/static/js/admin/jquery-ui.js"></script>
+    <script src="/static/js/admin/typecho.js"></script>
 
     <meta name="description" content="">
     <meta name="author" content="">
@@ -28,75 +20,95 @@
     <title>{{.Title}}</title>
 </head>
 <body>
-    <!--上边导航栏-->
-    <div class="typecho-head-nav clearfix" role="navigation">
-        <!--控制导航栏-->
-        <nav id="typecho-nav-list">
-            <ul class="root {{if .Console}}focus{{end}}">
-                <li class="parent"><a target="_self" href="#">控制台</a></li>
-                <ul class="child">
-                    <li class="focus">
-                        <a target="_self" href="#">个人设置</a>
-                    </li>
-                </ul>
+<!--上边导航栏-->
+<div class="typecho-head-nav clearfix" role="navigation">
+    <!--控制导航栏-->
+    <nav id="typecho-nav-list">
+        <ul class="root {{if .Console}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">控制台</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">个人设置</a>
+                </li>
             </ul>
-            <ul class="root {{if .Post}}focus{{end}}">
-                <li class="parent"><a target="_self" href="#">撰写</a></li>
-                <ul class="child">
-                    <li class="focus">
-                        <a target="_self" href="#">新建文章</a>
-                    </li>
-                </ul>
+        </ul>
+        <ul class="root {{if .Post}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">撰写</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">新建文章</a>
+                </li>
             </ul>
-            <ul class="root {{if .Manage}}focus{{end}}">
-                <li class="parent"><a target="_self" href="#">管理</a></li>
-                <ul class="child">
-                    <li class="focus">
-                        <a target="_self" href="#">文章</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">专题</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">{{if .Edit}}编辑专题{{else}}新增主题{{end}}</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">标签</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">草稿箱</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">回收箱</a>
-                    </li>
-                </ul>
+        </ul>
+        <ul class="root {{if .Manage}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">管理</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">文章</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">专题</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">{{if .Edit}}编辑专题{{else}}新增主题{{end}}</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">标签</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">草稿箱</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">回收箱</a>
+                </li>
             </ul>
-            <ul class="root {{if .Setting}}focus{{end}}">
-                <li class="parent"><a target="_self" href="#">设置</a></li>
-                <ul class="child">
-                    <li class="focus">
-                        <a target="_self" href="#">基本</a>
-                    </li>
-                    <li class="focus">
-                        <a target="_self" href="#">阅读</a>
-                    </li>
-                </ul>
+        </ul>
+        <ul class="root {{if .Setting}}focus{{end}}">
+            <li class="parent"><a target="_self" href="#">设置</a></li>
+            <ul class="child">
+                <li class="focus">
+                    <a target="_self" href="#">基本</a>
+                </li>
+                <li class="focus">
+                    <a target="_self" href="#">阅读</a>
+                </li>
             </ul>
-        </nav>
-        <!--右侧导航内容-->
-        <div class="operate">
-            <a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a>
-            <a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a>
-            <a target="_self" href="#">网站</a>
-        </div>
+        </ul>
+    </nav>
+    <!--右侧导航内容-->
+    <div class="operate">
+        <a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a>
+        <a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a>
+        <a target="_self" href="#">网站</a>
     </div>
+</div>
 
-    <!--主要内容-->
-    <div class="typecho-page-main main">
-        {{.LayoutContent}}
-    </div>
+<!--主要内容-->
+<div class="main">
+    <!--LayoutContent begin-->
+    {{.LayoutContent}}
+    <!--LayoutContent end-->
+</div>
 
-    <!--footer-->
-    {{template "footer.html" .}}
+<!--footer-->
+{{template "footer.html" .}}
+
+<!--js脚本接口-->
+<script>
+    (function () {
+        $(document).ready(function () {
+            // 处理消息机制
+            (function () {
+                
+            })();
+            
+            // 导航菜单，聚焦时展开下拉菜单
+            (function () {
+                
+            })();
+        });
+    })();
+</script>
+
 </body>
 </html>

@@ -44,5 +44,5 @@ type AdminCommonCtr struct {
 }
 
 func (this *AdminCommonCtr) Prepare() {
-    //this.Layout = "admin/admin_layout.html"
+    this.Layout = "admin/admin_layout.html"
 }

@@ -5,15 +5,15 @@ import (
 )
 
 
-type AdminController struct {
+type ArticleEditController struct {
     controllers.AdminCommonCtr
 }
 
-func (this *AdminController) Get ()  {
+func (this *ArticleEditController) Get ()  {
     this.PreBase()
 
     this.Prepare()
-    //this.TplName = "admin/admin_layout.html"
     this.TplName = "admin/article.html"
+    //this.TplName = "admin/example.html"
     return
 }
