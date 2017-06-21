@@ -25,41 +25,41 @@
     <!--控制导航栏-->
     <nav id="typecho-nav-list">
         <ul class="root {{if .Console}}focus{{end}}">
-            <li class="parent"><a target="_self" href="#">控制台</a></li>
+            <li class="parent"><a target="_self" href="/admin/user">控制台</a></li>
             <ul class="child">
                 <li class="focus">
-                    <a target="_self" href="#">个人设置</a>
+                    <a target="_self" href="/admin/user">个人设置</a>
                 </li>
             </ul>
         </ul>
         <ul class="root {{if .Post}}focus{{end}}">
-            <li class="parent"><a target="_self" href="#">撰写</a></li>
+            <li class="parent"><a target="_self" href="/admin/edit-article">撰写</a></li>
             <ul class="child">
                 <li class="focus">
-                    <a target="_self" href="#">新建文章</a>
+                    <a target="_self" href="/admin/edit-article">新建文章</a>
                 </li>
             </ul>
         </ul>
         <ul class="root {{if .Manage}}focus{{end}}">
-            <li class="parent"><a target="_self" href="#">管理</a></li>
+            <li class="parent"><a target="_self" href="/admin/manage-articles">管理</a></li>
             <ul class="child">
                 <li class="focus">
-                    <a target="_self" href="#">文章</a>
+                    <a target="_self" href="/admin/manage-articles">文章</a>
                 </li>
                 <li class="focus">
-                    <a target="_self" href="#">专题</a>
+                    <a target="_self" href="/admin/manage-topics">专题</a>
                 </li>
                 <li class="focus">
-                    <a target="_self" href="#">{{if .Edit}}编辑专题{{else}}新增主题{{end}}</a>
+                    <a target="_self" href="/admin/edit-topic">{{if .Edit}}编辑专题{{else}}新增专题{{end}}</a>
                 </li>
                 <li class="focus">
-                    <a target="_self" href="#">标签</a>
+                    <a target="_self" href="/admin/manage-tags">标签</a>
                 </li>
                 <li class="focus">
-                    <a target="_self" href="#">草稿箱</a>
+                    <a target="_self" href="/admin/manage-drafts">草稿箱</a>
                 </li>
                 <li class="focus">
-                    <a target="_self" href="#">回收箱</a>
+                    <a target="_self" href="/admin/manage-trashes">回收箱</a>
                 </li>
             </ul>
         </ul>
@@ -77,9 +77,9 @@
     </nav>
     <!--右侧导航内容-->
     <div class="operate">
-        <a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a>
-        <a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a>
-        <a target="_self" href="#">网站</a>
+        <a href="/admin/user"><span class="glyphicon glyphicon-user">狐狸精</span></a>
+        <a href="/admin/logout"><span class="glyphicon glyphicon-log-out">登出</span></a>
+        <a target="_self" href="/">网站</a>
     </div>
 </div>
 

@@ -16,7 +16,7 @@ func (this *HomeController) Get() {
 	this.Prepare()
 	// 首页文章列表
 	//this.Layout = "blog/home_layout.html"
-	this.TplName = "blog/article_list.html"
+	this.TplName = "visitor/article_list.html"
 	return
 }
 

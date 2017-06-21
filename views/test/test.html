@@ -1,27 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css.map">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css.map">
+    <link rel="stylesheet" type="text/css" href="/static/css/twitter-bootstrap-v2.css">
+
     <script src="/static/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
-    <title>Title</title>
+    <script src="/static/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--网页标题，图标-->
+    <link rel="icon" href="/static/img/jiaoshou.jpg">
+    <title>{{.Title}}</title>
 </head>
 <body>
-    <img src="..." class="img-responsive" alt="响应式图片">
-    <p>
-        This is the first paragraph of text.
-        This is the first paragraph of text.
-        This is the first paragraph of text.
-        This is the first paragraph of text.
-    </p>
+<div class="container-fluid">
+    <div class="row">
+        <!--左侧功能栏-->
+        <div class="span3">
+            <!--头像等，需要判断isLogin的判断处理： 匿名访问，登陆访问-->
+            <div class="top-section">
+                <div class="profile-image">
+                    <img src="/static/img/jiaoshou.jpg" class="img-responsive img-rounded img-circle" alt="logo image">
+                </div>
 
-    <hr>
+                <!--登陆信息-->
+                <ul class="nav navbar-nav">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a></li>
+                </ul>
+            </div>
 
-    <p>
-        This is the second paragraph of text.
-        This is the second paragraph of text.
-        This is the second paragraph of text.
-        This is the second paragraph of text.
-    </p>
+            <p class="text-right">狐狸精喜上唐僧</p>
+
+            <!--导航栏-->
+            <div class="well nav">
+                <ul class="nav navbar-text">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">分类</a></li>
+                    <li><a href="#">标签</a></li>
+                    <li><a href="#">归档</a></li>
+                    <li><a href="#">关于我们</a></li>
+                </ul>
+            </div>
+
+            <!--搜索-->
+            <div class="input-group">
+                <!--input输入框-->
+                <input type="text" class="form-control" id="search-content" placeholder="Search for...">
+                <!--按钮-->
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="btn-search">确认
+                        <span class="fa fa-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+            </div><!-- /input-group -->
+            <br>
+            <!--社交相关-->
+            <div class="icon">
+                <ul>
+                    {{range $one := .Socials}}
+                    <li><a href="{{$one.ExtraUrl}}" target="_blank">{{$one.Name}}<i class="{{.Icon}}"></i></a></li>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+
+        <!--右侧展示栏-->
+        <div class="container-fluid ">
+            {{.LayoutContent}}
+        </div>
+    </div>
+
+    <!--footer-->
+    {{template "footer.html" .}}
+</div>
 </body>
 </html>

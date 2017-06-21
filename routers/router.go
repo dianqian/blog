@@ -7,7 +7,9 @@ import (
 )
 
 func init() {
-	/* 博客页 */
+	/*********************************
+	 博客页
+	 */
 	// 首页
     beego.Router("/", &controllers.HomeController{})
 
@@ -17,12 +19,13 @@ func init() {
 	// user相关的页面
 	//
 
-	/*
+	/*********************************
 	 todo: administrator相关的内容
 	       admin相关的页面
 	 */
 	// admin login的页面
 	beego.Router("/admin/login", &manage.LoginController{})
+	beego.Router("/admin/logout", &manage.LogoutController{})
 
 	// 管理首页
 	beego.Router("/admin", &manage.AdminController{})
@@ -54,7 +57,7 @@ func init() {
 	beego.Router("/admin/discussion", &manage.DiscussionController{})
 
 
-	/**
+	/*********************************
 	 todo: 其他错误、异常处理相关
 	 */
 	// 404错误页

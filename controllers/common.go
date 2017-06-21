@@ -33,7 +33,7 @@ type HomeCommonCtr struct {
 func (this *HomeCommonCtr) Prepare() {
     this.Data["Socials"] = models.FindAllSocial()
 
-    this.Layout = "blog/home_layout.html"
+    this.Layout = "visitor/home_layout.html"
 }
 
 /**

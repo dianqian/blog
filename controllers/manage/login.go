@@ -49,3 +49,18 @@ func (this *LoginController) Post()  {
 }
 
 
+/**
+ 登出操作
+ */
+type LogoutController struct {
+    beego.Controller
+}
+
+func (this *LogoutController) Get() {
+    // todo: 具体业务，后续实现
+
+    // todo：重定向到网站首页，匿名访问模式
+    this.Redirect("/", http.StatusFound)
+    return
+}
+
