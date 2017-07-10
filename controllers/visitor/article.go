@@ -1,17 +1,17 @@
-package controllers
+package visitor
 
 import (
-    
+    "blog/controllers/base"
 )
 
 type ArticleController struct {
-    HomeCommonCtr
+    base.HomeCommonCtr
 }
 
 func (this *ArticleController) Get() {
     this.Data["IsFalse"] = true
 
-    this.PreBase()
+    //this.PreBase()
     this.Prepare()
     this.TplName = "blog/article.html"
     return

@@ -3,6 +3,7 @@ package routers
 import (
 	"blog/controllers"
 	"blog/controllers/manage"
+	"blog/controllers/visitor"
 	"github.com/astaxie/beego"
 )
 
@@ -11,10 +12,10 @@ func init() {
 	 博客页
 	 */
 	// 首页
-    beego.Router("/", &controllers.HomeController{})
+    beego.Router("/", &visitor.HomeController{})
 
 	// 文章显示
-	beego.Router("/article", &controllers.ArticleController{})
+	beego.Router("/article", &visitor.ArticleController{})
 
 	// user相关的页面
 	//

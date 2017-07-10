@@ -4,7 +4,7 @@
     -- --------------------------------------------------
     CREATE TABLE IF NOT EXISTS `user` (
         `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        `name` varchar(255) NOT NULL DEFAULT '' ,
+        `name` varchar(255) NOT NULL DEFAULT '' UNIQUE ,
         `pass_word` varchar(255) NOT NULL DEFAULT '' ,
         `avatar` varchar(255) NOT NULL DEFAULT '' ,
         `signature` varchar(255) NOT NULL DEFAULT '' ,
@@ -13,7 +13,7 @@
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
     -- --------------------------------------------------
     --  Table Structure for `blog/models.TmpUser`
@@ -26,7 +26,7 @@
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='匿名用户表';
 
     -- --------------------------------------------------
     --  Table Structure for `blog/models.ArticleInfo`

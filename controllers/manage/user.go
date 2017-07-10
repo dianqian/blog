@@ -1,16 +1,16 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type UserManageController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *UserManageController) Get ()  {
-    this.PreBase()
+    //this.PreBase()
 
     this.Prepare()
     this.TplName = "admin/user.html"

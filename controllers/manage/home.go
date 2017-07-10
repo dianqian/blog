@@ -1,16 +1,16 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type AdminController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *AdminController) Get ()  {
-    this.PreBase()
+    //this.PreBase()
 
     this.Prepare()
     //this.TplName = "admin/admin_layout.html"

@@ -1,16 +1,15 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type DiscussionController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *DiscussionController) Get ()  {
-    this.PreBase()
 
     this.Prepare()
     this.TplName = "admin/discussion.html"

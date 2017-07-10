@@ -39,6 +39,9 @@ func init() {
 }
 
 func main() {
+	// 使能session
+	beego.BConfig.WebConfig.Session.SessionOn = true
+
 	beego.Run()
 }
 

@@ -1,16 +1,15 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type DraftManageController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *DraftManageController) Get ()  {
-    this.PreBase()
 
     this.Prepare()
     this.TplName = "admin/drafts.html"

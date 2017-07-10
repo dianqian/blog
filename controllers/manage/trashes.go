@@ -1,16 +1,16 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type TrashManageController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *TrashManageController) Get ()  {
-    this.PreBase()
+    //this.PreBase()
 
     this.Prepare()
     this.TplName = "admin/trashes.html"

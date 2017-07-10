@@ -1,16 +1,16 @@
 package manage
 
 import (
-    "blog/controllers"
+    "blog/controllers/base"
 )
 
 
 type TopicEditController struct {
-    controllers.AdminCommonCtr
+    base.AdminCommonCtr
 }
 
 func (this *TopicEditController) Get ()  {
-    this.PreBase()
+    //this.PreBase()
 
     this.Prepare()
     this.TplName = "admin/topic.html"

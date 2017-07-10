@@ -21,6 +21,28 @@ type User struct {
 }
 
 /**
+ 基于指定字段读取数据
+ */
+func (this *User) Read(fields ...string) error {
+    err := orm.NewOrm().Read(this, fields...)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+/**
+ 更新指定字段的处理
+ */
+func (this *User) Update(fields ...string) error {
+    _, err := orm.NewOrm().Update(this, fields...)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+/**
  临时用户
  */
 type TmpUser struct {
@@ -36,28 +58,9 @@ type TmpUser struct {
 }
 
 /**
- 社交信息
+ 采用init的方式加载，而非在main.go文件中执行加载的模式
  */
-type Social struct {
-    Id              int
-    SortId          int                 // 排序值
-    Name            string              // 名字
-    ExtraUrl        string              // 外部链接
-    Icon            string              // 图标
-
-    Create          int64
-    Updated         int64
-    Status          int
-}
-
-func FindAllSocial() []*Social {
-    o := orm.NewOrm()
-
-    socialInfos := new(Social)
-    qs := o.QueryTable(socialInfos)
-
-    var list []*Social
-    qs.RelatedSel().All(&list)
-
-    return list
+func init()  {
+    orm.RegisterModel(new(User))
+    orm.RegisterModel(new(TmpUser))
 }
