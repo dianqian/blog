@@ -1,7 +1,6 @@
 package manage
 
 import (
-    "github.com/astaxie/beego"
     "net/http"
     "blog/controllers/base"
     "blog/models"
@@ -29,12 +28,17 @@ func (this *LoginController) Get ()  {
 
     // 判断是否已经完成登陆
     if this.IsLogin {
-        this.Redirect("/admin", http.StatusFound)
+        nextUri := this.GetSession("next_uri")
+        if nextUri == nil {
+            this.Redirect("/admin", http.StatusFound)
+        } else {
+            this.Redirect(nextUri.(string), http.StatusFound)
+        }
+
         return
     }
 
     this.TplName = "admin/login.html"
-    //this.TplName = "admin/example.html"
     return
 }
 
@@ -44,7 +48,12 @@ func (this *LoginController) Get ()  {
 func (this *LoginController) Post()  {
     // 如果已经登陆，则跳转到管理页面
     if this.IsLogin {
-        this.Redirect("/admin", http.StatusFound)
+        nextUri := this.GetSession("next_uri")
+        if nextUri == nil {
+            this.Redirect("/admin", http.StatusFound)
+        } else {
+            this.Redirect(nextUri.(string), http.StatusFound)
+        }
         return
     }
 
@@ -68,11 +77,18 @@ func (this *LoginController) Post()  {
 
     // 设置登陆set login
     this.SetLogin(user)
-    this.Redirect("/admin", http.StatusFound)
+
+    // 登陆完成，执行跳转
+    nextUri := this.GetSession("next_uri")
+    if nextUri == nil {
+        this.Redirect("/admin", http.StatusFound)
+    } else {
+        this.Redirect(nextUri.(string), http.StatusFound)
+    }
     return
 }
 
-/**
+/*******************************************
  密码相关的封装处理
  */
 type Password string
@@ -104,19 +120,21 @@ func Authenticate(name string, password string) (user *models.User, err error) {
         return user, nil
     }
 }
+/*******************************************/
 
 
 /**
  登出操作
  */
 type LogoutController struct {
-    beego.Controller
+    base.LoginBaseCtr
 }
 
 func (this *LogoutController) Get() {
     // todo: 具体业务，后续实现
+    this.DelLogin()
 
-    // todo：重定向到网站首页，匿名访问模式
+    // 重定向到网站首页，匿名访问模式
     this.Redirect("/", http.StatusFound)
     return
 }

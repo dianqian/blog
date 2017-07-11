@@ -11,7 +11,8 @@ type DraftManageController struct {
 
 func (this *DraftManageController) Get ()  {
 
-    this.Prepare()
+    this.AdminBase()
+
     this.TplName = "admin/drafts.html"
     //this.TplName = "admin/example.html"
     return

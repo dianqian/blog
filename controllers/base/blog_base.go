@@ -14,7 +14,7 @@ type HomeCommonCtr struct {
 /**
  预处理
  */
-func (this *HomeCommonCtr) Prepare() {
+func (this *HomeCommonCtr) HomeBase() {
     this.CommonBase()
 
     //this.Data["Socials"] = models.FindAllSocial()

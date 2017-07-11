@@ -10,10 +10,9 @@ type TrashManageController struct {
 }
 
 func (this *TrashManageController) Get ()  {
-    //this.PreBase()
 
-    this.Prepare()
+    this.AdminBase()
+
     this.TplName = "admin/trashes.html"
-    //this.TplName = "admin/example.html"
     return
 }

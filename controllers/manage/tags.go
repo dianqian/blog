@@ -10,10 +10,9 @@ type TagManageController struct {
 }
 
 func (this *TagManageController) Get ()  {
-    //this.PreBase()
 
-    this.Prepare()
+    this.AdminBase()
+
     this.TplName = "admin/tags.html"
-    //this.TplName = "admin/example.html"
     return
 }

@@ -1,7 +1,7 @@
 package base
 
 import (
-    "github.com/astaxie/beego"
+    //"github.com/astaxie/beego"
     "time"
     "github.com/astaxie/beego/logs"
 )
@@ -10,7 +10,8 @@ import (
  整个站点的功能类
  */
 type CommonCtr struct {
-    beego.Controller
+    //beego.Controller
+    LoginBaseCtr
 }
 
 func (this *CommonCtr) CommonBase() {

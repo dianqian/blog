@@ -39,17 +39,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{range .List}}
-                        <tr id="mid-category-{{.ID}}">
+                        {{range .TopicList}}
+                        <tr id="mid-category-{{.Id}}">
                             <td>
-                                <input type="checkbox" value="{{.ID}}" name="mid[]" />
+                                <input type="checkbox" value="{{.Id}}" name="mid[]" />
                             </td>
-                            <td><a href="/admin/add-serie?mid={{.ID}}">{{.ID}}</a>
-                                <a href="/series.html#toc-{{.ID}}" title="浏览 {{.Name}}"><i class="i-exlink"></i></a>
+                            <td><a href="/admin/edit-topic?topic_id={{.Id}}">{{.Id}}</a>
+                                <a href="/series.html#toc-{{.Id}}" title="浏览 {{.Name}}"><i class="i-exlink"></i></a>
                             </td>
                             <td>{{.Name}}</td>
                             <td>{{dateformat .CreateTime "2006/01/02 15:04"}}</td>
-                            <td><a class="balloon-button left size-50" href="#">{{len .Articles}}</a></td>
+                            <td><a class="balloon-button left size-50" href="#">{{.ArticleCount}}</a></td>
                         </tr>
                         {{end}}
                         </tbody>

@@ -4,15 +4,17 @@
     </div>
     {{with .Account}}
     <div class="row typecho-page-main">
+        <!--标题-->
         <div class="col-mb-12 col-tb-3">
             <p>
-                <img class="profile-avatar" src="//{{$.Kodo.Domain}}/static/img/avatar.jpg" alt="{{.BlogName}}" />
+                <img class="profile-avatar" src="{{.Avatar}}" alt="{{.BlogName}}" />
             </p>
             <h2>{{.BlogName}}</h2>
             <p>{{.SubTitle}}</p>
             <p>最后登录: {{dateformat .LoginTime "2006/01/02 15:04"}}</p>
         </div>
         <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
+            <!--账号信息-->
             <section>
                 <h3>账号信息</h3>
                 <form action="/admin/api/account" method="post" enctype="application/x-www-form-urlencoded">
@@ -21,15 +23,14 @@
                             <label class="typecho-label" for="info-0-1">
                                 个人邮箱</label>
                             <input id="info-0-1" name="email" type="text" class="text" value="{{.Email}}" />
-                            <p class="description">
-                                用于发送告警邮件及其它通知, 建议填写, 如: example@163.com.</p>
+                            <p class="description">用于发送告警邮件及其它通知, 建议填写, 如: example@163.com.</p>
                         </li>
                     </ul>
                     <ul class="typecho-option">
                         <li>
                             <label class="typecho-label" for="info-0-2">
                                 移动电话</label>
-                            <input id="info-0-2" name="phoneNumber" type="text" class="text" value="{{.PhoneN}}" />
+                            <input id="info-0-2" name="phoneNumber" type="text" class="text" value="{{.PhoneNumber}}" />
                             <p class="description">
                                 选择填写, 如: ＋8615123456789.</p>
                         </li>
@@ -45,14 +46,14 @@
                     </ul>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button type="submit" class="btn primary">
-                                更新账号信息</button>
+                            <button type="submit" class="btn primary">更新账号信息</button>
                         </li>
                     </ul>
                 </form>
             </section>
             <br>
             <section>
+                <!--博客信息-->
                 <h3>博客信息</h3>
                 <form action="/admin/api/blog" method="post" enctype="application/x-www-form-urlencoded">
                     <ul class="typecho-option">
@@ -119,6 +120,7 @@
                 </form>
             </section>
             <br>
+            <!--密码变更-->
             <section id="change-password">
                 <h3>密码修改</h3>
                 <form action="/admin/api/password" method="post" enctype="application/x-www-form-urlencoded">

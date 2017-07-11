@@ -10,6 +10,8 @@ type HomeController struct {
 }
 
 func (this *HomeController) Get() {
+	this.HomeBase()
+
 	this.Data["Website"] = "beego.me"
 	this.Data["Email"] = "astaxie@gmail.com"
 

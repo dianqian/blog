@@ -33,6 +33,10 @@ func init() {
 
 	// 管理员user信息管理
 	beego.Router("/admin/user", &manage.UserManageController{})
+	// todo: 配置相关的几个待实现
+	beego.Router("/admin/user/account", &manage.UserManageController{}, "post:ChangeAccountInfo")
+	beego.Router("/admin/user/blog", &manage.UserManageController{}, "post:ChangeBlogInfo")
+	beego.Router("/admin/user/changepw", &manage.UserManageController{}, "post:ChangePassword")
 
 	// 编辑文档页
 	beego.Router("/admin/edit-article", &manage.ArticleEditController{})

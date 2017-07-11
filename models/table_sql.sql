@@ -135,3 +135,17 @@
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+    -- --------------------------------------------------
+    --  Table Structure for `blog/models.Topic`
+    -- --------------------------------------------------
+    CREATE TABLE IF NOT EXISTS `topic` (
+        `id` INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        `name` VARCHAR(255) NOT NULL DEFAULT '',
+        `slug` VARCHAR(255) NOT NULL DEFAULT '',
+        `desc` VARCHAR(255) NOT NULL DEFAULT '',
+        `article_count` INTEGER NOT NULL  DEFAULT 0,
+        `create` BIGINT NOT NULL DEFAULT 0,
+        `updated` BIGINT NOT NULL DEFAULT 0,
+        `status` INTEGER NOT NULL DEFAULT 0
+    )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='专题表';

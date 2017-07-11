@@ -11,7 +11,8 @@ type ArticleManageController struct {
 
 func (this *ArticleManageController) Get ()  {
 
-    this.Prepare()
+    this.AdminBase()
+
     this.TplName = "admin/articles.html"
     //this.TplName = "admin/example.html"
     return
