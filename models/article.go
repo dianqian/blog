@@ -18,21 +18,6 @@ type ArticleInfo struct {
 }
 
 /**
- 标签信息
- */
-type TagInfo struct {
-    Id          int
-
-    Name        string                  // Tag的名字
-    Count       int                     // 该Tag文章的数量
-    Description string                  // 描述信息
-
-    Create      int64
-    Updated     int64
-    Status      int
-}
-
-/**
  文章内容信息
  */
 type ArticleContent struct {

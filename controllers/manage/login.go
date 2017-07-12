@@ -75,6 +75,7 @@ func (this *LoginController) Post()  {
         return
     }
 
+    logs.Debug(fmt.Sprintf("authenticate ok, login......"))
     // 设置登陆set login
     this.SetLogin(user)
 

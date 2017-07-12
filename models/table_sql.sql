@@ -149,3 +149,14 @@
         `updated` BIGINT NOT NULL DEFAULT 0,
         `status` INTEGER NOT NULL DEFAULT 0
     )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='专题表';
+
+    -- --------------------------------------------------
+    --  Table Structure for `blog/models.Tag`
+    -- --------------------------------------------------
+    CREATE TABLE IF NOT EXISTS `tag` (
+        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        `name` varchar(255) NOT NULL DEFAULT '' ,
+        `create` bigint NOT NULL DEFAULT 0 ,
+        `updated` bigint NOT NULL DEFAULT 0 ,
+        `status` integer NOT NULL DEFAULT 0
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='专题表';
