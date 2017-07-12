@@ -389,6 +389,10 @@
 <script src="/static/js/admin/diff.js"></script>
 <script>
     $(document).ready(function() {
+        /**
+         * 使用了google的开源代码pagedown与 segmentfault的开源代码HyperDown
+         * @type {*}
+         */
         var textarea = $('#text'),
             toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
             preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
@@ -396,6 +400,7 @@
         var options = {},
             isMarkdown = 1;
 
+        // hyperdown 的顶部工具配置
         options.strings = {
             bold: '加粗 <strong> Ctrl+B',
             boldexample: '加粗文字',
@@ -450,7 +455,7 @@
             cache = {};
 
 
-        // 自动跟随
+        // 动态的html重构，得到预览中自己样式的html
         converter.hook('makeHtml', function (html) {
             // convert all comment
             html = html.replace(/&lt;!--(.+?)--&gt;/g, '<!--$1-->');
@@ -511,7 +516,7 @@
                     }
                 }
             }
-            // 替换img
+            // 替换img 替换span+ background 的样式
             html = html.replace(/<(img)\s+([^>]*)\s*src="([^"]+)"([^>]*)>/ig, function (all, tag, prefix, src, suffix) {
                 if (!cache[src]) {
                     cache[src] = false;
@@ -546,13 +551,14 @@
         }
 
         var to;
+        //编辑时，预览实时刷新
         editor.hooks.chain('onPreviewRefresh', function () {
             var diff = $('.diff', preview), scrolled = false;
-
+            //防止反复触发成功回调
             if (to) {
                 clearTimeout(to);
             }
-
+            //图片定位
             $('img', preview).load(function () {
                 var t = $(this), src = t.attr('src');
 
@@ -571,6 +577,7 @@
 
             var changed = $('.diff', preview).parent();
             if (!changed.is(preview)) {
+            	//编辑中黄色背景，4.5s后恢复
                 changed.css('background-color', 'rgba(255,230,0,0.5)');
                 to = setTimeout(function () {
                     changed.css('background-color', 'transparent');
@@ -580,7 +587,7 @@
             if (diff.length > 0) {
                 var p = diff.position(), lh = diff.parent().css('line-height');
                 lh = !!lh ? parseInt(lh) : 0;
-
+                //预览滚动到相应位置
                 if (p.top < 0 || p.top > preview.height() - lh) {
                     preview.scrollTo(diff, {
                         offset  :   - 50
@@ -605,6 +612,7 @@
                 $('#tab-files-btn', this).length > 0);
         });
 
+        // 全屏 todo 与下面的enterFullScreen 一样不知道为什么单独写
         editor.hooks.chain('enterFakeFullScreen', function () {
             th = textarea.height();
             ph = preview.height();
@@ -615,6 +623,7 @@
             preview.css('height', h);
         });
 
+        // 全屏
         editor.hooks.chain('enterFullScreen', function () {
             $(document.body).addClass('fullscreen');
 
@@ -623,6 +632,7 @@
             preview.css('height', h);
         });
 
+        // 退出全屏
         editor.hooks.chain('exitFullScreen', function () {
             $(document.body).removeClass('fullscreen');
             textarea.height(th);
@@ -637,7 +647,7 @@
 
             var imageButton = $('#wmd-image-button'),
                 linkButton = $('#wmd-link-button');
-
+            //文件插入
             Typecho.insertFileToEditor = function (file, url, isImage) {
                 var button = isImage ? imageButton : linkButton;
 
@@ -652,7 +662,7 @@
                     }
                 }, 10);
             };
-
+            //上传成功
             Typecho.uploadComplete = function (file) {
                 Typecho.insertFileToEditor(file.title, file.url, file.isImage);
             };
