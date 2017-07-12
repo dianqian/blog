@@ -8,7 +8,7 @@
     </div>
     <div class="row typecho-page-main typecho-post-area" role="form">
         <form action="#" method="post" name="write-post">
-            <!---->
+            <!--左侧-->
             <div class="col-mb-12 col-tb-9" role="main">
                 <!--可能是草稿文件-->
                 {{if .Edit.IsDraft}}
@@ -17,17 +17,19 @@
                     <a href="#">删除它</a>
                 </cite>
                 {{end}}
+                <!--标题title-->
                 <p class="title">
                     <label for="title" class="sr-only">标题</label>
-                    <!--<input type="text" id="title" name="title" autocomplete="off" {{with .Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">-->
-                    <input type="text" id="title" name="title" autocomplete="off" placeholder="标题" class="w-100 text title"/>
+                    <input type="text" id="title" name="title" autocomplete="off" {{with .Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">
                 </p>
+                <!--文章url-->
                 <p>
                     <label for="slug" class="sr-only">网址缩略名</label>
                     https://{{.Domain}}/post/
                     <input type="text" id="slug" name="slug" autocomplete="off" class="mono"/>
                     .html
                 </p>
+                <!--文章内容-->
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
                     <textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">
@@ -45,7 +47,7 @@
                         </span>
                 </p>
             </div>
-            <!---->
+            <!--右侧-->
             <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                 <ul class="typecho-option-tabs clearfix">
                     <!--href的值对应下面的div中的id的跳转-->
@@ -57,8 +59,7 @@
                     <section class="typecho-post-option" role="application">
                         <label for="date" class="typecho-label">发布日期</label>
                         <p>
-                            <!--<input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .CreateTime "2006-01-02 15:04"}}"{{end}}/>-->
-                            <input class="typecho-date w-100" type="text" name="date" id="date"/>
+                            <input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .CreateTime "2006-01-02 15:04"}}"{{end}}/>
                         </p>
                     </section>
                     <section class="typecho-post-option category-option">
@@ -113,12 +114,14 @@
 <script>
     (function() {
         $(document).ready(function() {
+            // class="typecho-option" 以及第一个class="error"
             var error = $('.typecho-option .error:first');
 
             if (error.length > 0) {
                 $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
             }
 
+            // 设置form元素中，submit的动作
             $('form').submit(function() {
                 if (this.submitted) {
                     return false;
@@ -127,6 +130,7 @@
                 }
             });
 
+            // 每个label元素的第一个input且属性type=text的元素的click响应函数，将checked属性设置为true
             $('label input[type=text]').click(function(e) {
                 var check = $('#' + $(this).parents('label').attr('for'));
                 check.prop('checked', true);
@@ -171,10 +175,10 @@
             minute: (new Date()).getMinutes()
         });
 
-        // 聚焦
+        // 选中聚焦
         $('#title').select();
 
-        // 标签tag相关
+        // id=tags的元素相关的操作
         var tags = $('#tags'),
             tagsPre = [];
 
@@ -385,13 +389,13 @@
 <script src="/static/js/admin/diff.js"></script>
 <script>
     $(document).ready(function() {
-        var textarea = $("#text"),
-            toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
-            preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.article');
+        var textarea = $('#text');
+        var toolbar = $('<div class="editor" id="wmd-button-bar">工具栏</div>').insertBefore(textarea.parent());
+        var preview = $('<div id="wmd-preview" class="wmd-hidetab"></div>').insertAfter('.article');
 
+        // 定义options，并标记采用markdown
         var options = {},
             isMarkdown = 1;
-
         options.strings = {
             bold: '加粗 <strong> Ctrl+B',
             boldexample: '加粗文字',
