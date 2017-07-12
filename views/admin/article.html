@@ -389,13 +389,13 @@
 <script src="/static/js/admin/diff.js"></script>
 <script>
     $(document).ready(function() {
-        var textarea = $('#text');
-        var toolbar = $('<div class="editor" id="wmd-button-bar">工具栏</div>').insertBefore(textarea.parent());
-        var preview = $('<div id="wmd-preview" class="wmd-hidetab"></div>').insertAfter('.article');
+        var textarea = $('#text'),
+            toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
+            preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
-        // 定义options，并标记采用markdown
         var options = {},
             isMarkdown = 1;
+
         options.strings = {
             bold: '加粗 <strong> Ctrl+B',
             boldexample: '加粗文字',
@@ -546,7 +546,7 @@
         }
 
         var to;
-        article.hooks.chain('onPreviewRefresh', function () {
+        editor.hooks.chain('onPreviewRefresh', function () {
             var diff = $('.diff', preview), scrolled = false;
 
             if (to) {
@@ -605,7 +605,7 @@
                 $('#tab-files-btn', this).length > 0);
         });
 
-        article.hooks.chain('enterFakeFullScreen', function () {
+        editor.hooks.chain('enterFakeFullScreen', function () {
             th = textarea.height();
             ph = preview.height();
             $(document.body).addClass('fullscreen');
@@ -615,7 +615,7 @@
             preview.css('height', h);
         });
 
-        article.hooks.chain('enterFullScreen', function () {
+        editor.hooks.chain('enterFullScreen', function () {
             $(document.body).addClass('fullscreen');
 
             var h = window.screen.height - toolbar.outerHeight();
@@ -623,7 +623,7 @@
             preview.css('height', h);
         });
 
-        article.hooks.chain('exitFullScreen', function () {
+        editor.hooks.chain('exitFullScreen', function () {
             $(document.body).removeClass('fullscreen');
             textarea.height(th);
             preview.height(ph);
@@ -633,7 +633,7 @@
          * 初始化MarkDown的接口实现
          */
         function initMarkdown() {
-            article.run();
+            editor.run();
 
             var imageButton = $('#wmd-image-button'),
                 linkButton = $('#wmd-link-button');
@@ -659,7 +659,7 @@
 
             // 编辑预览切换的按钮，在editor属性的元素预先
             var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active">撰写</a><a href="#wmd-preview">预览</a></div>'),
-                editarea = $(textarea.parent()).attr("id", "wmd-editarea");             // 增加，id="wmd-editarea"
+                editarea = $(textarea.parent()).attr("id", "wmd-editarea");
 
             $(".wmd-edittab a").click(function() {
                 $(".wmd-edittab a").removeClass('active');
