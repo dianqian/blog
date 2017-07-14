@@ -26,6 +26,8 @@ type User struct {
 func (this *User) Read(fields ...string) error {
     err := orm.NewOrm().Read(this, fields...)
     if err != nil {
+        // todo: 具体错误处理，参考(https://beego.me/docs/mvc/model/object.md)
+        // orm.ErrNoRows
         return err
     }
     return nil

@@ -29,98 +29,45 @@
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='匿名用户表';
 
     -- --------------------------------------------------
-    --  Table Structure for `blog/models.ArticleInfo`
+    --  Table Structure for `blog/models.Article`
     -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `article_info` (
+    CREATE TABLE IF NOT EXISTS `article` (
         `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
         `title` varchar(255) NOT NULL DEFAULT '' ,
-        `sub_title` varchar(255) NOT NULL DEFAULT '' ,
+        `url` varchar(255) NOT NULL DEFAULT '' ,
         `author` varchar(255) NOT NULL DEFAULT '' ,
+        `publish_time` varchar(255) NOT NULL DEFAULT '' ,
         `tags` varchar(255) NOT NULL DEFAULT '' ,
-        `categories` varchar(255) NOT NULL DEFAULT '' ,
+        `topics` varchar(255) NOT NULL DEFAULT '' ,
+        `content` LONGTEXT,
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='文章article';
 
     -- --------------------------------------------------
-    --  Table Structure for `blog/models.ArticleContent`
+    --  Table Structure for `blog/models.ArticleTopic`
     -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `article_content` (
+    CREATE TABLE IF NOT EXISTS `article_topic` (
         `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
         `article_id` integer NOT NULL DEFAULT 0 ,
-        `content` varchar(255) NOT NULL DEFAULT '' ,
+        `topic_id` integer NOT NULL DEFAULT 0 ,
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='关联article topic表';
 
     -- --------------------------------------------------
-    --  Table Structure for `blog/models.ArticleStat`
+    --  Table Structure for `blog/models.ArticleTag`
     -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `article_stat` (
+    CREATE TABLE IF NOT EXISTS `article_tag` (
         `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
         `article_id` integer NOT NULL DEFAULT 0 ,
-        `comment_count` integer NOT NULL DEFAULT 0 ,
-        `favour_count` integer NOT NULL DEFAULT 0 ,
+        `tag_id` integer NOT NULL DEFAULT 0 ,
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
-
-    -- --------------------------------------------------
-    --  Table Structure for `blog/models.Comment`
-    -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `comment` (
-        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        `user_type` integer NOT NULL DEFAULT 0 ,
-        `user_id` integer NOT NULL DEFAULT 0 ,
-        `article_id` integer NOT NULL DEFAULT 0 ,
-        `content` varchar(255) NOT NULL DEFAULT '' ,
-        `create` bigint NOT NULL DEFAULT 0 ,
-        `updated` bigint NOT NULL DEFAULT 0 ,
-        `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
-
-    -- --------------------------------------------------
-    --  Table Structure for `blog/models.CommentStat`
-    -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `comment_stat` (
-        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        `comment_id` integer NOT NULL DEFAULT 0 ,
-        `favour_count` integer NOT NULL DEFAULT 0 ,
-        `low_count` integer NOT NULL DEFAULT 0 ,
-        `create` bigint NOT NULL DEFAULT 0 ,
-        `updated` bigint NOT NULL DEFAULT 0 ,
-        `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
-
-    -- --------------------------------------------------
-    --  Table Structure for `blog/models.Category`
-    -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `category` (
-        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        `sort_id` integer NOT NULL DEFAULT 0 ,
-        `name` varchar(255) NOT NULL DEFAULT '' ,
-        `count` integer NOT NULL DEFAULT 0 ,
-        `description` varchar(255) NOT NULL DEFAULT '' ,
-        `create` bigint NOT NULL DEFAULT 0 ,
-        `update` bigint NOT NULL DEFAULT 0 ,
-        `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
-
-    -- --------------------------------------------------
-    --  Table Structure for `blog/models.TagInfo`
-    -- --------------------------------------------------
-    CREATE TABLE IF NOT EXISTS `tag_info` (
-        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        `name` varchar(255) NOT NULL DEFAULT '' ,
-        `count` integer NOT NULL DEFAULT 0 ,
-        `description` varchar(255) NOT NULL DEFAULT '' ,
-        `create` bigint NOT NULL DEFAULT 0 ,
-        `updated` bigint NOT NULL DEFAULT 0 ,
-        `status` integer NOT NULL DEFAULT 0
-    ) ENGINE=InnoDB;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='关联article tag表';
 
     -- --------------------------------------------------
     --  Table Structure for `blog/models.Social`

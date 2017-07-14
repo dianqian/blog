@@ -4,25 +4,24 @@ import (
     "github.com/astaxie/beego"
 )
 
-/**
- 404错误的控制器
- */
-type Error404Controller struct {
+type ErrorController struct {
     beego.Controller
 }
 
-func (this *Error404Controller) Get() {
-    this.TplName = "errors/404.html"
+/**
+ 404错误
+ */
+func (c *ErrorController) Error404() {
+    c.Data["content"] = "page not found"
+    c.TplName = "errors/404.html"
 }
 
 /**
- 500错误的控制器
+ 500错误
  */
-type Error500Controller struct {
-    beego.Controller
+func (c *ErrorController) Error501() {
+    c.Data["content"] = "server error"
+    c.TplName = "errors/500.html"
 }
 
-func (this *Error500Controller) Get()  {
-    this.TplName = "errors/500.html"
-}
 

@@ -11,6 +11,9 @@ type AdminCommonCtr struct {
     CommonCtr
 }
 
+/**
+ todo： 这里参考beego中(https://beego.me/docs/mvc/controller/controller.md)的实现，后期可以做进一步的优化处理
+ */
 func (this *AdminCommonCtr) AdminBase() {
     // 执行基础内容
     this.CommonBase()

@@ -7,7 +7,13 @@ import (
 	"github.com/astaxie/beego"
 )
 
+
 func init() {
+	/*********************************
+	 todo: 其他错误、异常处理相关
+	 */
+	beego.ErrorController(&controllers.ErrorController{})
+
 	/*********************************
 	 博客页
 	 */
@@ -60,15 +66,6 @@ func init() {
 	beego.Router("/admin/general-setting", &manage.GeneralSettingController{})
 	// 评论相关
 	beego.Router("/admin/discussion", &manage.DiscussionController{})
-
-
-	/*********************************
-	 todo: 其他错误、异常处理相关
-	 */
-	// 404错误页
-	beego.Router("/404.html", &controllers.Error404Controller{})
-	// 500错误页
-	beego.Router("/500.html", &controllers.Error500Controller{})
 
 	// test
 	beego.Router("/test/", &controllers.TestController{})

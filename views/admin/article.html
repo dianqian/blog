@@ -7,7 +7,7 @@
         {{end}}
     </div>
     <div class="row typecho-page-main typecho-post-area" role="form">
-        <form action="#" method="post" name="write-post">
+        <form action="/admin/edit-article" method="post" name="write-post">
             <!--左侧-->
             <div class="col-mb-12 col-tb-9" role="main">
                 <!--可能是草稿文件-->
@@ -36,15 +36,15 @@
                             {{with .Edit}}
                                 {{.Content}}
                             {{end}}
-                        </textarea>
+                    </textarea>
                 </p>
                 <!--确认处-->
                 <p class="submit clearfix">
-                        <span class="right">
-                            <input type="hidden" name="cid" value="#"/>
-                            <button type="submit" name="do" value="save" id="btn-save" class="btn">保存草稿</button>
-                            <button type="submit" name="do" value="publish" id="btn-submit" class="btn primary">发布文章</button>
-                        </span>
+                    <span class="right">
+                        <input type="hidden" name="cid" value="#"/>
+                        <button type="submit" name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+                        <button type="submit" name="do" value="publish" id="btn-submit" class="btn primary">发布文章</button>
+                    </span>
                 </p>
             </div>
             <!--右侧-->
@@ -56,12 +56,14 @@
                 </ul>
                 <!--选项的id-->
                 <div id="tab-advance" class="tab-content">
+                    <!--日期-->
                     <section class="typecho-post-option" role="application">
                         <label for="date" class="typecho-label">发布日期</label>
                         <p>
                             <input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .CreateTime "2006-01-02 15:04"}}"{{end}}/>
                         </p>
                     </section>
+                    <!--专题-->
                     <section class="typecho-post-option category-option">
                         <label class="typecho-label">专题</label>
                         <ul>
@@ -70,20 +72,22 @@
                                 <label for="serie-0">默认专题</label>
                             </li>
                             <!--专题是基于db中的数据动态获取-->
-                            {{range $k,$v:=.Series}}
+                            {{range $index, $item:=.Series}}
                             <li>
-                                <input type="radio" id="serie-{{$v.Id}}" value="{{$v.Id}}" name="serie" {{with $.Edit}}{{if eq .SerieID $v.ID}}checked="true"{{end}}{{end}}/>
-                                <label for="serie-{{$v.Id}}">{{$v.Name}}</label>
+                                <input type="radio" id="serie-{{$item.ID}}" value="{{$item.ID}}" name="serie" {{if $item.Checked}}checked="true"{{end}}/>
+                                <label for="serie-{{$item.ID}}">{{$item.Name}}</label>
                             </li>
                             {{end}}
                         </ul>
                     </section>
+                    <!--标签, 文章自带的标签显示在这里-->
                     <section class="typecho-post-option">
-                        <label for="tags" class="typecho-label">标签</label>
+                        <label for="token-input-tags" class="typecho-label">标签</label>
                         <p>
-                            <input id="tags" name="tags" type="text" class="w-100 text"/>
+                            <input id="token-input-tags" name="tags" type="text" {{with .Edit}}value="{{.Tags}}" {{end}} class="w-100 text"/>
                         </p>
                     </section>
+                    <!--其他选项-->
                     <section class="typecho-post-option category-option">
                         <label class="typecho-label">其他选项</label>
                         <ul>
@@ -179,7 +183,7 @@
         $('#title').select();
 
         // id=tags的元素相关的操作
-        var tags = $('#tags'),
+        var tags = $('#token-input-tags'),
             tagsPre = [];
 
         if (tags.length > 0) {
