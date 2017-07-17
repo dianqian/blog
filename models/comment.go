@@ -1,6 +1,10 @@
 package models
 
 /**
+ 评论等相关
+ */
+
+/**
  评论数据结构
  */
 type Comment struct {

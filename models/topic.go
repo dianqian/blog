@@ -3,6 +3,10 @@ package models
 import "github.com/astaxie/beego/orm"
 
 /**
+ 专题相关
+ */
+
+/**
  专题处理
  */
 type Topic struct {

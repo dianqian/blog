@@ -7,7 +7,6 @@ import (
     "fmt"
     "crypto/md5"
     "encoding/hex"
-    "time"
     "github.com/astaxie/beego/logs"
 )
 
@@ -21,48 +20,48 @@ type LoginController struct {
 /**
  用于进入login登录界面的操作
  */
-func (this *LoginController) Get ()  {
-    this.Data["Title"] = "我的蘑菇鸡"
+func (l *LoginController) Get ()  {
+    l.Data["Title"] = "我的蘑菇鸡"
 
     // todo: 1. 判断是否已经登录；2. 如果已经登录，redirect到admin的首页；3. logout也会跳转到login的页面，所以也需要判断；
 
     // 判断是否已经完成登陆
-    if this.IsLogin {
-        nextUri := this.GetSession("next_uri")
+    if l.IsLogin {
+        nextUri := l.GetSession("next_uri")
         if nextUri == nil {
-            this.Redirect("/admin", http.StatusFound)
+            l.Redirect("/admin", http.StatusFound)
         } else {
-            this.Redirect(nextUri.(string), http.StatusFound)
+            l.Redirect(nextUri.(string), http.StatusFound)
         }
 
         return
     }
 
-    this.TplName = "admin/login.html"
+    l.TplName = "admin/login.html"
     return
 }
 
 /**
  login登录界面输入：user password后，点击submit后的post操作
  */
-func (this *LoginController) Post()  {
+func (l *LoginController) Post()  {
     // 如果已经登陆，则跳转到管理页面
-    if this.IsLogin {
-        nextUri := this.GetSession("next_uri")
+    if l.IsLogin {
+        nextUri := l.GetSession("next_uri")
         if nextUri == nil {
-            this.Redirect("/admin", http.StatusFound)
+            l.Redirect("/admin", http.StatusFound)
         } else {
-            this.Redirect(nextUri.(string), http.StatusFound)
+            l.Redirect(nextUri.(string), http.StatusFound)
         }
         return
     }
 
     // 执行登陆操作
-    name := this.GetString("user")
-    password := this.GetString("password")
+    name := l.GetString("user")
+    password := l.GetString("password")
     if name == "" || password == "" {
         logs.Debug(fmt.Sprintf("input username or password is null"))
-        this.Redirect("/admin/login", http.StatusFound)
+        l.Redirect("/admin/login", http.StatusFound)
         return
     }
 
@@ -71,20 +70,20 @@ func (this *LoginController) Post()  {
     if err != nil {
         logs.Info(fmt.Sprintf("authenticate failed: %s", err.Error()))
         // todo: 考虑如何将err msg带出去
-        this.Redirect("/admin/login", http.StatusFound)
+        l.Redirect("/admin/login", http.StatusFound)
         return
     }
 
     logs.Debug(fmt.Sprintf("authenticate ok, login......"))
     // 设置登陆set login
-    this.SetLogin(user)
+    l.SetLogin(user)
 
     // 登陆完成，执行跳转
-    nextUri := this.GetSession("next_uri")
+    nextUri := l.GetSession("next_uri")
     if nextUri == nil {
-        this.Redirect("/admin", http.StatusFound)
+        l.Redirect("/admin", http.StatusFound)
     } else {
-        this.Redirect(nextUri.(string), http.StatusFound)
+        l.Redirect(nextUri.(string), http.StatusFound)
     }
     return
 }
@@ -116,8 +115,7 @@ func Authenticate(name string, password string) (user *models.User, err error) {
     } else if user.PassWord != Password(password).Md5() {
         return nil, fmt.Errorf("invalid password")
     } else {
-        user.Updated = time.Now().Unix()
-        user.Update("updated")
+        // update作为修改用户信息的时间time
         return user, nil
     }
 }
@@ -131,12 +129,12 @@ type LogoutController struct {
     base.LoginBaseCtr
 }
 
-func (this *LogoutController) Get() {
+func (l *LogoutController) Get() {
     // todo: 具体业务，后续实现
-    this.DelLogin()
+    l.DelLogin()
 
     // 重定向到网站首页，匿名访问模式
-    this.Redirect("/", http.StatusFound)
+    l.Redirect("/", http.StatusFound)
     return
 }
 

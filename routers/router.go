@@ -41,8 +41,8 @@ func init() {
 	beego.Router("/admin/user", &manage.UserManageController{})
 	// todo: 配置相关的几个待实现
 	beego.Router("/admin/user/account", &manage.UserManageController{}, "post:ChangeAccountInfo")
-	beego.Router("/admin/user/blog", &manage.UserManageController{}, "post:ChangeBlogInfo")
-	beego.Router("/admin/user/changepw", &manage.UserManageController{}, "post:ChangePassword")
+	beego.Router("/admin/user/avatar", &manage.UserManageController{}, "post:ChangeAvatarInfo")
+	beego.Router("/admin/user/password", &manage.UserManageController{}, "post:ChangePassword")
 
 	// 编辑文档页
 	beego.Router("/admin/edit-article", &manage.ArticleEditController{})
@@ -62,6 +62,9 @@ func init() {
 	beego.Router("/admin/manage-tags", &manage.TagManageController{})
 
 	// todo: 待确认，具体是否需要
+	beego.Router("/admin/blog", &manage.BlogMgController{})
+	beego.Router("/admin/blog/icon", &manage.BlogMgController{}, "post:ChangeIcon")
+	beego.Router("/admin/blog/info", &manage.BlogMgController{}, "post:ChangeInfo")
 	// 常规基本设置页
 	beego.Router("/admin/general-setting", &manage.GeneralSettingController{})
 	// 评论相关

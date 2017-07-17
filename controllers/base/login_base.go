@@ -4,6 +4,8 @@ import (
     "github.com/astaxie/beego"
     "blog/models"
     "github.com/astaxie/beego/logs"
+    "time"
+    "fmt"
 )
 
 /**
@@ -19,15 +21,15 @@ type LoginBaseCtr struct {
 /**
  登陆的预加载操作，Prepare函数会在所有函数之前完成执行
  */
-func (this * LoginBaseCtr) Prepare() {
+func (l * LoginBaseCtr) Prepare() {
 
-    this.IsLogin = this.GetSession("user_info") != nil              // 没有该session，则认为没有登陆过
-    if this.IsLogin {
+    l.IsLogin = l.GetSession("user_info") != nil              // 没有该session，则认为没有登陆过
+    if l.IsLogin {
         logs.Debug("the user is login")
         // 获取该用户的相关信息
-        user := this.GetLogin()
+        user := l.GetLogin()
         if user != nil {
-            this.UserInfo = user
+            l.UserInfo = user
         } else {
             // todo: 获取登陆用户信息失败
         }
@@ -41,8 +43,8 @@ func (this * LoginBaseCtr) Prepare() {
 /**
  获取登陆的用户
  */
-func (this *LoginBaseCtr) GetLogin() *models.User {
-    user := &models.User{Id: this.GetSession("user_info").(int)}
+func (l *LoginBaseCtr) GetLogin() *models.User {
+    user := &models.User{Id: l.GetSession("user_info").(int)}
     err := user.Read("id")
     if err != nil {
         return nil
@@ -54,20 +56,40 @@ func (this *LoginBaseCtr) GetLogin() *models.User {
 /**
  记录登陆状态
  */
-func (this *LoginBaseCtr) SetLogin(user *models.User) {
-    this.IsLogin = true
+func (l *LoginBaseCtr) SetLogin(user *models.User) {
+    l.IsLogin = true
     // 设置sesstion
-    this.SetSession("user_info", user.Id)
+    l.SetSession("user_info", user.Id)
+
+    // 记录本次登录的时间
+    l.UserInfo = user
+    l.UserInfo.LastLoginTime = user.LoginTime
+    l.UserInfo.LoginTime = time.Now().Unix()
+    err := l.UserInfo.Update("login_time", "last_login_time")
+    if err != nil {
+        logs.Error(fmt.Sprintf("update login/last login time failed: %s", err.Error()))
+    }
+
     return
 }
 
 /**
  注销login信息
  */
-func (this *LoginBaseCtr) DelLogin() {
-    this.IsLogin = false
+func (l *LoginBaseCtr) DelLogin() {
+    l.IsLogin = false
     // session中删除事件
-    this.DelSession("user_info")
+    l.DelSession("user_info")
+
+    // 记录本次退出的时间
+    if l.UserInfo != nil {
+        l.UserInfo.LastLogoutTime = time.Now().Unix()
+        err := l.UserInfo.Update("last_logout_time")
+        if err != nil {
+            logs.Error(fmt.Sprintf("update logout time failed: %s", err.Error()))
+        }
+    }
+
     return
 }
 

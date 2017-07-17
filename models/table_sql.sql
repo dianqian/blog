@@ -6,14 +6,36 @@
         `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
         `name` varchar(255) NOT NULL DEFAULT '' UNIQUE ,
         `pass_word` varchar(255) NOT NULL DEFAULT '' ,
+        `nick_name` varchar(255) NOT NULL  DEFAULT '',
         `avatar` varchar(255) NOT NULL DEFAULT '' ,
         `signature` varchar(255) NOT NULL DEFAULT '' ,
         `email` varchar(255) NOT NULL DEFAULT '' ,
         `web_site` varchar(255) NOT NULL DEFAULT '' ,
+        `wechat` varchar(255) NOT NULL  DEFAULT '',
+        `login_time` bigint NOT NULL  DEFAULT 0,
+        `last_login_time` bigint NOT NULL  DEFAULT 0,
+        `last_logout_time` bigint NOT NULL  DEFAULT 0,
         `create` bigint NOT NULL DEFAULT 0 ,
         `updated` bigint NOT NULL DEFAULT 0 ,
         `status` integer NOT NULL DEFAULT 0
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+    -- --------------------------------------------------
+    --  Table Structure for `blog/models.Blogger`
+    -- --------------------------------------------------
+    CREATE TABLE IF NOT EXISTS `blogger` (
+        `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        `title` varchar(255) NOT NULL DEFAULT '' ,
+        `sub_title` varchar(255) NOT NULL DEFAULT '' ,
+        `icon` varchar(255) NOT NULL  DEFAULT '',
+        `bei_an` varchar(255) NOT NULL DEFAULT '' ,
+        `copyright` varchar(255) NOT NULL DEFAULT '' ,
+        `series_say` varchar(255) NOT NULL DEFAULT '' ,
+        `archives_say` varchar(255) NOT NULL DEFAULT '' ,
+        `create` bigint NOT NULL DEFAULT 0 ,
+        `updated` bigint NOT NULL DEFAULT 0 ,
+        `status` integer NOT NULL DEFAULT 0
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='blogger的配置信息';
 
     -- --------------------------------------------------
     --  Table Structure for `blog/models.TmpUser`

@@ -7,17 +7,18 @@
         <!--标题-->
         <div class="col-mb-12 col-tb-3">
             <p>
-                <img class="profile-avatar" src="{{.Avatar}}" alt="{{.BlogName}}" />
+                <img class="profile-avatar" src="{{.Avatar}}" alt="{{.Name}}" />
             </p>
-            <h2>{{.BlogName}}</h2>
-            <p>{{.SubTitle}}</p>
-            <p>最后登录: {{dateformat .LoginTime "2006/01/02 15:04"}}</p>
+            <h2>{{.Name}}</h2>
+            <p>{{.Signature}}</p>
+            <p>上次登录: {{dateformat .LastLoginTime "2006/01/02 15:04"}}</p>
+            <p>上次登出: {{dateformat .LastLogoutTime "2006/01/02 15:04"}}</p>
         </div>
         <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
             <!--账号信息-->
             <section>
                 <h3>账号信息</h3>
-                <form action="/admin/api/account" method="post" enctype="application/x-www-form-urlencoded">
+                <form action="/admin/user/account" method="post" enctype="application/x-www-form-urlencoded">
                     <ul class="typecho-option">
                         <li>
                             <label class="typecho-label" for="info-0-1">
@@ -29,19 +30,38 @@
                     <ul class="typecho-option">
                         <li>
                             <label class="typecho-label" for="info-0-2">
-                                移动电话</label>
-                            <input id="info-0-2" name="phoneNumber" type="text" class="text" value="{{.PhoneNumber}}" />
+                                个人站点</label>
+                            <input id="info-0-2" name="website" type="text" class="text" value="{{.WebSite}}" />
                             <p class="description">
-                                选择填写, 如: ＋8615123456789.</p>
+                                选择填写,个人站点主页url 如: www.weisen.com.</p>
                         </li>
                     </ul>
                     <ul class="typecho-option">
                         <li>
                             <label class="typecho-label" for="info-0-3">
-                                家庭住址</label>
-                            <input id="info-0-3" name="address" type="text" class="text" value="{{.Address}}" />
+                                社交</label>
+                            <input id="info-0-3" name="wechat" type="text" class="text" value="{{.Wechat}}" />
                             <p class="description">
-                                选择填写, 如: xx省xx市xx区(县)xxxx小区xxx号.</p>
+                                选择填写, 如: 微博、微信、qq等.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-1">
+                                博客昵称 *</label>
+                            <input id="blog-0-1" name="nickname" type="text" class="text" value="{{.NickName}}" />
+                            <p class="description">
+                                用户昵称可以与用户名不同, 用于前台显示.
+                                <br />如果你将此项留空, 将默认使用登录用户名.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-2">
+                                个人格言</label>
+                            <input id="blog-0-2" name="signature" type="text" class="text" value="{{.Signature}}" />
+                            <p class="description">
+                                简介或格言, 如: 生活百般滋味, 人生需要笑对.</p>
                         </li>
                     </ul>
                     <ul class="typecho-option typecho-option-submit">
@@ -52,78 +72,10 @@
                 </form>
             </section>
             <br>
-            <section>
-                <!--博客信息-->
-                <h3>博客信息</h3>
-                <form action="/admin/api/blog" method="post" enctype="application/x-www-form-urlencoded">
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-1">
-                                博客昵称 *</label>
-                            <input id="blog-0-1" name="blogName" type="text" class="text" value="{{.BlogName}}" />
-                            <p class="description">
-                                用户昵称可以与用户名不同, 用于前台显示.
-                                <br />如果你将此项留空, 将默认使用登录用户名.</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-4">
-                                标题显示 *</label>
-                            <input id="blog-0-4" name="bTitle" type="text" class="text" value="{{.BTitle}}" />
-                            <p class="description">
-                                用于所有页面的title组成, 如: Deepzz's Blog</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-2">
-                                个人格言</label>
-                            <input id="blog-0-2" name="subTitle" type="text" class="text" value="{{.SubTitle}}" />
-                            <p class="description">
-                                简介或格言, 如: 生活百般滋味, 人生需要笑对.</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-3">
-                                备案号</label>
-                            <input id="blog-0-3" name="beiAn" type="text" class="text" value="{{.BeiAn}}" />
-                            <p class="description">
-                                用于底部显示, 不添加则不显示, 如: 蜀 ICP 备 16021362 号</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-4">
-                                专题前说</label>
-                            <textarea id="blog-0-4" name="seriessay">{{.SeriesSay}}</textarea>
-                            <p class="description">
-                                此文字用于专题前述, 会在专题最前方显示.</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <label class="typecho-label" for="blog-0-5">
-                                归档前说</label>
-                            <textarea id="blog-0-5" name="archivessay">{{.ArchivesSay}}</textarea>
-                            <p class="description">
-                                此文字用于归档前述, 会在归档最前方显示.</p>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option typecho-option-submit" id="typecho-option-item-submit-4">
-                        <li>
-                            <button type="submit" class="btn primary">
-                                更新博客信息</button>
-                        </li>
-                    </ul>
-                </form>
-            </section>
-            <br>
             <!--密码变更-->
             <section id="change-password">
                 <h3>密码修改</h3>
-                <form action="/admin/api/password" method="post" enctype="application/x-www-form-urlencoded">
+                <form action="/admin/user/password" method="post" enctype="application/x-www-form-urlencoded">
                     <ul class="typecho-option" id="typecho-option-item-password-10">
                         <li>
                             <label class="typecho-label" for="password-0-11">

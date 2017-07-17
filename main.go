@@ -35,6 +35,7 @@ func init() {
 		//new(models.TagInfo),
 		new(models.Social),
 	)
+	orm.Debug = true
 	orm.RunSyncdb("default", false, true)
 }
 

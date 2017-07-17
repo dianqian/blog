@@ -1,0 +1,77 @@
+<div class="body container">
+    <div class="typecho-page-title">
+        <h2>设置</h2>
+    </div>
+    {{with .Blogger}}
+    <div class="row typecho-page-main">
+        <!--标题-->
+        <div class="col-mb-12 col-tb-3">
+            <p>
+                <img class="profile-avatar" src="{{.Icon}}" alt="{{.Title}}" />
+            </p>
+            <h2>{{.Title}}</h2>
+            <p>{{.SubTitle}}</p>
+            <p>上次修改: {{dateformat .LastUpdateTime "2006/01/02 15:04"}}</p>
+        </div>
+        <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
+            <section>
+                <!--博客信息-->
+                <h3>博客信息</h3>
+                <form action="/admin/blog/info" method="post" enctype="application/x-www-form-urlencoded">
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-4">
+                                主标题 *</label>
+                            <input id="blog-0-4" name="title" type="text" class="text" value="{{.Title}}" />
+                            <p class="description">
+                                用于所有页面的title组成, 如: weisen's Blog</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-4">
+                                子标题 *</label>
+                            <input id="blog-0-4" name="subtitle" type="text" class="text" value="{{.SubTitle}}" />
+                            <p class="description">
+                                用于所有页面的subtitle组成, 如: weisen's Blog</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-3">
+                                备案号</label>
+                            <input id="blog-0-3" name="beian" type="text" class="text" value="{{.BeiAn}}" />
+                            <p class="description">
+                                用于底部显示, 不添加则不显示, 如: 蜀 ICP 备 12345678 号</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-4">
+                                专题前说</label>
+                            <textarea id="blog-0-4" name="seriessay">{{.SeriesSay}}</textarea>
+                            <p class="description">
+                                此文字用于专题前述, 会在专题最前方显示.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="blog-0-5">
+                                归档前说</label>
+                            <textarea id="blog-0-5" name="archivessay">{{.ArchivesSay}}</textarea>
+                            <p class="description">
+                                此文字用于归档前述, 会在归档最前方显示.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option typecho-option-submit" id="typecho-option-item-submit-4">
+                        <li>
+                            <button type="submit" class="btn primary">
+                                更新博客信息</button>
+                        </li>
+                    </ul>
+                </form>
+            </section>
+        </div>
+    </div>
+    {{end}}
+</div>

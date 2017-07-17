@@ -3,6 +3,10 @@ package models
 import "github.com/astaxie/beego/orm"
 
 /**
+ 标签相关
+ */
+
+/**
  标签
  */
 type Tag struct {

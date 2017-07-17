@@ -25,6 +25,7 @@ func (this *AdminCommonCtr) AdminBase() {
             this.SetSession("next_uri", this.Ctx.Request.RequestURI)
         }
         this.Redirect("/admin/login", http.StatusFound)
+        this.StopRun()
         return
     }
 

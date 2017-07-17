@@ -3,6 +3,10 @@ package models
 import "github.com/astaxie/beego/orm"
 
 /**
+ 用户相关
+ */
+
+/**
  注册用户信息
  */
 type User struct {
@@ -10,14 +14,22 @@ type User struct {
 
     Name                string                  // 用户名
     PassWord            string                  // 密码
+
+    NickName            string                  // 昵称
     Avatar              string                  // 头像
     Signature           string                  // 签名
+
     Email               string                  // 邮箱
     WebSite             string                  // 站点
+    Wechat              string                  // 微信
 
     Create      int64
     Updated     int64
     Status      int
+
+    LoginTime           int64                   // 本次登录的时间
+    LastLoginTime       int64                   // 最后一次登录的时间，在退出本次登录时更新
+    LastLogoutTime      int64                   // 最后一次登出的时间，在本次退出时更新
 }
 
 /**

@@ -3,6 +3,10 @@ package models
 import "github.com/astaxie/beego/orm"
 
 /**
+ 文章相关
+ */
+
+/**
  文章的基本信息
  */
 type Article struct {
