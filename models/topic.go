@@ -24,8 +24,8 @@ type Topic struct {
 /**
  读取指定的topic
  */
-func (this *Topic) Read(fields ...string) error {
-    err := orm.NewOrm().Read(this, fields...)
+func (t *Topic) Read(fields ...string) error {
+    err := orm.NewOrm().Read(t, fields...)
     if err != nil {
         return err
     }
@@ -36,8 +36,8 @@ func (this *Topic) Read(fields ...string) error {
 /**
  更新指定topic
  */
-func (this *Topic) Update(fields ...string) error {
-    _, err := orm.NewOrm().Update(this, fields...)
+func (t *Topic) Update(fields ...string) error {
+    _, err := orm.NewOrm().Update(t, fields...)
     if err != nil {
         return err
     }
@@ -48,8 +48,8 @@ func (this *Topic) Update(fields ...string) error {
 /**
  insert插入一条topic
  */
-func (this *Topic) Insert() error {
-    _, err := orm.NewOrm().Insert(this)
+func (t *Topic) Insert() error {
+    _, err := orm.NewOrm().Insert(t)
     if err != nil {
         return err
     }
@@ -59,10 +59,10 @@ func (this *Topic) Insert() error {
 /**
  select出所有的topic
  */
-func (this *Topic) SelectAll() ([]*Topic, error) {
+func (t *Topic) SelectAll() ([]*Topic, error) {
     var topics []*Topic
 
-    qs := orm.NewOrm().QueryTable(this)
+    qs := orm.NewOrm().QueryTable(t)
     _, err := qs.All(&topics)
     if err != nil {
         return nil, err

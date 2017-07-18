@@ -14,11 +14,8 @@ type Article struct {
 
     Title       string                  // 标题
     Url         string                  // url
-    Author      string                  // 作者
-    PublishTime string                  // 发布时间
-
-    Tags        string                  // 标签
-    Topics      string                  // 分类
+    Author      int                     // 作者，对应的user id
+    PublishTime int64                   // 发布时间
 
     Content     string                  // 文章内容，采用markdown方式，longText的类型
 
@@ -48,6 +45,32 @@ func (a *Article) Update(fields...string) error {
         return err
     }
     return nil
+}
+
+/**
+ 插入一条数据
+ */
+func (a *Article) Insert() error {
+    _, err := orm.NewOrm().Insert(a)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+/**
+ 根据status字选择
+ */
+func (a *Article) SelectByStatus(status int) ([]*Article, error) {
+    var articles []*Article
+
+    qs := orm.NewOrm().QueryTable(a).Filter("status", status)
+    _, err := qs.All(&articles)
+    if err != nil {
+        return nil, err
+    }
+
+    return articles, nil
 }
 
 

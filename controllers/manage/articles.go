@@ -2,7 +2,19 @@ package manage
 
 import (
     "blog/controllers/base"
+    "blog/models"
+    "github.com/astaxie/beego/logs"
+    "fmt"
 )
+
+
+/**
+ article相关的topic
+ */
+type TopicBrief struct {
+    ID          int
+    Name        string
+}
 
 
 type ArticleManageController struct {
@@ -13,11 +25,29 @@ type ArticleManageController struct {
  todo: 参考(https://beego.me/docs/mvc/view/page.md)使用分页模式操作
  todo：也可以参考：https://beego.me/docs/utils/page.md
  */
-func (this *ArticleManageController) Get ()  {
+func (a *ArticleManageController) Get ()  {
 
-    this.AdminBase()
+    a.AdminBase()
 
-    this.TplName = "admin/articles.html"
-    //this.TplName = "admin/example.html"
+    article := new(models.Article)
+    articles, err := article.SelectByStatus(base.ARTICLE_STATUS_DRAFT)
+    if err != nil {
+        logs.Error(fmt.Sprintf("list draft article failed: %s", err.Error()))
+    }
+    // todo: 待实现的内容
+    articles = articles
+
+    tp := new(models.Topic)
+    tps, err := tp.SelectAll()
+    if err != nil {
+        logs.Error(fmt.Sprintf("list all topics failed: %s", err.Error()))
+    }
+    var tpbs []*TopicBrief
+    for _, item := range tps {
+        tpbs = append(tpbs, &TopicBrief{ID: item.Id, Name: item.Name})
+    }
+    a.Data["Series"] = tpbs
+
+    a.TplName = "admin/articles.html"
     return
 }

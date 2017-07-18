@@ -35,7 +35,7 @@ func init() {
 	beego.Router("/admin/logout", &manage.LogoutController{})
 
 	// 管理首页
-	beego.Router("/admin", &manage.AdminController{})
+	beego.Router("/admin", &manage.BlogMgController{})
 
 	// 管理员user信息管理
 	beego.Router("/admin/user", &manage.UserManageController{})

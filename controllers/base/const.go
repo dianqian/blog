@@ -1,0 +1,11 @@
+package base
+
+const (
+    TIME_LAYOUT_STR = "2006-01-02 15:04:05"
+)
+
+const (
+    ARTICLE_STATUS_DRAFT = 2
+    ARTICLE_STATUS_DELETE = 0
+    ARTICLE_STATUS_PUBLISH = 1
+)
