@@ -1,7 +1,7 @@
 <div class="body container">
     <div class="typecho-page-title">
         {{if .Edit}}
-        <h2>编辑 {{.Edit.Title}}</h2>
+        <h2>编辑: "{{.Edit.Title}}"</h2>
         {{else}}
         <h2>撰写文章</h2>
         {{end}}
@@ -26,7 +26,7 @@
                 <p>
                     <label for="slug" class="sr-only">网址缩略名</label>
                     https://{{.Domain}}/post/
-                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono"/>
+                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .Edit}}value="{{.Slug}}"{{end}}/>
                     .html
                 </p>
                 <!--文章内容-->
@@ -60,7 +60,7 @@
                     <section class="typecho-post-option" role="application">
                         <label for="date" class="typecho-label">发布日期</label>
                         <p>
-                            <input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .CreateTime "2006-01-02 15:04"}}"{{end}}/>
+                            <input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .PublishTime "2006-01-02 15:04"}}"{{end}}/>
                         </p>
                     </section>
                     <!--专题-->
@@ -84,7 +84,7 @@
                     <section class="typecho-post-option">
                         <label for="token-input-tags" class="typecho-label">标签</label>
                         <p>
-                            <input id="token-input-tags" name="tags" type="text" {{with .Edit}}value="{{.Tags}}" {{end}} class="w-100 text"/>
+                            <input id="token-input-tags" name="tags" type="text" {{with .Edit}}value="{{.Title}}" {{end}} class="w-100 text"/>
                         </p>
                     </section>
                     <!--其他选项-->

@@ -9,3 +9,8 @@ const (
     ARTICLE_STATUS_DELETE = 0
     ARTICLE_STATUS_PUBLISH = 1
 )
+
+const (
+    STATUS_VALID = 1
+    STATUS_UNVALID = 0
+)

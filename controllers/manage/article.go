@@ -8,6 +8,7 @@ import (
     "blog/models"
     "github.com/astaxie/beego"
     "time"
+    "strconv"
 )
 
 /**
@@ -63,6 +64,17 @@ type TagOfArticle struct {
     Name        string
 }
 
+/**
+ 编辑信息
+ */
+type Edit struct {
+    Title           string
+    IsDraft         bool
+    Slug            string
+    Content         string
+    PublishTime     time.Time
+}
+
 type ArticleEditController struct {
     base.AdminCommonCtr
 }
@@ -83,19 +95,32 @@ func (a *ArticleEditController) Get ()  {
         // todo: 编辑文章
         tpOfarticle = a.SetTopicChecked(articleID, tpOfarticle)
         a.SetSession("articleid", articleID)
+
+        // 准备article的内容
+        article := new(models.Article)
+        article.Id = articleID
+        err = article.Read("id")
+        if err != nil {
+            logs.Error(fmt.Sprintf("get article'%d' info failed: %s", articleID, err.Error()))
+        }
+
+        edit := Edit{
+            Title: article.Title,
+            Slug: article.Url,
+            Content: article.Content,
+            PublishTime: time.Unix(article.PublishTime, 0),
+            IsDraft: true,
+        }
+        a.Data["Edit"] = edit
     }
     a.Data["Series"] = tpOfarticle
 
     // 准备域名
     a.Data["Domain"] = beego.AppConfig.String(beego.BConfig.RunMode + "::domain")
 
+    // todo: tag处理
     //tag := models.Tag{}
     //tags, err := tag.SelectAll()
-
-
-
-
-    //this.Data["Tags"] =
 
     // 加载template
     a.TplName = "admin/article.html"
@@ -118,6 +143,13 @@ func (a *ArticleEditController) Post()  {
     serie := a.GetString("serie")               // 专题
     tags := a.GetString("tags")                 // 标签
     isUpdate := a.GetString("update")           // 标记是否需要更新时间
+
+    // todo: 检查serie的合法性
+    tpID, err := strconv.Atoi(serie)
+    if err != nil {
+        logs.Error(fmt.Sprintf("input topic id error: %s", err.Error()))
+        return
+    }
 
     // 入参检查
     if title == "" || slug == "" || text == "" || date == "" || serie == ""{
@@ -172,15 +204,22 @@ func (a *ArticleEditController) Post()  {
     if do == "save" {
         article.Status = base.ARTICLE_STATUS_DRAFT
         if article.Id != 0 {
-            err := article.Update("title", "url", "author", "publish_name", "content", "create", "updated", "status")
+            err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
             if err != nil {
                 logs.Error(fmt.Sprintf("article'%s' update failed: %s", err.Error(), article.Title))
             }
         } else {
-            err := article.Insert()
+            // 新建文章
+            arID, err := article.Insert()
             if err != nil {
                 logs.Error(fmt.Sprintf("article'%s' insert failed: %s", err.Error(), article.Title))
             }
+            // 新建ArticleTopic
+            at := &models.ArticleTopic{ArticleId: int(arID), TopicId: tpID, Create: time.Now().Unix(),
+                Updated: time.Now().Unix(), Status: base.STATUS_VALID}
+            // todo:
+            at = at
+
         }
         a.Redirect("/admin/manage-drafts", http.StatusFound)
     } else if do == "publish" {

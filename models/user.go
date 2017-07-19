@@ -35,8 +35,8 @@ type User struct {
 /**
  基于指定字段读取数据
  */
-func (this *User) Read(fields ...string) error {
-    err := orm.NewOrm().Read(this, fields...)
+func (u *User) Read(fields ...string) error {
+    err := orm.NewOrm().Read(u, fields...)
     if err != nil {
         // todo: 具体错误处理，参考(https://beego.me/docs/mvc/model/object.md)
         // orm.ErrNoRows
@@ -48,8 +48,8 @@ func (this *User) Read(fields ...string) error {
 /**
  更新指定字段的处理
  */
-func (this *User) Update(fields ...string) error {
-    _, err := orm.NewOrm().Update(this, fields...)
+func (u *User) Update(fields ...string) error {
+    _, err := orm.NewOrm().Update(u, fields...)
     if err != nil {
         return err
     }

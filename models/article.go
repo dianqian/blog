@@ -50,12 +50,12 @@ func (a *Article) Update(fields...string) error {
 /**
  插入一条数据
  */
-func (a *Article) Insert() error {
-    _, err := orm.NewOrm().Insert(a)
+func (a *Article) Insert() (int64, error) {
+    id, err := orm.NewOrm().Insert(a)
     if err != nil {
-        return err
+        return 0, err
     }
-    return nil
+    return id, nil
 }
 
 /**
@@ -87,6 +87,8 @@ type ArticleTopic struct {
     Updated     int64                   // 更新时间
     Status      int                     // 状态：1--有效；0--无效
 }
+
+
 
 /**
  select by article id.
