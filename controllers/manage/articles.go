@@ -2,6 +2,7 @@ package manage
 
 import (
     "blog/controllers/base"
+    "blog/common"
     "blog/models"
     "github.com/astaxie/beego/logs"
     "fmt"
@@ -30,7 +31,7 @@ func (a *ArticleManageController) Get ()  {
     a.AdminBase()
 
     article := new(models.Article)
-    articles, err := article.SelectByStatus(base.ARTICLE_STATUS_DRAFT)
+    articles, err := article.SelectByStatus(common.ARTICLE_STATUS_DRAFT)
     if err != nil {
         logs.Error(fmt.Sprintf("list draft article failed: %s", err.Error()))
     }

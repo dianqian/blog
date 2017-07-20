@@ -14,11 +14,11 @@ type HomeCommonCtr struct {
 /**
  预处理
  */
-func (this *HomeCommonCtr) HomeBase() {
-    this.CommonBase()
+func (h *HomeCommonCtr) HomeBase() {
+    h.CommonBase()
 
     //this.Data["Socials"] = models.FindAllSocial()
 
-    this.Layout = "visitor/home_layout.html"
+    h.Layout = "visitor/home_layout.html"
     logs.Debug("HomeCommonCtr Prepare......")
 }

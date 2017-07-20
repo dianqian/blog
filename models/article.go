@@ -1,6 +1,10 @@
 package models
 
-import "github.com/astaxie/beego/orm"
+import (
+    "github.com/astaxie/beego/orm"
+    "fmt"
+    "blog/common"
+)
 
 /**
  文章相关
@@ -22,6 +26,27 @@ type Article struct {
     Create      int64                   // 创建时间
     Updated     int64                   // 更新时间
     Status      int                     // 状态：0：回收(删除)；2：草稿；1：正式文章
+}
+
+/**
+ 计算count
+ */
+func (a *Article) Count(status int) (int64, error) {
+    qs := orm.NewOrm().QueryTable(a)
+    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
+        // 输入的status正确，就取具体的status
+        qs = qs.Filter("status", status)
+    } else {
+        // todo: 输入不合理的，暂不操作，后期加入error输出
+    }
+
+    // 得到count
+    cnt, err := qs.Count()
+    if err != nil {
+        return 0, fmt.Errorf("get article count failed: %s", err.Error())
+    }
+
+    return cnt, nil
 }
 
 /**

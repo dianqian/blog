@@ -2,6 +2,7 @@ package manage
 
 import (
     "blog/controllers/base"
+    "blog/common"
     "github.com/astaxie/beego/logs"
     "fmt"
     "net/http"
@@ -179,7 +180,7 @@ func (a *ArticleEditController) Post()  {
         // update
         article.Id = articleID.(int)
         if isUpdate == "true" {
-            pt, err := time.Parse(base.TIME_LAYOUT_STR, date + ":00")
+            pt, err := time.Parse(common.TIME_LAYOUT_STR, date + ":00")
             if err != nil {
                 logs.Error(fmt.Sprintf("publish time parse error:%s", err.Error()))
                 pt = time.Now()
@@ -189,7 +190,7 @@ func (a *ArticleEditController) Post()  {
     } else {
         // insert
         article.Id = 0
-        pt, err := time.Parse(base.TIME_LAYOUT_STR, date + ":00")
+        pt, err := time.Parse(common.TIME_LAYOUT_STR, date + ":00")
         if err != nil {
             logs.Error(fmt.Sprintf("publish time parse error:%s", err.Error()))
             pt = time.Now()
@@ -202,7 +203,7 @@ func (a *ArticleEditController) Post()  {
     do := a.GetString("do")
     logs.Debug(fmt.Sprintf("action=%s", do))
     if do == "save" {
-        article.Status = base.ARTICLE_STATUS_DRAFT
+        article.Status = common.ARTICLE_STATUS_DRAFT
         if article.Id != 0 {
             err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
             if err != nil {
@@ -216,7 +217,7 @@ func (a *ArticleEditController) Post()  {
             }
             // 新建ArticleTopic
             at := &models.ArticleTopic{ArticleId: int(arID), TopicId: tpID, Create: time.Now().Unix(),
-                Updated: time.Now().Unix(), Status: base.STATUS_VALID}
+                Updated: time.Now().Unix(), Status: common.STATUS_VALID}
             // todo:
             at = at
 
