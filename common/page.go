@@ -7,7 +7,9 @@ type Page struct {
     TotalCount int                  // 总的数据
     FirstPage  bool                 // 第一页
     LastPage   bool                 // 最后一页
+
     List       interface{}          // 数据list
+    Offset     int                  // 偏移量
 }
 
 /**
@@ -23,5 +25,16 @@ func PageUtil(count int, pageNo int, pageSize int, list interface{}) Page {
     if count % pageSize > 0 {
         tp = count / pageSize + 1
     }
-    return Page{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
+
+    page := Page {
+        PageNo: pageNo,
+        PageSize: pageSize,
+        TotalPage: tp,
+        TotalCount: count,
+        FirstPage: pageNo == 1,
+        LastPage: pageNo == tp,
+        List: list,
+        Offset: (pageNo - 1) * pageSize,
+    }
+    return page
 }

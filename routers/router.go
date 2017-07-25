@@ -21,7 +21,17 @@ func init() {
     beego.Router("/", &visitor.HomeController{})
 
 	// 文章显示
-	beego.Router("/article", &visitor.ArticleController{})
+	// http://localhost:8080/post/[article.url].html
+	beego.Router("/post/:slug", &visitor.ArticleController{})
+	// todo: 专题
+	beego.Router("topics", &visitor.Topics{})
+	// todo：归档
+	beego.Router("archives", &visitor.ArchiveController{})
+	// todo: 友链
+	beego.Router("blogroll", &visitor.BlogRoll{})
+	// todo: about
+	beego.Router("about", &visitor.About{})
+	// todo: search搜索
 
 	// user相关的页面
 	//

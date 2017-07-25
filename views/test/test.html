@@ -1,92 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme.min.css.map">
-    <link rel="stylesheet" type="text/css" href="/static/css/twitter-bootstrap-v2.css">
+<!Doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name="format-detection" content="telephone=no"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>HTTPS 常见部署问题及解决方案 | JerryQu 的小站</title><script>!function(e,n,t){function c(e,t){n.cookie=e+"="+t+";path=/;secure;expires=Tue, 15 Sep 2048 23:33:33 GMT"}e.L={},L.h=L.l=L.c=function(){};var l="nls",i="innerHTML",o="execScript";try{t[l]=0,L.h=function(e){t[e]=n.getElementById(e)[i]},L.l=function(l,a){var r=t[l]||"";if(r.length>99){var s=n.createElement(a?"script":"style");e[o]&&a?e[o](r):(s[i]=r,n.head.appendChild(s))}else n.documentElement.style.display="none",c("v",0),location.reload()},L.c=c}catch(a){c(l,1)}}(this,document,localStorage)</script><meta name="theme-color" content="#007b8b"><meta name="mobile-web-app-capable" content=yes><meta name="application-name" content="JerryQu 的小站"><meta name="msapplication-starturl" content="https://imququ.com"><meta name="msapplication-navbutton-color" content="#007b8b"><meta name="apple-mobile-web-app-capable" content=yes><meta name="apple-mobile-web-app-title" content="JerryQu 的小站"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="//st.imququ.com/static/img/blog/icon.png"><link rel=manifest href="/static/manifest.json"><link rel=search type="application/opensearchdescription+xml" href="/opensearch.xml" title="JerryQu 的小站"><link rel=alternate type="application/rss+xml" title="RSS 2.0" href="/rss.html"><script>L.l('blog_css')</script><link rel=amphtml href="https://imququ.com/amp/post/troubleshooting-https.html"><meta name=description content="本文罗列了 HTTPS 常见部署问题及解决方案，问题来自于本博客评论和读者邮件。"><meta name="twitter:card" content=summary><meta name="twitter:site" content="@qgy18"><meta name="twitter:title" content="HTTPS 常见部署问题及解决方案 | JerryQu 的小站"><meta name="twitter:description" content="本文罗列了 HTTPS 常见部署问题及解决方案，问题来自于本博客评论和读者邮件。"><meta name="twitter:image" content="https://st.imququ.com/static/img/blog/ququ_avatar.jpg"><script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","mainEntityOfPage":"https://imququ.com/post/troubleshooting-https.html","headline":"HTTPS 常见部署问题及解决方案","datePublished":"2016-12-12T23:50:26+08:00","dateModified":"2017-06-17T09:19:51+08:00","author":{"@type":"Person","name":"JerryQu"},"publisher":{"@type":"Organization","name":"JerryQu 的小站","logo":{"@type":"ImageObject","url":"https://st.imququ.com/static/img/blog/banner.png","width":600,"height":60}},"image":{"@type":"ImageObject","url":"https://st.imququ.com/static/img/blog/ququ_avatar.jpg","width":256,"height":256}}</script></head><body><div class=container><h3 aria-hidden=true class="global-tips">如果你看到这段文字，说明本地存储文件已损坏。<a href="?clear_ls=1" rel=nofollow>请点击本链接自动修复</a>！</h3><div class="left-col"><div class="intrude-less"><header id=header class=inner><div class=profilepic><a href="/"></a></div><h1><a href="/">Jerry Qu</a></h1><p class=subtitle>专注 WEB 端开发</p><nav id="main-nav"><ul><li ><a href="/"><span>首页</span></a><li ><a href="/post/series.html">
+    <span>专题</span></a><li ><a href="/post/archives.html"><span>归档</span></a><li ><a href="/post/blogroll.html"><span>友链</span></a><li ><a href="/post/about.html"><span>关于</span></a></ul></nav><nav id="sub-nav"><div class=social><a class="twitter external" rel=nofollow href="//twitter.com/qgy18" title=Twitter aria-label=Twitter>Twitter</a><a class=rss href="https://imququ.com/rss.html" title="RSS 订阅" aria-label="RSS 订阅">RSS</a><a class=search href="/search.html" title="站内搜索" aria-label="站内搜索">Search</a></div></nav></header></div></div><div class="mid-col"><div class="mid-col-container"><div id=content class=inner><script>L.l('blog_more_css')</script><article class="post post-250"><div class=meta><div class=date><time>Dec 12, 2016</time></div><div class="date-modified"><time>Jun 17, 2017</time></div><div class=comment><a href="#comments">82 Comments</a></div></div>
 
-    <script src="/static/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!--网页标题，图标-->
-    <link rel="icon" href="/static/img/jiaoshou.jpg">
-    <title>{{.Title}}</title>
-</head>
-<body>
-<div class="container-fluid">
-    <div class="row">
-        <!--左侧功能栏-->
-        <div class="span3">
-            <!--头像等，需要判断isLogin的判断处理： 匿名访问，登陆访问-->
-            <div class="top-section">
-                <div class="profile-image">
-                    <img src="/static/img/jiaoshou.jpg" class="img-responsive img-rounded img-circle" alt="logo image">
-                </div>
-
-                <!--登陆信息-->
-                <ul class="nav navbar-nav">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span>狐狸精</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>登出</a></li>
-                </ul>
-            </div>
-
-            <p class="text-right">狐狸精喜上唐僧</p>
-
-            <!--导航栏-->
-            <div class="well nav">
-                <ul class="nav navbar-text">
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#">分类</a></li>
-                    <li><a href="#">标签</a></li>
-                    <li><a href="#">归档</a></li>
-                    <li><a href="#">关于我们</a></li>
-                </ul>
-            </div>
-
-            <!--搜索-->
-            <div class="input-group">
-                <!--input输入框-->
-                <input type="text" class="form-control" id="search-content" placeholder="Search for...">
-                <!--按钮-->
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="btn-search">确认
-                        <span class="fa fa-search" aria-hidden="true"></span>
-                    </button>
-                </span>
-            </div><!-- /input-group -->
-            <br>
-            <!--社交相关-->
-            <div class="icon">
+    <h1 class=title>HTTPS 常见部署问题及解决方案</h1>
+    <div class="entry-content">
+        <div id="toc-container">
+            <div id=toc>
+                <p><strong>文章目录</strong></p>
                 <ul>
-                    {{range $one := .Socials}}
-                    <li><a href="{{$one.ExtraUrl}}" target="_blank">{{$one.Name}}<i class="{{.Icon}}"></i></a></li>
-                    {{end}}
+                    <li><a href="#toc-0">申请 Let&#39;s Encrypt 证书时，一直无法验证通过</a>
+                    <li><a href="#toc-1">网站无法访问，提示 ERR_CERTIFICATE_TRANSPARENCY_REQUIRED</a>
+                    <li><a href="#toc-2">浏览器提示证书有错误</a>
+                    <ul>
+                        <li><a href="#toc-2-0">检查证书链是否完整</a>
+                        <li><a href="#toc-2-1">检查浏览器是否支持 SNI</a>
+                        <li><a href="#toc-2-2">检查系统时间</a>
+                    </ul>
+                    <li><a href="#toc-3">启用 HTTP/2 后网站无法访问，提示 ERR_SPDY_INADEQUATE_TRANSPORT_SECURITY</a>
+                    <li><a href="#toc-4">网站无法访问，提示 ERR_SSL_VERSION_OR_CIPHER_MISMATCH</a>
+                    <li><a href="#toc-5">在 Nginx 启用 HTTP/2 后，浏览器依然使用 HTTP/1.1</a>
+                    <li><a href="#toc-6">升级到 HTTPS 后，网站部分资源不加载或提示不安全</a>
+                    <li><a href="#toc-7">仅 Safari、iOS 各种浏览器无法访问</a>
+                    <li><a href="#toc-8">将 OpenSSL 升级到 1.1.0+，IE8 无法访问</a>
                 </ul>
             </div>
         </div>
 
-        <!--右侧展示栏-->
-        <div class="container-fluid ">
-            {{.LayoutContent}}
-        </div>
+        <nav>
+            <ul>
+                <li><a href="#toc_0">欢迎使用马克飞象</a>
+                    <ul>
+                        <li><a href="#toc_1">Markdown简介</a>
+                            <ul>
+                                <li><a href="#toc_2">代码块</a></li>
+                                <li><a href="#toc_3">LaTeX 公式</a></li>
+                                <li><a href="#toc_4">表格</a></li>
+                                <li><a href="#toc_5">流程图</a></li>
+                                <li><a href="#toc_6">复选框</a></li>
+                            </ul></li>
+                        <li><a href="#toc_7">印象笔记相关</a>
+                            <ul>
+                                <li><a href="#toc_8">笔记本和标签</a></li>
+                                <li><a href="#toc_9">笔记标题</a></li>
+                                <li><a href="#toc_10">快捷编辑</a></li>
+                                <li><a href="#toc_11">数据同步</a></li>
+                                <li><a href="#toc_12">离线存储</a></li>
+                            </ul></li>
+                        <li><a href="#toc_13">编辑器相关</a>
+                            <ul>
+                                <li><a href="#toc_14">设置</a></li>
+                                <li><a href="#toc_15">快捷键</a></li>
+                            </ul></li>
+                        <li><a href="#toc_16">关于收费</a></li>
+                        <li><a href="#toc_17">反馈与建议</a></li>
+                    </ul></li>
+            </ul>
+        </nav>
+
+        <p>在最近几年里，我写了很多有关 HTTPS 和 HTTP/2 的文章，涵盖了证书申请、Nginx 编译及配置、性能优化等方方面面。在这些文章的评论中，不少读者提出了各种各样的问题，我的邮箱也经常收到类似的邮件。本文用来罗列其中有代表性、且我知道解决方案的问题。</p>
+    <p>为了控制篇幅，本文尽量只给出结论和引用链接，不展开讨论，如有疑问或不同意见，欢迎留言讨论。本文会持续更新，欢迎大家贡献自己遇到的问题和解决方案。</p>
+    <blockquote>
+        <p>实际上，遇到任何有关部署 HTTPS 或 HTTP/2 的问题，都推荐先用 <a href="https://www.ssllabs.com/ssltest/index.html">Qualys SSL Labs&#39;s SSL Server Test</a> 跑个测试，大部分问题都能被诊断出来。</p>
+    </blockquote>
+    <h3><a name="toc-0"></a>申请 Let&#39;s Encrypt 证书时，一直无法验证通过</h3>
+    <p>这类问题一般是因为 Let&#39;s Encrypt 无法访问你的服务器，推荐尝试 <a href="https://github.com/Neilpang/acme.sh">acme.sh</a> 的 <a href="https://github.com/Neilpang/acme.sh#7-use-dns-mode">DNS 验证模式</a>，一般都能解决。 </p>
+    <h3><a name="toc-1"></a>网站无法访问，提示 ERR_CERTIFICATE_TRANSPARENCY_REQUIRED</h3>
+    <p>使用 Chrome 53 访问使用 Symantec 证书的网站，很可能会出现这个错误提示。这个问题由 Chrome 的某个 Bug 引起，目前最好的解决方案是升级到 Chrome 最新版。相关链接：</p>
+    <ul>
+        <li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=664177">Out of date Chrome results in ERR_CERTIFICATE_TRANSPARENCY_REQUIRED for Symantec operated sites</a>；</li>
+        <li><a href="https://knowledge.symantec.com/support/ssl-certificates-support/index?page=content&amp;id=ALERT2160">Warning | Certificate Transparency error with Chrome 53</a>；</li>
+    </ul>
+    <h3><a name="toc-2"></a>浏览器提示证书有错误</h3>
+    <h4><a name="toc-2-0"></a>检查证书链是否完整</h4>
+    <p>首先确保网站使用的是合法 CA 签发的有效证书，其次检查 Web Server 配置中证书的完整性（一定要包含站点证书及所有中间证书）。如果缺失了中间证书，部分浏览器能够自动获取但严重影响 TLS 握手性能；部分浏览器直接报证书错误。</p>
+    <blockquote>
+        <p><a href="https://whatsmychaincert.com/">What&#39;s My Chain Cert?</a> 这个网站可以用来检查证书链是否完整，它还可以用来生成正确的证书链。</p>
+    </blockquote>
+    <h4><a name="toc-2-1"></a>检查浏览器是否支持 SNI</h4>
+    <p>如果只有老旧浏览器（例如 IE8 on Windows XP）提示这个错误，多半是因为你的服务器同时部署了使用不同证书的多个 HTTPS 站点，这样，不支持 SNI（Server Name Indication）的浏览器通常会获得错误的证书，从而无法访问。</p>
+    <p>要解决浏览器不支持 SNI 带来的问题，可以将使用不同证书的 HTTPS 站点部署在不同服务器上；还可以利用 SAN（Subject Alternative Name）机制将多个域名放入同一张证书；当然你也可以直接无视这些老旧浏览器。特别地，使用不支持 SNI 的浏览器访问商业 HTTPS CDN，基本都会因为证书错误而无法使用。</p>
+    <blockquote>
+        <p>有关 SNI 的更多说明，请看「<a href="https://imququ.com/post/sth-about-switch-to-https-2.html#toc-2">关于启用 HTTPS 的一些经验分享（二）</a>」。</p>
+    </blockquote>
+    <h4><a name="toc-2-2"></a>检查系统时间</h4>
+    <p>如果用户电脑时间不对，也会导致浏览器提示证书有问题，这时浏览器一般都会有明确的提示，例如 Chrome 的 ERR_CERT_DATE_INVALID。</p>
+    <h3><a name="toc-3"></a>启用 HTTP/2 后网站无法访问，提示 ERR_SPDY_INADEQUATE_TRANSPORT_SECURITY</h3>
+    <p>这个问题一般是由于 CipherSuite 配置有误造成的。建议对照「<a href="https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations">Mozilla 的推荐配置</a>、<a href="https://github.com/cloudflare/sslconfig/blob/master/conf">CloudFlare 使用的配置</a>」等权威配置修改 Nginx 的 <code>ssl_ciphers</code> 配置项。</p>
+    <blockquote>
+        <p>有关这个问题的具体原因，请看「<a href="https://imququ.com/post/why-tls-handshake-failed-with-http2-enabled.html">从启用 HTTP/2 导致网站无法访问说起</a>」。</p>
+    </blockquote>
+    <h3><a name="toc-4"></a>网站无法访问，提示 ERR_SSL_VERSION_OR_CIPHER_MISMATCH</h3>
+    <p>出现这种错误，通常都是配置了不安全的 SSL 版本或者 CipherSuite —— 例如服务器只支持 SSLv3，或者 CipherSuite 只配置了 RC4 系列，使用 Chrome 访问就会得到这个提示。解决方案跟上一节一样。</p>
+    <p>还有一种情况会出现这种错误 —— 使用不支持 ECC 的浏览器访问只提供 ECC 证书的网站。例如在 Windows XP 中，使用 ECC 证书的网站只有 Firefox 能访问（Firefox 的 TLS 自己实现，不依赖操作系统）；Android 平台中，也需要 Android 4+ 才支持 ECC 证书。</p>
+    <blockquote>
+        <p>针对不支持 ECC 证书的浏览器，有一个完美的解决方案，请看「<a href="https://imququ.com/post/ecc-certificate.html">开始使用 ECC 证书</a>」。</p>
+    </blockquote>
+    <h3><a name="toc-5"></a>在 Nginx 启用 HTTP/2 后，浏览器依然使用 HTTP/1.1</h3>
+    <p>Chrome 51+ 移除了对 NPN 的支持，只支持 ALPN，而浏览器和服务端都支持 NPN 或 ALPN，是用上 HTTP/2 的大前提。换句话说，如果服务端不支持 ALPN，Chrome 51+ 无法使用 HTTP/2。</p>
+    <p>OpenSSL 1.0.2 才开始支持 ALPN —— 很多主流服务器系统自带的 OpenSSL 都低于这个版本，所以推荐在编译 Web Server 时自己指定 OpenSSL 的位置。</p>
+    <blockquote>
+        <p>详见「<a href="https://imququ.com/post/enable-alpn-asap.html">为什么我们应该尽快支持 ALPN</a>」。</p>
+    </blockquote>
+    <h3><a name="toc-6"></a>升级到 HTTPS 后，网站部分资源不加载或提示不安全</h3>
+    <p>记住一个原则：HTTPS 网站的所有外链资源（CSS、JS、图片、音频、字体文件、异步接口、表单 action 地址等等）都需要升级为 HTTPS，就不会遇到这个问题了。</p>
+    <blockquote>
+        <p>详见「<a href="https://imququ.com/post/sth-about-switch-to-https-3.html">关于启用 HTTPS 的一些经验分享（三）</a>」。</p>
+    </blockquote>
+    <h3><a name="toc-7"></a>仅 Safari、iOS 各种浏览器无法访问</h3>
+    <p>如果你的 HTTPS 网站用 PC Chrome 和 Firefox 访问一切正常，但 macOS Safari 和 iOS 各种浏览器无法访问，有可能是 Certificate Transparency 配置有误。当然，如果你之前没有通过 TLS 扩展启用 Certificate Transparency，请跳过本小节。</p>
+    <p>具体症状是：通过 Wireshark 抓包分析，通常能看到名为 Illegal Parameter 的 Alert 信息；通过 <code>curl -v</code> 排查，一般能看到 Unknown SSL protocol error in connection 错误提示。</p>
+    <p>这时候，请进入 Nginx <code>ssl_ct_static_scts</code> 配置指定的目录，检查 SCT 文件大小是否正常，尤其要关注是否存在空文件。</p>
+    <blockquote>
+        <p>需要注意的是：根据<a href="https://groups.google.com/a/chromium.org/forum/#!msg/ct-policy/u87C79AY-E8/VM4K1v8qCgAJ">官方公告</a>，从 2016 年 12 月 1 日开始，Google 的 Aviator CT log 服务将不再接受新的证书请求。用 <a href="https://github.com/grahamedgecombe/ct-submit">ct-submit</a> 等工具手动获取 SCT 文件时，不要再使用 Aviator 服务，否则就会得到空文件。</p>
+        <p>更新：nginx-ct 的作者已经发布了 <a href="https://github.com/grahamedgecombe/nginx-ct/releases">v1.3.2</a>，针对零字节的 SCT 文件做了处理，不再发送。</p>
+    </blockquote>
+    <h3><a name="toc-8"></a>将 OpenSSL 升级到 1.1.0+，IE8 无法访问</h3>
+    <p>造成这个问题的根本原因是 OpenSSL 1.1.0+ 默认禁用了 3DES 系列的 Cipher Suites：</p>
+    <blockquote>
+        <p>For the 1.1.0 release, which we expect to release tomorrow, we will treat triple-DES just like we are treating RC4. It is not compiled by default; you have to use “enable-weak-ssl-ciphers” as a config option. <a href="https://www.openssl.org/blog/blog/2016/08/24/sweet32/">via</a></p>
+    </blockquote>
+    <p>升级到 OpenSSL 1.1.0+ 之后，要么选择不支持 Windows XP + IE8；要么在编译时加上 <code>enable-weak-ssl-ciphers</code> 参数。例如这是我的 Nginx 编译参数：</p>
+    <pre><code class="lang-shell">./configure --add-module=../ngx_brotli --add-module=../nginx-ct-1.3.2 --with-openssl=../openssl --with-openssl-opt=<span class="hljs-string">'enable-tls1_3 enable-weak-ssl-ciphers'</span> --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module
+</code></pre>
+
+
+
+    <p>本文链接：<a rel=bookmark title="Permalink to HTTPS 常见部署问题及解决方案" href="https://imququ.com/post/troubleshooting-https.html">https://imququ.com/post/troubleshooting-https.html</a>，<a href="https://imququ.com/post/troubleshooting-https.html#comments">参与评论 »</a></p>
+        <p>--<acronym title="End of File">EOF</acronym>--</p>
+        <p class="post-info">发表于&nbsp;<span class=date>2016-12-12 23:50:26</span>，并被添加「<a href="/search.html?s=tag%3ANginx">Nginx</a>、<a href="/search.html?s=tag%3AHTTPS">HTTPS</a>、<a href="/search.html?s=tag%3AHTTP2">HTTP2</a>」标签，最后修改于&nbsp;<span class=date>2017-06-17 09:19:51</span>。<a href="https://imququ.com/post/troubleshooting-https.md">查看本文 Markdown 版本 »</a></p><p class="copyright-info">本站使用「<a href="http://creativecommons.org/licenses/by/4.0/deed.zh">署名 4.0 国际</a>」创作共享协议，<a href="/post/about.html#toc-1">相关说明 »</a></p><div class="entry-series">
+        <h3>专题「Web 服务器」的其他文章&nbsp;<a href="/series.html#toc-13" title="更多">»</a></h3><ul><li><a href="/post/use-verynginx.html">开始使用 VeryNginx</a>&nbsp;<span class=date>(Dec 10, 2016)</span><li><a href="/post/ecc-certificate.html">开始使用 ECC 证书</a>&nbsp;<span class=date>(Aug 27, 2016)</span><li><a href="/post/moving-to-https-asap.html">为什么我们应该尽快升级到 HTTPS？</a>&nbsp;<span class=date>(May 16, 2016)</span><li><a href="/post/my-nginx-conf.html">本博客 Nginx 配置之完整篇</a>&nbsp;<span class=date>(Mar 21, 2016)</span><li><a href="/post/why-can-not-turn-on-ocsp-stapling.html">从无法开启 OCSP Stapling 说起</a>&nbsp;<span class=date>(Mar 13, 2016)</span><li><a href="/post/certificate-transparency.html">Certificate Transparency 那些事</a>&nbsp;<span class=date>(Feb 03, 2016)</span><li><a href="/post/letsencrypt-certificate.html">Let&#39;s Encrypt，免费好用的 HTTPS 证书</a>&nbsp;<span class=date>(Dec 25, 2015)</span><li><a href="/post/why-nginx-disable-gzip-in-http10.html">从 Nginx 默认不压缩 HTTP/1.0 说起</a>&nbsp;<span class=date>(Dec 15, 2015)</span><li><a href="/post/optimize-tls-handshake.html">TLS 握手优化详解</a>&nbsp;<span class=date>(Nov 08, 2015)</span><li><a href="/post/optimize-ssl-ciphers-with-boringssl.html">使用 BoringSSL 优化 HTTPS 加密算法选择</a>&nbsp;<span class=date>(Oct 15, 2015)</span></ul>
     </div>
 
-    <!--footer-->
-    {{template "footer.html" .}}
-</div>
-</body>
-</html>
+
+    </div>
+
+
+
+</article><nav class="page-navi"><a href="/post/use-verynginx.html" class=prev>&laquo; 开始使用 VeryNginx</a></nav><section id=comments><h1 class=title>Comments</h1><div class=total_thread data-identifier="post-troubleshooting-https" data-url="https://imququ.com/post/troubleshooting-https.html"></div></section></div></div><footer id=footer class=inner>&copy;&nbsp;2017&nbsp;-&nbsp;JerryQu 的小站&nbsp;-&nbsp;<a target=_blank rel="nofollow noopener" class="external beian" href="http://www.miitbeian.gov.cn/">京 ICP 备 15046275 号</a><br>Powered by&nbsp;<a href="/post/readme.html">ThinkJS</a>&nbsp;&amp;&nbsp;<a target=_blank rel="nofollow noopener" class=external href="//github.com/shashankmehta/greyshade">GreyShade</a></footer></div></div><input type=hidden id=CURRENT_PAGE value="post-troubleshooting-https"><input type=hidden id=CDN_DOMAIN value="https://st.imququ.com"><script>L.l('ana_js',1)</script><script>L.l('jq_js',1)</script><script>L.l('blog_js',1)</script></body></html>

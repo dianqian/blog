@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "yVsquN5Hr/oyH7UkbxXUfZTc8Xg=",
+			"path": "gitlab.mogujie.org/security/wolgo/wolproto/wolagent2server",
+			"revision": "76f7141f80e69120c360c7e37c9e2ddb5a86a39b",
+			"revisionTime": "2017-07-19T07:46:52Z"
+		}
+	],
+	"rootPath": "blog"
+}

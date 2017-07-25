@@ -32,11 +32,7 @@
                 <!--文章内容-->
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
-                    <textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">
-                        {{with .Edit}}
-                            {{.Content}}
-                        {{end}}
-                    </textarea>
+                    <textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">{{with .Edit}}{{.Content}}{{end}}</textarea>
                 </p>
                 <!--确认处-->
                 <p class="submit clearfix">
@@ -187,6 +183,8 @@
             tagsPre = [];
 
         if (tags.length > 0) {
+            // https://stackoverflow.com/questions/1219860/html-encoding-lost-when-attribute-read-from-input-field
+            // 防xss
             var items = tags.val().split(','),
                 result = [];
             for (var i = 0; i < items.length; i++) {

@@ -1,0 +1,21 @@
+<div id=content class=inner>
+    {{with .About}}
+    <article class="post post-{{.ID}}" itemscope itemtype="http://schema.org/Article">
+        <h1 class=title itemprop=headline>{{.Title}}</h1>
+        <div class="entry-content" itemprop=articleBody>
+            <div id="toc-container">
+                <div id="toc">
+                    <p><strong>文章目录</strong></p>
+                    {{str2html .Header}}
+                </div>
+            </div>
+            {{str2html .Content}}
+        </div>
+    </article>
+    <!--评论部分-->
+    <section id=comments>
+        <h1 class=title>Comments</h1>
+        <div class=total_thread data-identifier="post-{{.Slug}}" data-url="https://{{$.Domain}}/post/{{.Slug}}.html"></div>
+    </section>
+    {{end}}
+</div>

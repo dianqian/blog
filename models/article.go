@@ -29,27 +29,6 @@ type Article struct {
 }
 
 /**
- 计算count
- */
-func (a *Article) Count(status int) (int64, error) {
-    qs := orm.NewOrm().QueryTable(a)
-    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
-        // 输入的status正确，就取具体的status
-        qs = qs.Filter("status", status)
-    } else {
-        // todo: 输入不合理的，暂不操作，后期加入error输出
-    }
-
-    // 得到count
-    cnt, err := qs.Count()
-    if err != nil {
-        return 0, fmt.Errorf("get article count failed: %s", err.Error())
-    }
-
-    return cnt, nil
-}
-
-/**
  根据指定字段读取数据
  */
 func (a *Article) Read(fields...string) error {
@@ -82,6 +61,82 @@ func (a *Article) Insert() (int64, error) {
     }
     return id, nil
 }
+
+/**
+ 计算count
+ */
+func (a *Article) Count(status int) (int64, error) {
+    qs := orm.NewOrm().QueryTable(a)
+    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
+        // 输入的status正确，就取具体的status
+        qs = qs.Filter("status", status)
+    } else {
+        // todo: 输入不合理的，暂不操作，后期加入error输出
+    }
+
+    // 得到count
+    cnt, err := qs.Count()
+    if err != nil {
+        return 0, fmt.Errorf("get article count failed: %s", err.Error())
+    }
+
+    return cnt, nil
+}
+
+/**
+ 携带offset、limit的配置信息
+ */
+func (a *Article) Select(offset int, limit int, status int) ([]*Article, error) {
+    var articles []*Article
+
+    qs := orm.NewOrm().QueryTable(a).Offset(offset).Limit(limit)
+    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
+        // 输入的status正确，就取具体的status
+        qs = qs.Filter("status", status)
+    } else {
+        // todo: 输入不合理的，暂不操作，后期加入error输出
+    }
+
+    _, err := qs.All(&articles)
+    if err != nil {
+        return articles, err
+    }
+
+    return articles, nil
+}
+
+/**
+ 获取article的pre和next
+ 上一篇、下一篇，采用publish time时间，发布的时间
+ direction: 1----next;-1----pre
+ */
+func (a *Article) SelectBrother(direction int, publishTime int64) (error) {
+
+    qs := orm.NewOrm().QueryTable(a)
+
+    if direction == common.BROTHER_PREV {
+        qs = qs.Filter("publish_time__lt", publishTime)
+    } else if direction == common.BROTHER_NEXT {
+        qs = qs.Filter("publish_time__gt", publishTime)
+    }
+
+    var articles []*Article
+    qs = qs.Limit(1)
+    _, err := qs.All(&articles)
+    if err != nil {
+        return err
+    }
+    if len(articles) != 1 {
+        return fmt.Errorf("no brother article")
+    }
+
+    a.Id = articles[0].Id
+    a.Title = articles[0].Title
+    a.Url = articles[0].Url
+    a.PublishTime = articles[0].PublishTime
+    return nil
+}
+
 
 /**
  根据status字选择

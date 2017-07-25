@@ -153,18 +153,12 @@ func (a *ArticleEditController) Post()  {
     }
 
     // 入参检查
-    if title == "" || slug == "" || text == "" || date == "" || serie == ""{
-        //err := fmt.Errorf("param error")
-        logs.Error(fmt.Sprintf("param error: title/slug/text/date/serie"))
+    if title == "" || slug == "" {
+        logs.Error(fmt.Sprintf("param error: title/slug"))
         return
     }
-    logs.Debug(fmt.Sprintf("title: %s", title))
-    logs.Debug(fmt.Sprintf("slug: %s", slug))
-    logs.Debug(fmt.Sprintf("text: %s", text))
-    logs.Debug(fmt.Sprintf("date: %s", date))
-    logs.Debug(fmt.Sprintf("serie: %s", serie))
-    logs.Debug(fmt.Sprintf("tags: %s", tags))
-    logs.Debug(fmt.Sprintf("update: %s", isUpdate))
+    // todo: tags
+    tags = tags
 
     // 构造数据
     article := new(models.Article)
@@ -180,22 +174,12 @@ func (a *ArticleEditController) Post()  {
         // update
         article.Id = articleID.(int)
         if isUpdate == "true" {
-            pt, err := time.Parse(common.TIME_LAYOUT_STR, date + ":00")
-            if err != nil {
-                logs.Error(fmt.Sprintf("publish time parse error:%s", err.Error()))
-                pt = time.Now()
-            }
-            article.PublishTime = pt.Unix()
+            article.PublishTime = a.dealPublishTime(date).Unix()
         }
     } else {
         // insert
         article.Id = 0
-        pt, err := time.Parse(common.TIME_LAYOUT_STR, date + ":00")
-        if err != nil {
-            logs.Error(fmt.Sprintf("publish time parse error:%s", err.Error()))
-            pt = time.Now()
-        }
-        article.PublishTime = pt.Unix()
+        article.PublishTime = a.dealPublishTime(date).Unix()
         article.Create = time.Now().Unix()
     }
 
@@ -230,4 +214,21 @@ func (a *ArticleEditController) Post()  {
     }
 
     return
+}
+
+/**
+
+ */
+func (a *ArticleEditController) dealPublishTime(date string) time.Time {
+    if date == "" {
+        return time.Now()
+    }
+
+    pt, err := time.Parse(common.TIME_LAYOUT_STR, date + ":00")
+    if err != nil {
+        logs.Error(fmt.Sprintf("publish time parse error:%s", err.Error()))
+        pt = time.Now()
+    }
+
+    return pt
 }

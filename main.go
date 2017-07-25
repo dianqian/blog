@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"blog/models"
+	"blog/common"
 )
 
 func init() {
@@ -42,6 +43,10 @@ func init() {
 func main() {
 	// 使能session
 	beego.BConfig.WebConfig.Session.SessionOn = true
+
+	// 自定义在模板中使用的函数
+	// 使用《模板函数》特性：https://beego.me/docs/mvc/view/template.md
+	beego.AddFuncMap("TimeIsZero", common.TimeIsZero)
 
 	beego.Run()
 }

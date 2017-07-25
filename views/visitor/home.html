@@ -3,15 +3,15 @@
     <article class="post post-list">
         <div class="meta">
             <div class="date">
-                <time>{{dateformat .CreateTime "Jan 02, 2006"}}</time>
+                <time>{{dateformat .PublishTime "Jan 02, 2006"}}</time>
             </div>
             <div class="comment">
-                <a href="/post/{{.Slug}}.html#comments">{{.Count}} Comments</a>
+                <a href="/post/{{.Slug}}.html#comments">{{.CommentCount}} Comments</a>
             </div>
         </div>
 
         <h1 class="title">
-            <a href="/post/{{.Slug}}.html">{{.Title}}</a>
+            <a href="/post/{{.Slug}}.html" name="article" value="{{.ID}}" methods="get">{{.Title}}</a>
         </h1>
         <div class="entry-content">
             <p>{{str2html .Excerpt}}[...]</p>
@@ -28,7 +28,7 @@
         <a href="?pn={{.Next}}" class="next">下一页 »</a>
         {{end}}
         <div class="center">
-            <a href="/archives.html">博客归档</a>
+            <a href="/archives">博客归档</a>
         </div>
     </nav>
 

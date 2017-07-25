@@ -14,3 +14,11 @@ const (
     STATUS_VALID = 1
     STATUS_UNVALID = 0
 )
+
+/**
+ brother directory
+ */
+const (
+    BROTHER_PREV = -1
+    BROTHER_NEXT = 1
+)
