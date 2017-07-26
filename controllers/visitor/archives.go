@@ -6,6 +6,8 @@ import (
     "bytes"
     "fmt"
     "blog/models"
+    "github.com/astaxie/beego/logs"
+    "blog/common"
 )
 
 type ArchiveController struct {
@@ -17,12 +19,18 @@ func (a *ArchiveController) Get()  {
     a.HomeBase()
 
     // 准备数据
-    //ap := new(ArchivePage)
-    //err :=
+    ap := new(ArchivePage)
+    err := a.getPreSay(ap)
+    if err != nil {
+        logs.Error(fmt.Sprintf("get archive presay failed: %s", err.Error()))
+    }
+    err = a.getArchivesAndArticles(ap)
+    if err != nil {
+        logs.Error(fmt.Sprintf("get archive and article failed: %s", err.Error()))
+    }
 
-
-    a.Data["Header"] = ""
-    a.Data["Content"] = ""
+    // 转换为markdown的text
+    a.Data["Header"], a.Data["Content"] = common.GetHeaderAndContent([]byte(ap.generateArchiveMarkdown()))
 
     a.TplName = "visitor/archives.html"
     return
@@ -49,16 +57,39 @@ func (a *ArchiveController) getPreSay(ap *ArchivePage) error {
 func (a *ArchiveController) getArchivesAndArticles(ap *ArchivePage) error {
     // 取出所有的文章
     ar := new(models.Article)
-    ars, err := ar.SelectByStatus(100)
+    ars, err := ar.Select(0, 1000, 100)
     if err != nil {
         return fmt.Errorf("find article error: %s", err.Error())
     }
 
-    ars = ars
-    //for _, item := range ars {
-    //
-    //}
+    // 遍历文章
+    for _, item := range ars {
+        ay, am, _ := time.Unix(item.PublishTime, 0).Date()            // 文章的日期
+        isMatch := false
+        // 遍历archive
+        for _, one := range ap.Archives {
+            if ay == one.Year && am == one.Month {
+                // 匹配到archive
+                one.ArticleBrief = append(one.ArticleBrief, &ArticleBriefForArchive{
+                    Name: item.Title, Slug: item.Url, PublishTime: time.Unix(item.PublishTime, 0),
+                })
+                isMatch = true
 
+                break                           // 跳出该循环
+            }
+        }
+
+        // 没有匹配，则新增一个Archive
+        if isMatch == false {
+            oneAr := &Archive{
+                Date: time.Unix(item.PublishTime, 0),
+                Year: ay, Month: am,
+            }
+            oneAr.ArticleBrief = append(oneAr.ArticleBrief, &ArticleBriefForArchive{
+                Name: item.Title, Slug: item.Url, PublishTime: time.Unix(item.PublishTime, 0),
+            })
+        }
+    }
 
     return nil
 }
@@ -75,6 +106,8 @@ type ArchivePage struct {
 
 type Archive struct {
     Date                time.Time           // 日期
+    Year                int                 // 年
+    Month               time.Month          // 月
     ArticleBrief        []*ArticleBriefForArchive
 }
 
