@@ -18,7 +18,7 @@ import (
 type TopicOfArticle struct {
     ID          int
     Name        string
-    Checked     bool                    // 是否被当前文章选中
+    Checked     string                    // 是否被当前文章选中
 }
 
 /**
@@ -40,21 +40,24 @@ func (a *ArticleEditController) GetTopics() []*TopicOfArticle {
 /**
  为article设置checked的topic
  */
-func (a *ArticleEditController) SetTopicChecked(aID int, tpOfarticle []*TopicOfArticle) []*TopicOfArticle {
+func (a *ArticleEditController) SetTopicChecked(aID int, tpOfarticle []*TopicOfArticle) ([]*TopicOfArticle, string) {
+    isDefault := "checked"
+
     ar := new(models.ArticleTopic)
     ats, err := ar.SelectByArticle(aID)
     if err != nil {
         for _, item := range ats {
             for _, tp := range tpOfarticle {
                 if item.TopicId == tp.ID {
-                    tp.Checked = true
+                    tp.Checked = "checked"
+                    isDefault = ""
                     break
                 }
             }
         }
     }
 
-    return tpOfarticle
+    return tpOfarticle, isDefault
 }
 
 /**
@@ -88,13 +91,14 @@ func (a *ArticleEditController) Get ()  {
     a.AdminBase()
 
     // 专题内容准备
-    tpOfarticle := a.GetTopics()
+    isDefaultTp := ""
+    tpOfArticle := a.GetTopics()
     articleID, err := a.GetInt("articleid")
     if err != nil || articleID == 0 {
         // todo: 表示新建文章
     } else {
         // todo: 编辑文章
-        tpOfarticle = a.SetTopicChecked(articleID, tpOfarticle)
+        tpOfArticle, isDefaultTp = a.SetTopicChecked(articleID, tpOfArticle)
         a.SetSession("articleid", articleID)
 
         // 准备article的内容
@@ -114,7 +118,8 @@ func (a *ArticleEditController) Get ()  {
         }
         a.Data["Edit"] = edit
     }
-    a.Data["Series"] = tpOfarticle
+    a.Data["DefaultTp"] = isDefaultTp
+    a.Data["Series"] = tpOfArticle
 
     // 准备域名
     a.Data["Domain"] = beego.AppConfig.String(beego.BConfig.RunMode + "::domain")
@@ -187,11 +192,16 @@ func (a *ArticleEditController) Post()  {
     do := a.GetString("do")
     logs.Debug(fmt.Sprintf("action=%s", do))
     if do == "save" {
-        article.Status = common.ARTICLE_STATUS_DRAFT
+        article.Status = common.ARTICLE_STATUS_DRAFT                                // 草稿
         if article.Id != 0 {
             err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
             if err != nil {
-                logs.Error(fmt.Sprintf("article'%s' update failed: %s", err.Error(), article.Title))
+                logs.Error(fmt.Sprintf("article'%d' update failed: %s", article.Title, err.Error()))
+            }
+            // 处理article topic
+            err = a.dealTopic(article.Id, tpID)
+            if err != nil {
+                logs.Error(fmt.Sprintf("when update article, deal topic failed: %s", err.Error()))
             }
         } else {
             // 新建文章
@@ -199,11 +209,12 @@ func (a *ArticleEditController) Post()  {
             if err != nil {
                 logs.Error(fmt.Sprintf("article'%s' insert failed: %s", err.Error(), article.Title))
             }
-            // 新建ArticleTopic
-            at := &models.ArticleTopic{ArticleId: int(arID), TopicId: tpID, Create: time.Now().Unix(),
-                Updated: time.Now().Unix(), Status: common.STATUS_VALID}
-            // todo:
-            at = at
+            // 处理article topic
+            err = a.dealTopic(int(arID), tpID)
+            if err != nil {
+                logs.Error(fmt.Sprintf("when insert article, deal topic failed: %s", err.Error()))
+            }
+            // todo: 新建ArticleTag数据
 
         }
         a.Redirect("/admin/manage-drafts", http.StatusFound)
@@ -217,7 +228,49 @@ func (a *ArticleEditController) Post()  {
 }
 
 /**
+ 更新article对应的
+ */
+func (a *ArticleEditController) dealTopic(articleID int, tpID int) error {
+    // 先确认topic的有效性
+    tp := &models.Topic{Id: tpID}
+    err := tp.Read("id")
+    if err != nil {
+        logs.Warning(fmt.Sprintf("read topic for '%d' failed: %s", tpID, err.Error()))
+        tp.Id = 1                      // 就将1定义为缺省的topic id值，后续需要录入表中
+    }
 
+    // 确认article_topic表中存在对应数据
+    arTp := &models.ArticleTopic{ArticleId: articleID, TopicId: tp.Id}
+    err = arTp.Read("article_id")
+    if err != nil {
+        // 不存在数据
+        arTp.Create = time.Now().Unix()
+        arTp.Updated = arTp.Create
+        arTp.Status = common.STATUS_VALID
+        _, err := arTp.Insert()
+        if err != nil {
+            logs.Error(fmt.Sprintf("insert article topic failed: %s", err.Error()))
+            return fmt.Errorf("insert article topic failed: %s", err.Error())
+        }
+    } else {
+        // 存在数据
+        if arTp.TopicId != tp.Id {
+            // 更新topic id值
+            arTp.TopicId = tp.Id
+            arTp.Updated = time.Now().Unix()
+            err = arTp.Update("topic_id", "updated")
+            if err != nil {
+                logs.Error(fmt.Sprintf("update article_topic failed: %s", err.Error()))
+                return fmt.Errorf("update article_topic failed: %s", err.Error())
+            }
+        }
+    }
+
+    return nil
+}
+
+/**
+ 处理发布时间
  */
 func (a *ArticleEditController) dealPublishTime(date string) time.Time {
     if date == "" {

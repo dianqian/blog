@@ -168,7 +168,38 @@ type ArticleTopic struct {
     Status      int                     // 状态：1--有效；0--无效
 }
 
+/**
+ 根据指定字段读取数据
+ */
+func (a *ArticleTopic) Read(fields...string) error {
+    err := orm.NewOrm().Read(a, fields...)
+    if err != nil {
+        return err
+    }
+    return nil
+}
 
+/**
+ 更新行数据
+ */
+func (a *ArticleTopic) Update(fields...string) error {
+    _, err := orm.NewOrm().Update(a, fields...)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+/**
+ 插入一条数据
+ */
+func (a *ArticleTopic) Insert() (int64, error) {
+    id, err := orm.NewOrm().Insert(a)
+    if err != nil {
+        return 0, err
+    }
+    return id, nil
+}
 
 /**
  select by article id.

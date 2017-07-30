@@ -14,6 +14,9 @@ type Topics struct {
     base.HomeCommonCtr
 }
 
+/**
+ 专题展示
+ */
 func (t *Topics) Get() {
     // 基础的执行
     t.HomeBase()
@@ -33,7 +36,6 @@ func (t *Topics) Get() {
 
     }
 
-    logs.Error(tpForMd.generateTopicsMarkdown())
     t.Data["Header"], t.Data["Content"] = common.GetHeaderAndContent([]byte(tpForMd.generateTopicsMarkdown()))
 
     t.TplName = "visitor/series.html"
@@ -143,9 +145,11 @@ func (tpInfo *TopicsInfoForMd) generateTopicsMarkdown() string {
         buffer.WriteString(fmt.Sprintf("## %s{#toc-%d}", item.Name, item.ID))
         buffer.WriteString("\n")
         buffer.WriteString(item.Description)
+        buffer.WriteString("\n\n")
         for _, ar := range item.ArticleBrief {
             // list方式的markdown语法： * [标题](/post/slug.html) <span class="date">(Man 02, 2006)</span>
             buffer.WriteString(fmt.Sprintf("* [%s](/post/%s.html) <span class=\"date\">(%s)</span>", ar.Name, ar.Slug, ar.PublishTime.Format("Jan 02, 2006")))
+            buffer.WriteString("\n")
         }
         buffer.WriteString("\n")
     }

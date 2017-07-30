@@ -64,6 +64,7 @@ func (a *ArchiveController) getArchivesAndArticles(ap *ArchivePage) error {
 
     // 遍历文章
     for _, item := range ars {
+        //logs.Error(item.PublishTime)
         ay, am, _ := time.Unix(item.PublishTime, 0).Date()            // 文章的日期
         isMatch := false
         // 遍历archive
@@ -88,6 +89,8 @@ func (a *ArchiveController) getArchivesAndArticles(ap *ArchivePage) error {
             oneAr.ArticleBrief = append(oneAr.ArticleBrief, &ArticleBriefForArchive{
                 Name: item.Title, Slug: item.Url, PublishTime: time.Unix(item.PublishTime, 0),
             })
+
+            ap.Archives = append(ap.Archives, oneAr)
         }
     }
 
@@ -136,6 +139,7 @@ func (ap *ArchivePage) generateArchiveMarkdown() string {
         for _, ar := range item.ArticleBrief {
             // list方式的markdown语法： * [标题](/post/slug.html) <span class="date">(Man 02, 2006)</span>
             buffer.WriteString(fmt.Sprintf("* [%s](/post/%s.html) <span class=\"date\">(%s)</span>", ar.Name, ar.Slug, ar.PublishTime.Format("Jan 02, 2006")))
+            buffer.WriteString("\n")
         }
         buffer.WriteString("\n\n")
     }

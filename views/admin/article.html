@@ -64,13 +64,13 @@
                         <label class="typecho-label">专题</label>
                         <ul>
                             <li>
-                                <input type="radio" id="serie-0" value="0" name="serie" checked="checked"/>
+                                <input type="radio" id="serie-0" value="0" name="serie" checked="{{.DefaultTp}}"/>
                                 <label for="serie-0">默认专题</label>
                             </li>
                             <!--专题是基于db中的数据动态获取-->
                             {{range $index, $item:=.Series}}
                             <li>
-                                <input type="radio" id="serie-{{$item.ID}}" value="{{$item.ID}}" name="serie" {{if $item.Checked}}checked="true"{{end}}/>
+                                <input type="radio" id="serie-{{$item.ID}}" value="{{$item.ID}}" name="serie" checked="{{$item.Checked}}"/>
                                 <label for="serie-{{$item.ID}}">{{$item.Name}}</label>
                             </li>
                             {{end}}
