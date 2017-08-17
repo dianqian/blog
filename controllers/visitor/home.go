@@ -70,7 +70,7 @@ func (h *HomeController) Get() {
 			ID: item.Id,
 			PublishTime: time.Unix(item.PublishTime, 0),
 			Slug: item.Url,
-			Excerpt: "",                    // todo: 描述待实现
+			Excerpt: h.generalExcerpt(item),
 			Title: item.Title,
 		}
 		arDesc = append(arDesc, one)
@@ -84,3 +84,8 @@ func (h *HomeController) Get() {
 	return
 }
 
+
+func (h *HomeController) generalExcerpt(a *models.Article) string {
+	_, content := common.GetHeaderAndContent([]byte(a.Content))
+	return common.GeneralExcerpt(content)
+}

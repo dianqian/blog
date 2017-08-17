@@ -49,6 +49,15 @@ func (a *ArticleManageController) Get ()  {
     }
     a.Data["Series"] = tpbs
 
+    title := ArticleTitleInfo{}
+    publishTitles, err := title.GetTitleInfos(common.ARTICLE_STATUS_PUBLISH)
+    if err != nil {
+        logs.Error(fmt.Sprintf("draft GetTitleInfos failed: %s", err.Error()))
+        a.TplName = "admin/articles.html"
+        return
+    }
+
+    a.Data["List"] = publishTitles
     a.TplName = "admin/articles.html"
     return
 }

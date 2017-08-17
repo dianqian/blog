@@ -50,7 +50,7 @@
                         <thead>
                         <tr>
                             <th> </th>
-                            <th> </th>
+                            <th>评论</th>
                             <th>标题</th>
                             <th>作者</th>
                             <th>专题</th>
@@ -64,15 +64,15 @@
                             <td>
                                 <input type="checkbox" value="{{.ID}}" name="cid[]" />
                             </td>
-                            <td><a href="/post/{{.Slug}}.html#comments" class="balloon-button size-1">{{.Count}}</a></td>
+                            <td><a href="" class="balloon-button size-1">100</a></td>
                             <td>
-                                <a href="/admin/write-post?cid={{.ID}}">{{.Title}}</a>
-                                <a target="_black" href="/post/{{.Slug}}.html" title="浏览 {{.Title}}"><i class="i-exlink"></i></a>
+                                <a href="/admin/edit-article?articleid={{.ID}}">{{.Title}}</a>
+                                <a target="_black" href="" title="浏览 {{.Title}}"><i class="i-exlink"></i></a>
                             </td>
                             <td>{{.Author}}</td>
-                            <td>{{if gt .SerieID 0}}专题ID:{{.SerieID}}{{else}}--{{end}}</td>
-                            <td>{{dateformat .CreateTime "06/01/02 15:04"}}</td>
-                            <td>{{dateformat .UpdateTime "06/01/02 15:04"}}</td>
+                            <td>{{.Topic}}</td>
+                            <td>{{dateformat .Create "2006/01/02 15:04"}}</td>
+                            <td>{{dateformat .Update "2006/01/02 15:04"}}</td>
                         </tr>
                         {{end}}
                         </tbody>

@@ -193,38 +193,56 @@ func (a *ArticleEditController) Post()  {
     logs.Debug(fmt.Sprintf("action=%s", do))
     if do == "save" {
         article.Status = common.ARTICLE_STATUS_DRAFT                                // 草稿
-        if article.Id != 0 {
-            err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
-            if err != nil {
-                logs.Error(fmt.Sprintf("article'%d' update failed: %s", article.Title, err.Error()))
-            }
-            // 处理article topic
-            err = a.dealTopic(article.Id, tpID)
-            if err != nil {
-                logs.Error(fmt.Sprintf("when update article, deal topic failed: %s", err.Error()))
-            }
-        } else {
-            // 新建文章
-            arID, err := article.Insert()
-            if err != nil {
-                logs.Error(fmt.Sprintf("article'%s' insert failed: %s", err.Error(), article.Title))
-            }
-            // 处理article topic
-            err = a.dealTopic(int(arID), tpID)
-            if err != nil {
-                logs.Error(fmt.Sprintf("when insert article, deal topic failed: %s", err.Error()))
-            }
-            // todo: 新建ArticleTag数据
-
+        err := a.saveArticle(article, tpID)
+        if err != nil {
+            logs.Error(err.Error())
+            return
         }
         a.Redirect("/admin/manage-drafts", http.StatusFound)
     } else if do == "publish" {
+        article.Status = common.ARTICLE_STATUS_PUBLISH                              // 草稿
+        err := a.saveArticle(article, tpID)
+        if err != nil {
+            logs.Error(err.Error())
+            return
+        }
         a.Redirect("/admin/manage-articles", http.StatusFound)
     } else if do == "auto" {
         // todo: 自动保存的处理
     }
 
     return
+}
+
+/**
+ 对于文章保存的处理
+ */
+func (a *ArticleEditController) saveArticle(article *models.Article, tpID int) error {
+    if article.Id != 0 {
+        err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
+        if err != nil {
+            return fmt.Errorf("article'%d' update failed: %s", article.Title, err.Error())
+        }
+        // 处理article topic
+        err = a.dealTopic(article.Id, tpID)
+        if err != nil {
+            return fmt.Errorf("when update article, deal topic failed: %s", err.Error())
+        }
+    } else {
+        // 新建文章
+        arID, err := article.Insert()
+        if err != nil {
+            return fmt.Errorf("article'%s' insert failed: %s", err.Error(), article.Title)
+        }
+        // 处理article topic
+        err = a.dealTopic(int(arID), tpID)
+        if err != nil {
+            return fmt.Errorf("when insert article, deal topic failed: %s", err.Error())
+        }
+        // todo: 新建ArticleTag数据
+    }
+
+    return nil
 }
 
 /**

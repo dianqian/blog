@@ -59,3 +59,38 @@ func GetContent(md []byte) (content string) {
     byteContent := blackfriday.Markdown(md, renderer, BlackfridayCommonExtensions)
     return string(byteContent)
 }
+
+/**
+ 去除所有html的元素
+ */
+func IgnoreHtmlTag(src string) string {
+    //去除所有尖括号内的HTML代码
+    re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
+    src = re.ReplaceAllString(src, "")
+
+    //去除换行符
+    re, _ = regexp.Compile("\\s{2,}")
+    return re.ReplaceAllString(src, "")
+}
+
+/**
+ 生成文章的描述信息
+ */
+func GeneralExcerpt(content string) string {
+    var excerpt string
+
+    reg := regexp.MustCompile("<!--more-->")
+    index := reg.FindStringIndex(content)
+    if index == nil {
+        uc := []rune(content)
+        length := 300
+        if len(uc) < length {
+            length = len(uc)
+        }
+        excerpt = IgnoreHtmlTag(string(uc[0:length]))
+    } else {
+        excerpt = IgnoreHtmlTag(content[0: index[0]])
+    }
+
+    return excerpt
+}
