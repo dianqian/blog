@@ -2,7 +2,7 @@ package base
 
 import (
     "github.com/astaxie/beego"
-    "blog/models"
+    "blog/models/db"
     "github.com/astaxie/beego/logs"
     "time"
     "fmt"
@@ -14,7 +14,7 @@ import (
 type LoginBaseCtr struct {
     beego.Controller
 
-    UserInfo    *models.User                // 用户信息
+    UserInfo    *db.User                // 用户信息
     IsLogin     bool                        // 标记是否发生登陆
 }
 
@@ -43,8 +43,8 @@ func (l * LoginBaseCtr) Prepare() {
 /**
  获取登陆的用户
  */
-func (l *LoginBaseCtr) GetLogin() *models.User {
-    user := &models.User{Id: l.GetSession("user_info").(int)}
+func (l *LoginBaseCtr) GetLogin() *db.User {
+    user := &db.User{Id: l.GetSession("user_info").(int)}
     err := user.Read("id")
     if err != nil {
         return nil
@@ -56,7 +56,7 @@ func (l *LoginBaseCtr) GetLogin() *models.User {
 /**
  记录登陆状态
  */
-func (l *LoginBaseCtr) SetLogin(user *models.User) {
+func (l *LoginBaseCtr) SetLogin(user *db.User) {
     l.IsLogin = true
     // 设置sesstion
     l.SetSession("user_info", user.Id)
