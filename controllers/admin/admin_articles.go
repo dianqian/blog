@@ -27,9 +27,10 @@ type ArticleManageController struct {
  todo：也可以参考：https://beego.me/docs/utils/page.md
  */
 func (a *ArticleManageController) Get ()  {
-
+    // 基础项
     a.AdminBase()
 
+    // 根据status选择文章
     article := new(db.Article)
     articles, err := article.SelectByStatus(common.ARTICLE_STATUS_DRAFT)
     if err != nil {

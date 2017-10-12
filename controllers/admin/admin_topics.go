@@ -22,9 +22,9 @@ type TopicManageController struct {
     base.AdminCommonCtr
 }
 
-func (this *TopicManageController) Get ()  {
+func (t *TopicManageController) Get ()  {
     // 基础组件的执行
-    this.AdminBase()
+    t.AdminBase()
 
     // 准备数据
     var topicsData []*TopicBriefInfo
@@ -41,7 +41,7 @@ func (this *TopicManageController) Get ()  {
     }
 
     // 将数据带出
-    this.Data["TopicList"] = topicsData
-    this.TplName = "admin/admin_topics.html"
+    t.Data["TopicList"] = topicsData
+    t.TplName = "admin/admin_topics.html"
     return
 }

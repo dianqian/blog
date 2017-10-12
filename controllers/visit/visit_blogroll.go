@@ -38,6 +38,6 @@ func (b *BlogRoll) Get()  {
         b.Data["Article"] = roll
     }
 
-    b.TplName = "visit/visit_blogroll.html"
+    b.TplName = "visit/visit_roll.html"
     return
 }

@@ -17,41 +17,41 @@ type TopicEditController struct {
 /**
  展示topic
  */
-func (this *TopicEditController) Get ()  {
+func (t *TopicEditController) Get ()  {
     // 预加载
-    this.AdminBase()
+    t.AdminBase()
 
     // 尝试获取参数
-    topicId, err := this.GetInt("topic_id")
+    topicId, err := t.GetInt("topic_id")
     if err == nil {
         // 是修改，需要保存在topic id值
         topic := new(db.Topic)
         topic.Id = topicId
         err := topic.Read("id")
         if err == nil {
-            this.SetSession("modify_topic_id", topicId)
-            this.Data["EditTopic"] = topic
+            t.SetSession("modify_topic_id", topicId)
+            t.Data["EditTopic"] = topic
         }
     } else {
         // 否则，新增
     }
 
-    this.TplName = "admin/admin_topic.html"
+    t.TplName = "admin/admin_topic.html"
     return
 }
 
 /**
  提交topic
  */
-func (this *TopicEditController) Post()  {
+func (t *TopicEditController) Post()  {
 
     // 预处理的
-    this.AdminBase()
+    t.AdminBase()
 
     // 检查入参
-    name := this.GetString("name")
-    slugName := this.GetString("slug")
-    desc := this.GetString("description")
+    name := t.GetString("name")
+    slugName := t.GetString("slug")
+    desc := t.GetString("description")
     // todo: 需要做一个参数检查
     logs.Debug(fmt.Sprintf("%s, %s, %s", name, slugName, desc))
 
@@ -64,7 +64,7 @@ func (this *TopicEditController) Post()  {
 
     var err error
     err = nil
-    topicInter := this.GetSession("modify_topic_id")
+    topicInter := t.GetSession("modify_topic_id")
     if topicInter == nil {
         // 没有modify topic id值，执行insert
         topic.Create = time.Now().Unix()
@@ -87,7 +87,7 @@ func (this *TopicEditController) Post()  {
         // todo：编辑失败，需要进行提示和重新操作
     } else {
         // 编辑成功，跳转到list中
-        this.Redirect("/admin/manage-topics", http.StatusFound)
+        t.Redirect("/admin/topics.html", http.StatusFound)
     }
 
     return

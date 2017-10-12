@@ -7,128 +7,74 @@ import (
     "fmt"
     "net/http"
     "blog/models/db"
-    "github.com/astaxie/beego"
     "time"
     "strconv"
+    "blog/models/html/htmladmin"
+    "strings"
 )
-
-/**
- article相关的topic
- */
-type TopicOfArticle struct {
-    ID          int
-    Name        string
-    Checked     string                    // 是否被当前文章选中
-}
-
-/**
- 获取topics
- */
-func (a *ArticleEditController) GetTopics() []*TopicOfArticle {
-    var tpOfarticle []*TopicOfArticle
-    tp := new(db.Topic)
-    tps, err := tp.SelectAll()
-    if err == nil {
-        for _, item := range tps {
-            tpOfarticle = append(tpOfarticle, &TopicOfArticle{ID: item.Id, Name: item.Name})
-        }
-    }
-
-    return tpOfarticle
-}
-
-/**
- 为article设置checked的topic
- */
-func (a *ArticleEditController) SetTopicChecked(aID int, tpOfarticle []*TopicOfArticle) ([]*TopicOfArticle, string) {
-    isDefault := "checked"
-
-    ar := new(db.ArticleTopic)
-    ats, err := ar.SelectByArticle(aID)
-    if err != nil {
-        for _, item := range ats {
-            for _, tp := range tpOfarticle {
-                if item.TopicId == tp.ID {
-                    tp.Checked = "checked"
-                    isDefault = ""
-                    break
-                }
-            }
-        }
-    }
-
-    return tpOfarticle, isDefault
-}
-
-/**
- article相关的tag
- */
-type TagOfArticle struct {
-    ID          int
-    Name        string
-}
-
-/**
- 编辑信息
- */
-type Edit struct {
-    Title           string
-    IsDraft         bool
-    Slug            string
-    Content         string
-    PublishTime     time.Time
-}
 
 type ArticleEditController struct {
     base.AdminCommonCtr
 }
 
 /**
- 进入文章编辑、新建文章的界面
- */
+ @Description：进入文章编辑、新建文章的界面
+ @Param:
+ @Return：
+*/
 func (a *ArticleEditController) Get ()  {
     // 预加载执行
     a.AdminBase()
 
+    htmlArticleEditData := htmladmin.HTMLArticleEditData{}
+
     // 专题内容准备
     isDefaultTp := ""
-    tpOfArticle := a.GetTopics()
+    tp := &htmladmin.TopicOfArticle{}
+    tps := tp.GetTopics()
+
+    toa := htmladmin.TagOfArticle{}
     articleID, err := a.GetInt("articleid")
     if err != nil || articleID == 0 {
         // todo: 表示新建文章
     } else {
         // todo: 编辑文章
-        tpOfArticle, isDefaultTp = a.SetTopicChecked(articleID, tpOfArticle)
+        tps, isDefaultTp = tp.SetTopicChecked(articleID, tps)
         a.SetSession("articleid", articleID)
 
         // 准备article的内容
-        article := new(db.Article)
-        article.Id = articleID
+        article := &db.Article{Id: articleID}
         err = article.Read("id")
         if err != nil {
             logs.Error(fmt.Sprintf("get article'%d' info failed: %s", articleID, err.Error()))
         }
 
-        edit := Edit{
+        edit := htmladmin.Edit{
+            IsEdit: true,
             Title: article.Title,
             Slug: article.Url,
             Content: article.Content,
             PublishTime: time.Unix(article.PublishTime, 0),
             IsDraft: true,
         }
-        a.Data["Edit"] = edit
+        htmlArticleEditData.Edit = edit
+
+        // 获取article相关的tag值
+        toas, err := toa.GetTags(articleID)
+        if err != nil {
+            logs.Error(fmt.Sprintf("get tag for article'%s' failed: %s", article.Title, err.Error()))
+            htmlArticleEditData.ArticleTags = "test, test1, test2"
+        } else {
+            htmlArticleEditData.ArticleTags = strings.Join(toas, ",")
+        }
     }
-    a.Data["DefaultTp"] = isDefaultTp
-    a.Data["Series"] = tpOfArticle
 
-    // 准备域名
-    a.Data["Domain"] = beego.AppConfig.String(beego.BConfig.RunMode + "::domain")
+    htmlArticleEditData.AllTags, _ = toa.GetAllTags()
+    htmlArticleEditData.DefaultTp = isDefaultTp
+    htmlArticleEditData.Series = tps
 
-    // todo: tag处理
-    //tag := models.Tag{}
-    //tags, err := tag.SelectAll()
-
-    // 加载template
+    // 加载template，设置html和data
+    a.Data["HTMLArticleEditData"] = htmlArticleEditData
     a.TplName = "admin/admin_article.html"
     return
 }
@@ -198,7 +144,7 @@ func (a *ArticleEditController) Post()  {
             logs.Error(err.Error())
             return
         }
-        a.Redirect("/admin/manage-drafts", http.StatusFound)
+        a.Redirect("/admin/drafts.html", http.StatusFound)
     } else if do == "publish" {
         article.Status = common.ARTICLE_STATUS_PUBLISH                              // 草稿
         err := a.saveArticle(article, tpID)
@@ -206,7 +152,7 @@ func (a *ArticleEditController) Post()  {
             logs.Error(err.Error())
             return
         }
-        a.Redirect("/admin/manage-articles", http.StatusFound)
+        a.Redirect("/admin/articles.html", http.StatusFound)
     } else if do == "auto" {
         // todo: 自动保存的处理
     }

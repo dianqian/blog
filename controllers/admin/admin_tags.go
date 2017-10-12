@@ -12,9 +12,9 @@ type TagManageController struct {
     base.AdminCommonCtr
 }
 
-func (tgMCtrl *TagManageController) Get ()  {
+func (t *TagManageController) Get ()  {
     // 基础执行
-    tgMCtrl.AdminBase()
+    t.AdminBase()
 
     // 准备数据
     tg := new(db.Tag)
@@ -23,9 +23,9 @@ func (tgMCtrl *TagManageController) Get ()  {
         // todo: select出错
         logs.Error(fmt.Sprintf("tag select all failed: %s.", err.Error()))
     } else {
-        tgMCtrl.Data["TagList"] = tgs
+        t.Data["TagList"] = tgs
     }
 
-    tgMCtrl.TplName = "admin/admin_tags.html"
+    t.TplName = "admin/admin_tags.html"
     return
 }

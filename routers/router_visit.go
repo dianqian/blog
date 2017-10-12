@@ -22,13 +22,13 @@ func init() {
     // http://localhost:8080/post/[article.url].html
     beego.Router("/post/:slug", &visit.ArticleController{})
     // todo: 专题
-    beego.Router("topics", &visit.Topics{})
+    beego.Router("/topics.html", &visit.Topics{})
     // todo：归档
-    beego.Router("archives", &visit.ArchiveController{})
+    beego.Router("/archives.html", &visit.ArchiveController{})
     // todo: 友链
-    beego.Router("blogroll", &visit.BlogRoll{})
+    beego.Router("/roll.html", &visit.BlogRoll{})
     // todo: about
-    beego.Router("about", &visit.About{})
+    beego.Router("/about.html", &visit.About{})
     // todo: search搜索
 
     // user相关的页面

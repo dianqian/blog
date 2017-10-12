@@ -65,7 +65,9 @@ func (u *UserManageController) Get ()  {
 }
 
 /**
- 修改头像avatar
+ 修改头像avatar:
+    1. 文件上传；
+    2. 修改avatar的url链接；
  */
 func (u *UserManageController) ChangeAvatarInfo()  {
     // todo: 待实现
@@ -90,7 +92,7 @@ func (u *UserManageController) ChangeAccountInfo()  {
         logs.Error(fmt.Sprintf("update email/web_site/wechat/nick_name/signature failed: %s", err.Error()))
     }
 
-    u.Redirect("/admin/user", http.StatusFound)
+    u.Redirect("/admin/user.html", http.StatusFound)
 
     return
 }
@@ -106,19 +108,19 @@ func (u *UserManageController) ChangePassword()  {
     confirm := u.GetString("confirm")
     if newpw == "" || confirm == "" || oldpw == "" {
         logs.Error(fmt.Sprintf("input null, old/new/confirm."))
-        u.Redirect("/admin/user", http.StatusFound)
+        u.Redirect("/admin/user.html", http.StatusFound)
         return
     }
 
     if newpw != confirm {
         logs.Error(fmt.Sprintf("new password not equal confirm password."))
-        u.Redirect("/admin/user", http.StatusFound)
+        u.Redirect("/admin/user.html", http.StatusFound)
         return
     }
 
     if oldpw == newpw {
         logs.Error(fmt.Sprintf("new password equal old password."))
-        u.Redirect("/admin/user", http.StatusFound)
+        u.Redirect("/admin/user.html", http.StatusFound)
         return
     }
 
@@ -126,7 +128,7 @@ func (u *UserManageController) ChangePassword()  {
     user, err := Authenticate(u.UserInfo.Name, oldpw)
     if err != nil {
         logs.Error(fmt.Sprintf("authenticate failed: %s.", err.Error()))
-        u.Redirect("/admin/user", http.StatusFound)
+        u.Redirect("/admin/user.html", http.StatusFound)
         return
     }
 
@@ -136,12 +138,12 @@ func (u *UserManageController) ChangePassword()  {
     err = user.Update("pass_word", "updated")
     if err != nil {
         logs.Error(fmt.Sprintf("save new password failed: %s.", err.Error()))
-        u.Redirect("/admin/user", http.StatusFound)
+        u.Redirect("/admin/user.html", http.StatusFound)
         return
     }
 
     logs.Info(fmt.Sprintf("update password ok."))
     u.DelLogin()
-    u.Redirect("/admin/user", http.StatusFound)
+    u.Redirect("/admin/user.html", http.StatusFound)
     return
 }

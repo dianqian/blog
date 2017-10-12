@@ -14,11 +14,11 @@ type GeneralSettingController struct {
     base.AdminCommonCtr
 }
 
-func (this *GeneralSettingController) Get ()  {
+func (g *GeneralSettingController) Get ()  {
     //this.PreBase()
 
-    this.Prepare()
-    this.TplName = "admin/admin_general.html"
+    g.Prepare()
+    g.TplName = "admin/admin_general.html"
     //this.TplName = "admin/example.html"
     return
 }
@@ -106,6 +106,6 @@ func (b *BlogMgController) ChangeInfo()  {
         logs.Error(fmt.Sprintf("blog info update failed: %s", err.Error()))
     }
 
-    b.Redirect("/admin/blog", http.StatusFound)
+    b.Redirect("/admin/manager.html", http.StatusFound)
     return
 }

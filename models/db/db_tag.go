@@ -1,6 +1,9 @@
 package db
 
-import "github.com/astaxie/beego/orm"
+import (
+    "github.com/astaxie/beego/orm"
+    "fmt"
+)
 
 /**
  标签相关
@@ -16,6 +19,11 @@ type Tag struct {
     Create      int64
     Updated     int64
     Status      int
+}
+
+func (tg *Tag) TableName() string {
+    return "tag"
+    //return reflect.TypeOf(*tg).Name()
 }
 
 /**
@@ -59,6 +67,34 @@ func (tg *Tag) SelectAll() ([]*Tag, error) {
     var tags []*Tag
 
     qs := orm.NewOrm().QueryTable(tg)
+    _, err := qs.All(&tags)
+    if err != nil {
+        return nil, err
+    }
+
+    return tags, nil
+}
+
+// 用于编码方便加入的
+const (
+    SELECT_COND_FALSE = "1=2"
+    SELECT_COND_TRUE = "1=1"
+)
+
+/**
+ @Description：根据ids获取tag的对象列表
+ @Param:
+ @Return：
+ */
+func (tg *Tag) GetByIDs(ids []int) ([]*Tag, error) {
+    var tags []*Tag
+
+    if len(ids) <= 0 {
+        return nil, fmt.Errorf("no input id")
+    }
+
+    qs := orm.NewOrm().QueryTable(tg).Filter("id__in", ids)
+
     _, err := qs.All(&tags)
     if err != nil {
         return nil, err

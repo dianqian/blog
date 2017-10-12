@@ -61,7 +61,7 @@ func (l *LoginController) Post()  {
     password := l.GetString("password")
     if name == "" || password == "" {
         logs.Debug(fmt.Sprintf("input username or password is null"))
-        l.Redirect("/admin/login", http.StatusFound)
+        l.Redirect("/admin/login.html", http.StatusFound)
         return
     }
 
@@ -70,7 +70,7 @@ func (l *LoginController) Post()  {
     if err != nil {
         logs.Info(fmt.Sprintf("authenticate failed: %s", err.Error()))
         // todo: 考虑如何将err msg带出去
-        l.Redirect("/admin/login", http.StatusFound)
+        l.Redirect("/admin/login.html", http.StatusFound)
         return
     }
 
@@ -93,9 +93,9 @@ func (l *LoginController) Post()  {
  */
 type Password string
 
-func (this Password) Md5() string {
+func (p Password) Md5() string {
     h := md5.New()
-    h.Write([]byte(this))
+    h.Write([]byte(p))
     return hex.EncodeToString(h.Sum(nil))
 }
 

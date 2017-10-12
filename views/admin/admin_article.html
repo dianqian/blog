@@ -1,17 +1,17 @@
 <div class="body container">
     <div class="typecho-page-title">
-        {{if .Edit}}
-        <h2>编辑: "{{.Edit.Title}}"</h2>
+        {{if .HTMLArticleEditData.Edit.IsEdit}}
+        <h2>编辑: "{{.HTMLArticleEditData.Edit.Title}}"</h2>
         {{else}}
         <h2>撰写文章</h2>
         {{end}}
     </div>
     <div class="row typecho-page-main typecho-post-area" role="form">
-        <form action="/admin/edit-article" method="post" name="write-post">
+        <form action="/admin/article.html" method="post" name="write-post">
             <!--左侧-->
             <div class="col-mb-12 col-tb-9" role="main">
                 <!--可能是草稿文件-->
-                {{if .Edit.IsDraft}}
+                {{if .HTMLArticleEditData.Edit.IsDraft}}
                 <cite class="edit-draft-notice">
                     你正在编辑的是草稿，你也可以
                     <a href="#">删除它</a>
@@ -20,19 +20,19 @@
                 <!--标题title-->
                 <p class="title">
                     <label for="title" class="sr-only">标题</label>
-                    <input type="text" id="title" name="title" autocomplete="off" {{with .Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">
+                    <input type="text" id="title" name="title" autocomplete="off" {{with .HTMLArticleEditData.Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">
                 </p>
                 <!--文章url-->
                 <p>
                     <label for="slug" class="sr-only">网址缩略名</label>
-                    https://{{.Domain}}/post/
-                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .Edit}}value="{{.Slug}}"{{end}}/>
+                    https://{{.HTMLAdData.Domain}}/post/
+                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .HTMLArticleEditData.Edit}}value="{{.Slug}}"{{end}}/>
                     .html
                 </p>
                 <!--文章内容-->
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
-                    <textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">{{with .Edit}}{{.Content}}{{end}}</textarea>
+                    <textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">{{with .HTMLArticleEditData.Edit}}{{.Content}}{{end}}</textarea>
                 </p>
                 <!--确认处-->
                 <p class="submit clearfix">
@@ -56,7 +56,7 @@
                     <section class="typecho-post-option" role="application">
                         <label for="date" class="typecho-label">发布日期</label>
                         <p>
-                            <input class="typecho-date w-100" type="text" name="date" id="date" {{with .Edit}}value="{{dateformat .PublishTime "2006-01-02 15:04"}}"{{end}}/>
+                            <input class="typecho-date w-100" type="text" name="date" id="date" {{with .HTMLArticleEditData.Edit}}value="{{dateformat .PublishTime "2006-01-02 15:04"}}"{{end}}/>
                         </p>
                     </section>
                     <!--专题-->
@@ -64,11 +64,11 @@
                         <label class="typecho-label">专题</label>
                         <ul>
                             <li>
-                                <input type="radio" id="serie-0" value="0" name="serie" checked="{{.DefaultTp}}"/>
+                                <input type="radio" id="serie-0" value="0" name="serie" checked="{{.HTMLArticleEditData.DefaultTp}}"/>
                                 <label for="serie-0">默认专题</label>
                             </li>
                             <!--专题是基于db中的数据动态获取-->
-                            {{range $index, $item:=.Series}}
+                            {{range $index, $item:=.HTMLArticleEditData.Series}}
                             <li>
                                 <input type="radio" id="serie-{{$item.ID}}" value="{{$item.ID}}" name="serie" checked="{{$item.Checked}}"/>
                                 <label for="serie-{{$item.ID}}">{{$item.Name}}</label>
@@ -80,7 +80,7 @@
                     <section class="typecho-post-option">
                         <label for="token-input-tags" class="typecho-label">标签</label>
                         <p>
-                            <input id="token-input-tags" name="tags" type="text" {{with .Edit}}value="{{.Title}}" {{end}} class="w-100 text"/>
+                            <input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>
                         </p>
                     </section>
                     <!--其他选项-->
@@ -200,7 +200,7 @@
                 });
             }
 
-            tags.tokenInput({{.Tags}}, {
+            tags.tokenInput({{.HTMLArticleEditData.AllTags}}, {
                 propertyToSearch: 'tags',
                     tokenValue: 'tags',
                     searchDelay: 0,
