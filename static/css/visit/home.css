@@ -22,7 +22,7 @@
  */
 .sidebar {
     position: fixed;
-    top: 51px;
+    top: 0;
     bottom: 0;
     left: 0;
     z-index: 1000;
@@ -55,19 +55,10 @@
 }
 
 /* article about */
-article .comment .date {
+article div.comment div.date {
     position: relative;
     font-size: 12px;
-}
-
-article div.meta {
-    color: #555;
-    float: right;
-    font-size: .9em;
-    line-height: 2;
-    position: relative;
-    text-align: right;
-    width: auto;
+    display: inline-block;
 }
 
 article .meta a {
@@ -96,8 +87,16 @@ article .entry-content {
         width: auto;
     }
 
-    article .meta .date {
+    article .meta {
         margin-right: 30px;
+    }
+
+    #toc {
+        margin: 0
+    }
+
+    #toc, #toc-container {
+        float: none
     }
 }
 
@@ -271,4 +270,54 @@ article .entry-content a:hover {
 
 article .entry-content ul ul, article .entry-content ul ol, article .entry-content ul dl, article .entry-content ol ul, article .entry-content ol ol, article .entry-content ol dl, article .entry-content dl ul, article .entry-content dl ol, article .entry-content dl dl, article .entry-content blockquote > p:first-of-type {
     margin-top: 0
+}
+
+article .meta {
+    color: #555;
+    font-size: .8em;
+    line-height: 2;
+    position: relative;
+    text-align: right;
+    width: auto;
+}
+
+/*目录格式*/
+#toc-container, #toc {
+    float: right
+}
+
+#toc {
+    border: 1px solid #e2e2e2;
+    font-size: 14px;
+    margin: 0 0 15px 20px;
+    max-width: 260px;
+    min-width: 120px;
+    padding: 6px
+}
+
+#toc strong {
+    border-bottom: 1px solid #e2e2e2;
+    display: block
+}
+
+#toc p {
+    margin: 0;
+    padding: 0 4px
+}
+
+#toc ul {
+    margin: .5em .5em .5em 0;
+    padding-left: 20px;
+}
+
+#toc ul ul {
+    margin-top: 0;
+    margin-bottom: 0
+}
+
+article h1.title {
+    font-size: 2em;
+    font-weight: 300;
+    line-height: 35px;
+    margin-bottom: 25px;
 }

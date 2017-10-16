@@ -1,11 +1,14 @@
 <div id="content" class="inner">
     {{range .HTMLData.List}}
     <article class="post post-list">
-        <div class="meta">
-            <div class="date">
+        <div class="meta float-right">
+            <div class="date" style="display: inline-block">
+                <label>发布时间:</label>
                 <time>{{dateformat .PublishTime "Jan 02, 2006"}}</time>
             </div>
-            <div class="comment">
+            <span>|</span>
+            <div class="comment" style="display: inline-block">
+                <label>评论数:</label>
                 <a href="/post/{{.Slug}}.html#comments">{{.CommentCount}} Comments</a>
             </div>
         </div>
@@ -15,19 +18,20 @@
         </h1>
         <div class="entry-content">
             <p>{{str2html .Excerpt}}[...]</p>
-            <p><a href="/post/{{.Slug}}.html" class="more-link">继续阅读 »</a></p>
+            <p><a class="btn btn-secondary" href="/post/{{.Slug}}.html" role="button">继续阅读 »</a></p>
         </div>
+        <hr>
     </article>
     {{end}}
 
     <nav class="page-navi">
         {{if gt .HTMLData.Prev 0}}
-        <a href="?pn={{.Prev}}" class="prev">« 上一页</a>
+        <a href="?pn={{.Prev}}" class="prev float-left">« 上一页</a>
         {{end}}
         {{if gt .HTMLData.Next 0}}
-        <a href="?pn={{.Next}}" class="next">下一页 »</a>
+        <a href="?pn={{.Next}}" class="next float-right">下一页 »</a>
         {{end}}
-        <div class="center">
+        <div class="text-center">
             <a href="/archives.html">博客归档</a>
         </div>
     </nav>

@@ -1,27 +1,33 @@
 <div id=content class=inner>
+    <link>
+
     {{with .Article}}
     <article class="post post-{{.ID}}" itemscope itemtype="http://schema.org/Article">
-        <div class="meta float-right">
+        <!--文章标题-->
+        <h1 class=title itemprop=headline>{{.Title}}</h1>
+        <!--附加信息-->
+        <div class="meta">
             <!--发布时间-->
-            <div class=date>
+            <div class="date" style="display: inline-block">
                 <label>发布时间:</label>
                 <time itemprop=datePublished content="{{dateformat .PublishTime "2006-01-02T15:04:05Z07:00"}}">{{dateformat .PublishTime "Jan 02, 2006"}}</time>
             </div>
+            <span>|</span>
             <!--&lt;!&ndash;更新时间&ndash;&gt;-->
             <!--<div class="date-modified text-hide">-->
-                <!--<label>更新时间:</label>-->
-                <!--<time itemprop=dateModified content="{{dateformat .UpdateTime "2006-01-02T15:04:05Z07:00"}}">{{dateformat .UpdateTime "Jan 02, 2006"}}</time>-->
+            <!--<label>更新时间:</label>-->
+            <!--<time itemprop=dateModified content="{{dateformat .UpdateTime "2006-01-02T15:04:05Z07:00"}}">{{dateformat .UpdateTime "Jan 02, 2006"}}</time>-->
             <!--</div>-->
             <!--展示评论数-->
-            <div class=comment>
-                <label>相关评论:</label>
+            <div class="comment" style="display: inline-block;">
+                <label>评论数:</label>
                 <a href="#comments">{{.CommentCount}} Comments</a>
             </div>
         </div>
-        <!--文章标题-->
-        <h1 class=title itemprop=headline>{{.Title}}</h1>
+
+        <!--文章内容-->
         <div class="entry-content" itemprop=articleBody>
-            <div id="toc-container" class="float-right">
+            <div id="toc-container">
                 <div id="toc">
                     <p><strong>文章目录</strong></p>
                     {{str2html .Header}}
