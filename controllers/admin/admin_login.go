@@ -2,8 +2,8 @@ package admin
 
 import (
     "net/http"
-    "blog/controllers/base"
-    "blog/models/db"
+    "nest/controllers/base"
+    "nest/models/db"
     "fmt"
     "crypto/md5"
     "encoding/hex"

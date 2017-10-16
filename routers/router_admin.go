@@ -3,7 +3,7 @@ package routers
 
 import (
     "github.com/astaxie/beego"
-    "blog/controllers/admin"
+    "nest/controllers/admin"
 )
 
 func init()  {

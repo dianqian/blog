@@ -1,8 +1,8 @@
 package admin
 
 import (
-    "blog/controllers/base"
-    "blog/common"
+    "nest/controllers/base"
+    "nest/common"
     "github.com/astaxie/beego/logs"
     "fmt"
 )

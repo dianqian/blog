@@ -3,7 +3,7 @@ package base
 import (
     "github.com/astaxie/beego/logs"
     "github.com/astaxie/beego"
-    "blog/models/html/htmlvisitor"
+    "nest/models/html/htmlvisitor"
 )
 
 /**

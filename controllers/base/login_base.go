@@ -2,7 +2,7 @@ package base
 
 import (
     "github.com/astaxie/beego"
-    "blog/models/db"
+    "nest/models/db"
     "github.com/astaxie/beego/logs"
     "time"
     "fmt"

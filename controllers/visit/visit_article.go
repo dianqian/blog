@@ -1,15 +1,15 @@
 package visit
 
 import (
-    "blog/controllers/base"
+    "nest/controllers/base"
     "time"
     "github.com/astaxie/beego"
     "github.com/astaxie/beego/logs"
     "fmt"
     "strings"
     "net/url"
-    "blog/models/db"
-    "blog/common"
+    "nest/models/db"
+    "nest/common"
 )
 
 /**

@@ -2,7 +2,7 @@
 package htmladmin
 
 import (
-    "blog/models/db"
+    "nest/models/db"
     "time"
 )
 

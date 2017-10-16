@@ -3,7 +3,7 @@ package db
 import (
     "github.com/astaxie/beego/orm"
     "fmt"
-    "blog/common"
+    "nest/common"
 )
 
 /**

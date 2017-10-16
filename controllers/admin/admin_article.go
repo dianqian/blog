@@ -1,15 +1,15 @@
 package admin
 
 import (
-    "blog/controllers/base"
-    "blog/common"
+    "nest/controllers/base"
+    "nest/common"
     "github.com/astaxie/beego/logs"
     "fmt"
     "net/http"
-    "blog/models/db"
+    "nest/models/db"
     "time"
     "strconv"
-    "blog/models/html/htmladmin"
+    "nest/models/html/htmladmin"
     "strings"
 )
 

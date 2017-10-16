@@ -1,110 +1,101 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width,minimum-scale=1.0" name="viewport" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="referrer" content="always" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="icon" href="/static/img/favicon.ico">
     <title>{{.Title}}</title>
-    <script>
-        !function(n,t) {
-            function e() {
-                o("nls",1)
-            }
-            function c() {
-                t.documentElement.style.display="none", u() , location.reload()
-            }function r(n){var t="";try{t=f[n]||"",t.length<99&&c()}catch(e){u()}return t}function i(n,t){try{f[n]=t,t!==f[n]&&u()}catch(e){u()}}function o(n,e){var c=999;e||(c=-1),c=new Date(+new Date+864e5*c).toGMTString();var r=n+"="+e+";path=/;secure;expires="+c;t.cookie=r}function a(n){var e=t.getElementById(n).innerHTML;i(n,e)}function l(e,c){var i=r(e),o=t.createElement(c?"script":"style");return n.execScript&&c?n.execScript(i):(o.innerHTML=i,void t.head.appendChild(o))}function u(){o("v",0)}var f,h=function(){},d=n.L={h:h,l:h,c:h};
-            try {
-                f=localStorage, d.h=a, d.l=l, d.c=o
-            }
-            catch(p) {
-                e()
-            }
-        }(this, document);
-    </script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/visit/home.css">
+
+    <!-- Custom styles for this template -->
+    <!--<link href="dashboard.css" rel="stylesheet">-->
 </head>
 
 <body>
-    {{if .Version}}
-        <script>L.c('v', {{.Version}})</script>
-    {{end}}
-    <link rel="apple-touch-icon" href="/static/img/jiaoshou.jpg" />
-    <link rel="search" type="application/opensearchdescription+xml" href="//{{.Domain}}/opensearch.xml" title="{{.BTitle}}" />
 
-    <!---->
-
-    <link rel="stylesheet" type="text/css" href="/static/css/st_blog.css">
-    <!--<link rel="stylesheet" type="text/css" href="/static/css/admin/style.css">-->
-
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="//{{.Domain}}/rss.html" />
-    <meta name="description" content="{{.Description}}" />
-    <meta name="twitter:card" content="{{.Twitter.Card}}" />
-    <meta name="twitter:site" content="@{{.Twitter.Site}}" />
-    <meta name="twitter:title" content="{{.Title}}" />
-    <meta name="twitter:description" content="{{.Description}}" />
-    <meta name="twitter:image" content="https://{{.Twitter.Image}}" />
-    <div class="container">
-        <div class="left-col">
-            <div class="intrude-less">
-                <header id="header" class="inner">
-                    <div class="profilepic">
-                        <a href="/"></a>
-                    </div>
-                    <h1><a href="/">狐狸精</a></h1>
-                    <p class="subtitle">狐狸精喜上唐僧</p>
-
-                    <!--主导航-->
-                    <nav id="main-nav">
-                        <ul>
-                            <li class="on"><a href="/"><span>首页</span></a></li>
-                            <li class="on"><a href="/topics.html"><span>专题</span></a></li>
-                            <li class="on"><a href="/archives.html"><span>归档</span></a></li>
-                            <li class="on"><a href="/roll.html"><span>友链</span></a></li>
-                            <li class="on"><a href="/about.html"><span>关于</span></a></li>
-                        </ul>
-                    </nav>
-
-                    <!--子导航-->
-                    <nav id="sub-nav">
-                        <div class="social">
-                            <!--社交方式-->
-                            <a target="_blank" class="twitter external" rel="nofollow" href="//{{.Twitter.Address}}" title="Twitter" aria-label="Twitter">Twitter</a>
-                            <a target="_blank" class="rss" href="//{{.Domain}}/rss.html" title="RSS 订阅" aria-label="RSS 订阅">RSS</a>
-
-
-                            <!--🔍页进入方式-->
-                            <a class="search" href="/search.html" title="站内搜索" aria-label="站内搜索">Search</a>
-                        </div>
-                    </nav>
-                </header>
+<div class="container-fluid">
+    <div class="row">
+        <!--左侧导航栏-->
+        <header id="header" class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+            <!--头像、标题、签名-->
+            <div class="pic text-center">
+                <img src="/static/img/jiaoshou.jpg" class="rounded-circle">
+                <h4>高阶词典</h4>
+                <span class="subtitle text-muted">唐僧爱飘柔</span>
             </div>
-        </div>
 
-        <div class="mid-col">
+            <hr>
+            <!--分类导航栏-->
+            <ul class="nav nav-pills flex-column text-center">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/topics.html">专题</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/archives.html">归档</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/roll.html">友链</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html">关于</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/search.html">搜索🔍</a>
+                </li>
+            </ul>
+
+            <hr>
+            <!--社交标题栏-->
+            <!--todo: xxxxx-->
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Nav item again</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">One more nav</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Another nav item</a>
+                </li>
+            </ul>
+        </header>
+
+        <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
             <!--主要内容-->
-            <div class="mid-col-container">
+            <div class="container">
                 {{.LayoutContent}}
             </div>
 
             <!--角标-->
-            <footer id="footer" class="inner">
-                &copy; meili-inc 2017 - {{.Title}} -
+            <hr>
+            <footer id="footer" class="text-center">
+                &copy; xxxx-inc 2017 - {{.Title}} -
                 <a target="_blank" rel="nofollow designer" class="external beian" href="http://www.miitbeian.gov.cn/">{{.BeiAn}}</a>
                 <br />Powered by
                 <a target="_blank" href="#">Meili-inc Sec</a>
             </footer>
-        </div>
+        </main>
     </div>
-    <input type="hidden" id="CURRENT_PAGE" value="{{.CurrentPage}}" />
-    <input type="hidden" id="CDN_DOMAIN" value="//{{.Kodo.Domain}}" />
+</div>
 
-    <!---->
-
-    <script src="/static/js/st_ana.js"></script>
-    <script src="/static/js/st_blog.js"></script>
-    <script src="/static/js/st_highlight.js"></script>
-    <script src="/static/js/st_jq.js"></script>
-
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--todo: xxxxx-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../../../../assets/js/vendor/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>

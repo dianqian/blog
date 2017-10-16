@@ -1,9 +1,9 @@
 package visit
 
 import (
-    "blog/controllers/base"
-    "blog/models/db"
-    "blog/common"
+    "nest/controllers/base"
+    "nest/models/db"
+    "nest/common"
     "github.com/astaxie/beego/logs"
     "fmt"
 )

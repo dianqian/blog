@@ -2,13 +2,13 @@ package visit
 
 import (
 	"github.com/astaxie/beego/logs"
-	"blog/controllers/base"
+	"nest/controllers/base"
 	"fmt"
-	"blog/models/db"
+	"nest/models/db"
 	"github.com/astaxie/beego"
-	"blog/common"
+	"nest/common"
 	"time"
-	"blog/models/html/htmlvisitor"
+	"nest/models/html/htmlvisitor"
 )
 
 type HomeController struct {

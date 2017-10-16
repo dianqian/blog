@@ -4,11 +4,11 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
-	_ "blog/models/db"
-	_ "blog/routers"
+	_ "nest/models/db"
+	_ "nest/routers"
 	"fmt"
 	"github.com/astaxie/beego/logs"
-	"blog/common"
+	"nest/common"
 )
 
 func main() {

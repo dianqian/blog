@@ -2,8 +2,8 @@ package routers
 
 import (
     "github.com/astaxie/beego"
-    "blog/controllers/visit"
-    "blog/controllers"
+    "nest/controllers/visit"
+    "nest/controllers"
 )
 
 func init() {
@@ -33,8 +33,6 @@ func init() {
 
     // user相关的页面
     //
-
-
 
     // test
     beego.Router("/test/", &controllers.TestController{})

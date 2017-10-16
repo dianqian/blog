@@ -5,7 +5,7 @@ import (
     "github.com/astaxie/beego/logs"
     "fmt"
     "time"
-    "blog/models/db"
+    "nest/models/db"
 )
 
 type ArticleTitleInfo struct {
