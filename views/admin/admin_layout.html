@@ -1,117 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" type="text/css" href="/static/css/editor.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-
-    <script src="/static/js/admin/jquery.js"></script>
-    <script src="/static/js/admin/jquery-ui.js"></script>
-    <script src="/static/js/admin/typecho.js"></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!--网页标题，图标-->
     <link rel="icon" href="/static/img/jiaoshou.jpg">
     <title>{{.Title}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/admin/admin.css" rel="stylesheet">
+    <!--markdown相关的-->
+    <link href="/static/css/bootstrap-markdown.min.css" rel="stylesheet">
+    <!--datetimepicker-->
+    <link href="/static/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
 </head>
+
 <body>
-<!--上边导航栏-->
-<div class="typecho-head-nav clearfix" role="navigation">
-    <!--控制导航栏-->
-    <nav id="typecho-nav-list">
-        <ul class="root {{if .Console}}focus{{end}}">
-            <li class="parent"><a target="_self" href="/admin/user.html">控制台</a></li>
-            <ul class="child">
-                <li class="focus">
-                    <a target="_self" href="/admin/user.html">个人设置</a>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">管理后台</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" target="_self" href="/admin/article.html">新建文章</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown-article" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">文章管理</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-article">
+                        <a class="dropdown-item" target="_self" href="/admin/articles.html">文章</a>
+                        <a class="dropdown-item" target="_self" href="/admin/drafts.html">草稿箱</a>
+                        <a class="dropdown-item" target="_self" href="/admin/trashes.html">回收站</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown-topic" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">专题管理</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-topic">
+                        <a class="dropdown-item" target="_self" href="/admin/topics.html">专题</a>
+                        <a class="dropdown-item" target="_self" href="/admin/topic.html">{{if .Edit}}编辑专题{{else}}新增专题{{end}}</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_self" href="/admin/tags.html">标签</a>
+                </li>
+
+                <!--设置相关-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown-set" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">设置</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-set">
+                        <a class="dropdown-item" href="/admin/user.html">用户</a>
+                        <a class="dropdown-item disabled" href="#">基本</a>
+                        <a class="dropdown-item disabled" href="#">阅读</a>
+                        <a class="dropdown-item" href="/admin/manager.html" target="_self">博客</a>
+                    </div>
                 </li>
             </ul>
-        </ul>
-        <ul class="root {{if .Post}}focus{{end}}">
-            <li class="parent"><a target="_self" href="/admin/article.html">撰写</a></li>
-            <ul class="child">
-                <li class="focus">
-                    <a target="_self" href="/admin/article.html">新建文章</a>
+
+            <ul class="navbar-nav float-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/user.html">{{.HTMLAdData.UserName}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout.html">登出</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_self" href="/">网站</a>
                 </li>
             </ul>
-        </ul>
-        <ul class="root {{if .Manage}}focus{{end}}">
-            <li class="parent"><a target="_self" href="/admin/articles.html">管理</a></li>
-            <ul class="child">
-                <li class="focus">
-                    <a target="_self" href="/admin/articles.html">文章</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/topics.html">专题</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/topic.html">{{if .Edit}}编辑专题{{else}}新增专题{{end}}</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/tags.html">标签</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/drafts.html">草稿箱</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/trashes.html">回收箱</a>
-                </li>
-            </ul>
-        </ul>
-        <ul class="root {{if .Setting}}focus{{end}}">
-            <li class="parent"><a target="_self" href="#">设置</a></li>
-            <ul class="child">
-                <li class="focus">
-                    <a target="_self" href="#">基本</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="#">阅读</a>
-                </li>
-                <li class="focus">
-                    <a target="_self" href="/admin/manager.html">博客设置</a>
-                </li>
-            </ul>
-        </ul>
+        </div>
     </nav>
-    <!--右侧导航内容-->
-    <div class="operate">
-        <a href="/admin/user.html"><span class="glyphicon glyphicon-user">{{.HTMLAdData.UserName}}</span></a>
-        <a href="/admin/logout.html"><span class="glyphicon glyphicon-log-out">登出</span></a>
-        <a target="_self" href="/">网站</a>
+
+    <!--主要内容-->
+    <div class="main">
+        <!--LayoutContent begin-->
+        {{.LayoutContent}}
+        <!--LayoutContent end-->
     </div>
-</div>
 
-<!--主要内容-->
-<div class="main">
-    <!--LayoutContent begin-->
-    {{.LayoutContent}}
-    <!--LayoutContent end-->
-</div>
+    <!--footer-->
+    {{template "footer.html" .}}
 
-<!--footer-->
-{{template "footer.html" .}}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
-<!--js脚本接口-->
-<script>
-    (function () {
-        $(document).ready(function () {
-            // 处理消息机制
-            (function () {
-                
-            })();
-            
-            // 导航菜单，聚焦时展开下拉菜单
-            (function () {
-                
-            })();
-        });
-    })();
-</script>
+    <!--js script-->
+    <script>window.jQuery || document.write('<script src="/static/js/jquery.min.js"><\/script>')</script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-markdown.js"></script>
+    <script src="/static/js/bootstrap-datetimepicker.js"></script>
 
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/static/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
