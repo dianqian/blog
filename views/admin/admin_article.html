@@ -10,7 +10,7 @@
     <form action="/admin/article.html" method="post" name="write-post">
         <div class="row">
             <!--左侧-->
-            <div class="col-sm-9 col-md-9 d-none d-sm-block bg-light sidebar form-group" role="main">
+            <div class="col-sm-9 col-md-9 sidebar form-group" role="main">
                 <!--可能是草稿文件-->
                 {{if .HTMLArticleEditData.Edit.IsDraft}}
                 <cite class="edit-draft-notice">
@@ -38,7 +38,7 @@
                 </p>
                 <!--确认处-->
                 <p class="submit clearfix">
-                    <span class="float-right">
+                    <span class="navbar-right">
                         <input type="hidden" name="cid" value="#"/>
                         <button type="submit" name="do" value="save" id="btn-save" class="btn">保存草稿</button>
                         <button type="submit" name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
@@ -123,7 +123,22 @@
 
     </div>
 
-    <!--<script type="text/javascript">-->
-        <!--$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});-->
-    <!--</script>-->
+    <!--日期设置-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.form_datetime').datetimepicker({
+                language:  'fr',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1
+            });
+        });
+    </script>
+
+    <!---->
+
 </div>

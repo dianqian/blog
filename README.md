@@ -14,15 +14,29 @@
     
 ## 技术点
 
-1. 后端采用beego的框架实现，其中，beego是go语言开发的web框架；
-2. 前端目前使用html的实现，后续将采用[getbootstrap](https://getbootstrap.com)进行前端实现；
+### 后端实现
+
+后端采用beego的框架实现，其中，beego是go语言开发的web框架；
+
+### 前端框架
+
+前端基本package采用[Bootstrap3](http://v3.bootcss.com/)。所有开发在此基础上完成。
+
+#### visit
+
+#### admin
+
+涉及到的技术点为：
+    
+1. 基础组件[Bootstrap3](http://v3.bootcss.com/)；
+2. 文章编辑采用markdown的方式，利用[toopay/bootstrap-markdown](http://www.codingdrama.com/bootstrap-markdown/)
+3. 时间插件采用[smalot/bootstrap-datetimepicker](https://github.com/smalot/bootstrap-datetimepicker)
 
 ## 作者
 
 - [aqiusen@163.com](https://github.com/aqiusen)
 - [weir-lee](https://github.com/weir-lee)
 - [cyongxue](https://github.com/cyongxue)
-
 
 
 ## todo list

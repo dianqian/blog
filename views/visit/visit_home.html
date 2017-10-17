@@ -1,6 +1,10 @@
 <div id="content" class="inner">
     {{range .HTMLData.List}}
     <article class="post post-list">
+        <h1 class="title">
+            <a href="/post/{{.Slug}}.html" name="article" value="{{.ID}}" methods="get">{{.Title}}</a>
+        </h1>
+
         <div class="meta float-right">
             <div class="date" style="display: inline-block">
                 <label>发布时间:</label>
@@ -13,12 +17,9 @@
             </div>
         </div>
 
-        <h1 class="title">
-            <a href="/post/{{.Slug}}.html" name="article" value="{{.ID}}" methods="get">{{.Title}}</a>
-        </h1>
         <div class="entry-content">
             <p>{{str2html .Excerpt}}[...]</p>
-            <p><a class="btn btn-secondary" href="/post/{{.Slug}}.html" role="button">继续阅读 »</a></p>
+            <p><a class="btn btn-primary" href="/post/{{.Slug}}.html" role="button">继续阅读 »</a></p>
         </div>
         <hr>
     </article>
