@@ -88,24 +88,25 @@
                         </ul>
                     </section>
                     <!--标签, 文章自带的标签显示在这里-->
-                    <section class="typecho-post-option">
+                    <section class="typecho-post-option tags_typeahead">
                         <label for="input-tags" class="control-label">标签</label>
-                        <p>
-                            <select id="input-tags" class="selectpicker show-tick" data-live-search="true" multiple>
-                                <option selected>ASD</option>
-                                <option>Bla</option>
-                                <option>Ble</option>
-                                <option>ASD1</option>
-                                <option>Bla2</option>
-                                <option>Ble3</option>
-                                <option>Ble4</option>
-                                <option>Ble5</option>
-                                <option>Ble6</option>
-                            </select>
-                        </p>
                         <!--<p>-->
-                            <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
+                            <!--<select id="input-tags" class="selectpicker show-tick" data-live-search="true" multiple>-->
+                                <!--<option selected>ASD</option>-->
+                                <!--<option>Bla</option>-->
+                                <!--<option>Ble</option>-->
+                                <!--<option>ASD1</option>-->
+                                <!--<option>Bla2</option>-->
+                                <!--<option>Ble3</option>-->
+                                <!--<option>Ble4</option>-->
+                                <!--<option>Ble5</option>-->
+                                <!--<option>Ble6</option>-->
+                            <!--</select>-->
                         <!--</p>-->
+                        <p>
+                            <input id="input-tags" type="text" value="Amsterdam,Washington" data-role="tagsinput" class="w-100"/>
+                            <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
+                        </p>
                     </section>
                     <!--其他选项-->
                     <section class="typecho-post-option category-option">
