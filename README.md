@@ -35,8 +35,8 @@
 ## 作者
 
 - [cyongxue](https://github.com/cyongxue)
-- xxx
-
+- [aqiusen@163.com](https://github.com/aqiusen)
+- [weir-lee](https://github.com/weir-lee)
 
 ## todo list
 
