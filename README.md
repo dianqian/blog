@@ -31,6 +31,8 @@
 1. 基础组件[Bootstrap3](http://v3.bootcss.com/)；
 2. 文章编辑采用markdown的方式，利用[toopay/bootstrap-markdown](http://www.codingdrama.com/bootstrap-markdown/)
 3. 时间插件采用[smalot/bootstrap-datetimepicker](https://github.com/smalot/bootstrap-datetimepicker)
+4. 选择器采用[bootstrap-select](http://silviomoreto.github.io/bootstrap-select/)
+5. 标签输入[bootstrap-tagsinput](https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/)
 
 ## 作者
 
