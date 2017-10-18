@@ -44,3 +44,8 @@ textarea {
 .h-100 {
     height: 100% !important;
 }
+
+.description {
+    color: #adadad;
+    font-size: 12px;
+}

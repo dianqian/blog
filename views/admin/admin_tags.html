@@ -1,45 +1,34 @@
-<div class="body container">
-    <div class="typecho-page-title">
+<div class="container-fluid">
+    <div class="">
         <h2>管理标签</h2>
     </div>
-    <div class="row typecho-page-main manage-metas">
-        <div class="col-mb-12 col-tb-8" role="main">
+    <hr>
+    <div class="container-fluid">
+        <div class="container" role="main">
             <form method="post" name="manage_tags" class="operate-form">
-                <div class="typecho-list-operate clearfix">
-                    <div class="operate">
-                        <label><i class="sr-only">全选</i>
-                            <input type="checkbox" class="typecho-table-select-all" />
-                        </label>
-                        <div class="btn-group btn-drop">
-                            <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i class="i-caret-down"></i></button>
-                             <ul class="dropdown-menu">
-                             <li><a lang="你确认要删除这些标签吗?" href="/admin/api/tag-delete">删除</a></li>
-                             </ul>
-                        </div>
-                    </div>
-                </div>
-                <ul class="typecho-list-notable tag-list clearfix">
-                    {{range .TagList}}
-                    <li class="size-5"><input type="checkbox" name="mid[]" />{{.Name}}<i class="i-edit"></i></li>
-                    {{end}}
-                </ul>
+
+                <!--标签, 文章自带的标签显示在这里-->
+                <section class="typecho-post-option tags_typeahead">
+                    <label for="input-tags" class="control-label">标签</label>
+                    <p>
+                        <input id="input-tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} data-role="tagsinput" class="w-100"/>
+                        <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
+                    </p>
+                </section>
+
+                <button type="submit" class="btn btn-default" style="float: right">确认</button>
+
             </form>
         </div>
-        <div class="col-mb-12 col-tb-4" role="form">
-            <p>　　
-                《水龙吟 西湖怀古》<br>
-                东南第一名州，西湖自古多佳丽。<br>
-                临堤台榭，画船楼阁，游人歌吹。<br>
-                十里荷花，三秋桂子，四山晴翠。<br>
-                使百年南渡，一时豪杰，都忘却、平生志。<br>
-                <br>
-                可惜天旋时异，藉何人、雪当年耻？<br>
-                登临形胜，感伤今古，发挥英气。<br>
-                力士推山，天吴移水，作农桑地。<br>
-                借钱塘潮汐，为君洗尽，岳将军泪！<br>
-            </p>
-        </div>
     </div>
+
+    <!--active-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_tags").addClass("active")
+            }
+        );
+    </script>
 </div>
 <script type="text/javascript">
     (function () {

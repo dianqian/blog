@@ -1,44 +1,42 @@
-<div class="body container">
-    <div class="typecho-page-title">
+<div class="container-fluid">
+    <div class="">
         {{if .EditTopic}}
         <h2>编辑 {{with .EditTopic}}{{.Name}}{{end}}</h2>
         {{else}}
         <h2>新增专题</h2>
         {{end}}
     </div>
-    <div class="row typecho-page-main" role="form">
+    <hr>
+    <div class="container-fluid" role="form">
         <div class="col-mb-12 col-tb-6 col-tb-offset-3">
             <form action="/admin/edit-topic" method="post" enctype="application/x-www-form-urlencoded">
-                <ul class="typecho-option" id="typecho-option-item-name-0">
-                    <li>
-                        <label class="typecho-label" for="name-0-1">专题名称 *</label>
-                        <input id="name-0-1" name="name" type="text" class="text" value="{{.EditTopic.Name}}" />
-                    </li>
-                </ul>
-                <ul class="typecho-option" id="typecho-option-item-slug-1">
-                    <li>
-                        <label class="typecho-label" for="slug-0-2">专题缩略名</label>
-                        <input id="slug-0-2" name="slug" type="text" class="text" value="{{.EditTopic.Slug}}" />
-                        <p class="description">专题缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</p>
-                    </li>
-                </ul>
-                <ul class="typecho-option" id="typecho-option-item-description-3">
-                    <li>
-                        <label class="typecho-label" for="description-0-3">专题描述</label>
-                        <textarea id="description-0-3" name="description">{{.EditTopic.Desc}}</textarea>
-                        <p class="description">此文字用于描述专题, 在有的主题中它会被显示.</p>
-                    </li>
-                </ul>
-
+                <div class="form-group">
+                    <label class="typecho-label" for="name-0">专题名称 *</label>
+                    <input id="name-0" name="name" type="text" class="text form-control" value="{{.EditTopic.Name}}" />
+                </div>
+                <div class="form-group">
+                    <label class="typecho-label" for="slug-0">专题缩略名</label>
+                    <input id="slug-0" name="slug" type="text" class="text form-control" value="{{.EditTopic.Slug}}" />
+                    <p class="description">专题缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</p>
+                </div>
+                <div class="form-group">
+                    <label class="typecho-label" for="description-0">专题描述</label>
+                    <textarea id="description-0" name="description" class="form-control" rows="20">{{.EditTopic.Desc}}</textarea>
+                    <p class="description">此文字用于描述专题, 在有的主题中它会被显示.</p>
+                </div>
                 <input type="hidden" name="topic_id" value="{{.EditTopic.Id}}"/>
-                <ul class="typecho-option typecho-option-submit" id="typecho-option-item--6">
-                    <li>
-                        <button type="submit" class="btn primary">增加专题</button>
-                    </li>
-                </ul>
+                <button type="submit" class="btn btn-default">确认</button>
             </form>
         </div>
     </div>
+
+    <!--active-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_topics").addClass("active")
+            }
+        );
+    </script>
 </div>
 <script>
     (function () {

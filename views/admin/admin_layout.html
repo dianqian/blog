@@ -53,10 +53,10 @@
 
         <nav class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav nav">
-                <li class="active">
+                <li id="nav_article">
                     <a target="_self" href="/admin/article.html">新建文章</a>
                 </li>
-                <li class="dropdown">
+                <li id="nav_articles" class="dropdown">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">文章管理<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a class="" target="_self" href="/admin/articles.html">文章</a></li>
@@ -64,19 +64,19 @@
                         <li><a class="" target="_self" href="/admin/trashes.html">回收站</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
+                <li id="nav_topics" class="dropdown">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">专题管理<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a class="" target="_self" href="/admin/topics.html">专题</a></li>
                         <li><a class="" target="_self" href="/admin/topic.html">{{if .Edit}}编辑专题{{else}}新增专题{{end}}</a></li>
                     </ul>
                 </li>
-                <li class="">
+                <li id="nav_tags" class="">
                     <a target="_self" href="/admin/tags.html">标签</a>
                 </li>
 
                 <!--设置相关-->
-                <li class="dropdown">
+                <li id="nav_settings" class="dropdown">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">设置<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a class="" href="/admin/user.html">用户</a></li>

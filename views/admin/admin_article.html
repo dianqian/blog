@@ -104,7 +104,7 @@
                             <!--</select>-->
                         <!--</p>-->
                         <p>
-                            <input id="input-tags" type="text" value="Amsterdam,Washington" data-role="tagsinput" class="w-100"/>
+                            <input id="input-tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} data-role="tagsinput" class="w-100"/>
                             <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
                         </p>
                     </section>
@@ -153,6 +153,12 @@
         });
     </script>
 
-    <!---->
+    <!--active的实现-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_article").addClass("active")
+            }
+        );
+    </script>
 
 </div>

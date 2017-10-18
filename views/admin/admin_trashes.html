@@ -1,11 +1,12 @@
-<div class="body container">
+<div class="container-fluid">
     <div class="typecho-page-title">
         <h2>回收箱</h2>
     </div>
-    <div class="row typecho-page-main manage-metas">
-        <div class="col-mb-12" role="main">
+    <hr>
+    <div class="container-fluid" role="main">
+        <div class="w-100">
             <form method="post" name="manage_trash" class="operate-form">
-                <div class="typecho-list-operate clearfix">
+                <div class="clearfix" style="margin-bottom: 20px">
                     <div class="operate">
                         <label><i class="sr-only">全选</i>
                             <input type="checkbox" class="typecho-table-select-all" />
@@ -21,8 +22,8 @@
                     <div class="search" role="search">
                     </div>
                 </div>
-                <div class="typecho-table-wrap">
-                    <table class="typecho-list-table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
                         <colgroup>
                             <col width="20" />
                             <col width="40%" />
@@ -32,7 +33,7 @@
                             <col width="14%" />
                         </colgroup>
                         <thead>
-                        <tr>
+                        <tr class="alert-success">
                             <th> </th>
                             <th>标题</th>
                             <th>作者</th>
@@ -58,8 +59,43 @@
                     </table>
                 </div>
             </form>
+
+            <!--分页标记-->
+            <div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li><span>总10项</span></li>
+                        <!--条件判断是否有上一页-->
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <!--展示具体页码-->
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <!--条件判断是否有下一页-->
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
+
+    <!--active-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_articles").addClass("active")
+            }
+        );
+    </script>
 </div>
 <script>
     (function() {

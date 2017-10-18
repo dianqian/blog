@@ -1,72 +1,87 @@
-<div class="body container">
-    <div class="typecho-page-title">
+<div class="container-fluid">
+    <div class="">
         <h2>设置</h2>
     </div>
+
+    <hr>
     {{with .Blogger}}
-    <div class="row typecho-page-main">
+    <div class="container-fluid">
         <!--标题-->
-        <div class="col-mb-12 col-tb-3">
-            <p>
-                <img class="profile-avatar" src="{{.Icon}}" alt="{{.Title}}" />
-            </p>
-            <h2>{{.Title}}</h2>
-            <p>{{.SubTitle}}</p>
-            <p>上次修改: {{dateformat .LastUpdateTime "2006/01/02 15:04"}}</p>
+        <div id="header" class="col-sm-4 col-md-3 sidebar">
+            <!--头像、标题、签名-->
+            <div class="pic text-center">
+                <img src="/static/img/jiaoshou.jpg" class="rounded-circle">
+                <h4>{{.Title}}</h4>
+                <span class="subtitle text-muted">{{.SubTitle}}</span>
+                <hr>
+                <p>上次修改: {{dateformat .LastUpdateTime "2006/01/02 15:04"}}</p>
+            </div>
+
+            <hr>
+            <!--分类导航栏-->
+            <ul class="nav nav-sidebar text-center">
+                <li class="" id="change_user_info">
+                    <a href="#change_user_tab">账号信息</a>
+                </li>
+                <li class="" id="change_pwd_info" >
+                    <a href="#change_pwd_tab">密码修改</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
+
+        <div class="col-sm-8 col-md-9 sidebar container" role="form">
             <section>
                 <!--博客信息-->
                 <h3>博客信息</h3>
                 <form action="/admin/manager/info" method="post" enctype="application/x-www-form-urlencoded">
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="blog-0-4">
+                            <label class="typecho-label" for="blog-0-1">
                                 主标题 *</label>
-                            <input id="blog-0-4" name="title" type="text" class="text" value="{{.Title}}" />
+                            <input id="blog-0-1" name="title" type="text" class="text form-control" value="{{.Title}}" />
                             <p class="description">
                                 用于所有页面的title组成, 如: weisen's Blog</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="blog-0-4">
+                            <label class="typecho-label" for="blog-0-2">
                                 子标题 *</label>
-                            <input id="blog-0-4" name="subtitle" type="text" class="text" value="{{.SubTitle}}" />
+                            <input id="blog-0-2" name="subtitle" type="text" class="text form-control" value="{{.SubTitle}}" />
                             <p class="description">
                                 用于所有页面的subtitle组成, 如: weisen's Blog</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-3">
                                 备案号</label>
-                            <input id="blog-0-3" name="beian" type="text" class="text" value="{{.BeiAn}}" />
+                            <input id="blog-0-3" name="beian" type="text" class="text form-control" value="{{.BeiAn}}" />
                             <p class="description">
                                 用于底部显示, 不添加则不显示, 如: 蜀 ICP 备 12345678 号</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-4">
                                 专题前说</label>
-                            <textarea id="blog-0-4" name="seriessay">{{.SeriesSay}}</textarea>
+                            <textarea id="blog-0-4" name="seriessay" class="form-control" rows="10">{{.SeriesSay}}</textarea>
                             <p class="description">
                                 此文字用于专题前述, 会在专题最前方显示.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-5">
                                 归档前说</label>
-                            <textarea id="blog-0-5" name="archivessay">{{.ArchivesSay}}</textarea>
+                            <textarea id="blog-0-5" name="archivessay" class="form-control" rows="10">{{.ArchivesSay}}</textarea>
                             <p class="description">
                                 此文字用于归档前述, 会在归档最前方显示.</p>
                         </li>
                     </ul>
                     <ul class="typecho-option typecho-option-submit" id="typecho-option-item-submit-4">
                         <li>
-                            <button type="submit" class="btn primary">
-                                更新博客信息</button>
+                            <button type="submit" class="btn btn-default">更新博客信息</button>
                         </li>
                     </ul>
                 </form>
@@ -74,4 +89,6 @@
         </div>
     </div>
     {{end}}
+
+
 </div>
