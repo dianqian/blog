@@ -1,113 +1,122 @@
-<div class="body container">
-    <div class="typecho-page-title">
+<div class="container-fluid">
+    <div class="">
         <h2>个人设置</h2>
     </div>
+    <hr>
     {{with .Account}}
-    <div class="row typecho-page-main">
-        <!--标题-->
-        <div class="col-mb-12 col-tb-3">
-            <p>
-                <img class="profile-avatar" src="{{.Avatar}}" alt="{{.Name}}" />
-            </p>
-            <h2>{{.Name}}</h2>
-            <p>{{.Signature}}</p>
-            <p>上次登录: {{dateformat .LastLoginTime "2006/01/02 15:04"}}</p>
-            <p>上次登出: {{dateformat .LastLogoutTime "2006/01/02 15:04"}}</p>
+    <div class="container-fluid">
+
+        <!--左侧导航栏-->
+        <div id="header" class="col-sm-4 col-md-3 sidebar">
+            <!--头像、标题、签名-->
+            <div class="pic text-center">
+                <img src="/static/img/jiaoshou.jpg" class="rounded-circle">
+                <h4>{{.Name}}</h4>
+                <span class="subtitle text-muted">{{.Signature}}</span>
+                <hr>
+                <p>上次登录: {{dateformat .LastLoginTime "2006/01/02 15:04"}}</p>
+                <p>上次登出: {{dateformat .LastLogoutTime "2006/01/02 15:04"}}</p>
+            </div>
+
+            <hr>
+            <!--分类导航栏-->
+            <ul class="nav nav-sidebar text-center">
+                <li class="" id="change_user_info">
+                    <a href="#change_user_tab">账号信息</a>
+                </li>
+                <li class="" id="change_pwd_info" >
+                    <a href="#change_pwd_tab">密码修改</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
+
+        <div class="col-sm-8 col-md-9 sidebar container" role="form">
             <!--账号信息-->
-            <section>
+            <section id="change_user_tab">
                 <h3>账号信息</h3>
                 <form action="/admin/user/account" method="post" enctype="application/x-www-form-urlencoded">
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="info-0-1">
-                                个人邮箱</label>
-                            <input id="info-0-1" name="email" type="text" class="text" value="{{.Email}}" />
+                            <label class="typecho-label" for="info-0-1">个人邮箱</label>
+                            <input id="info-0-1" name="email" type="text" class="text form-control" value="{{.Email}}" />
                             <p class="description">用于发送告警邮件及其它通知, 建议填写, 如: example@163.com.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="info-0-2">
-                                个人站点</label>
-                            <input id="info-0-2" name="website" type="text" class="text" value="{{.WebSite}}" />
-                            <p class="description">
-                                选择填写,个人站点主页url 如: www.weisen.com.</p>
+                            <label class="typecho-label" for="info-0-2">个人站点</label>
+                            <input id="info-0-2" name="website" type="text" class="text form-control" value="{{.WebSite}}" />
+                            <p class="description">选择填写,个人站点主页url 如: www.weisen.com.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="info-0-3">
                                 社交</label>
-                            <input id="info-0-3" name="wechat" type="text" class="text" value="{{.Wechat}}" />
-                            <p class="description">
-                                选择填写, 如: 微博、微信、qq等.</p>
+                            <input id="info-0-3" name="wechat" type="text" class="text form-control" value="{{.Wechat}}" />
+                            <p class="description">选择填写, 如: 微博、微信、qq等.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-1">
                                 博客昵称 *</label>
-                            <input id="blog-0-1" name="nickname" type="text" class="text" value="{{.NickName}}" />
+                            <input id="blog-0-1" name="nickname" type="text" class="text form-control" value="{{.NickName}}" />
                             <p class="description">
                                 用户昵称可以与用户名不同, 用于前台显示.
                                 <br />如果你将此项留空, 将默认使用登录用户名.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-2">
                                 个人格言</label>
-                            <input id="blog-0-2" name="signature" type="text" class="text" value="{{.Signature}}" />
+                            <input id="blog-0-2" name="signature" type="text" class="text form-control" value="{{.Signature}}" />
                             <p class="description">
                                 简介或格言, 如: 生活百般滋味, 人生需要笑对.</p>
                         </li>
                     </ul>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button type="submit" class="btn primary">更新账号信息</button>
+                            <button type="submit" class="btn btn-default">更新账号信息</button>
                         </li>
                     </ul>
                 </form>
             </section>
-            <br>
+            <hr>
             <!--密码变更-->
-            <section id="change-password">
+            <section id="change_pwd_tab">
                 <h3>密码修改</h3>
                 <form action="/admin/user/password" method="post" enctype="application/x-www-form-urlencoded">
-                    <ul class="typecho-option" id="typecho-option-item-password-10">
+                    <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="password-0-11">
                                 原始密码</label>
-                            <input id="password-0-11" name="old" type="password" class="w-60" />
+                            <input id="password-0-11" name="old" type="password" class="form-control" />
                             <p class="description">
                                 该账户旧密码.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option" id="typecho-option-item-password-10">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="password-0-11">
-                                用户密码</label>
-                            <input id="password-0-11" name="new" type="password" class="w-60" />
+                            <label class="typecho-label" for="password-0-12">用户密码</label>
+                            <input id="password-0-12" name="new" type="password" class="form-control" />
                             <p class="description">
                                 为此用户分配一个密码.
                                 <br />建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option" id="typecho-option-item-confirm-11">
+                    <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="confirm-0-12">
-                                用户密码确认</label>
-                            <input id="confirm-0-12" name="confirm" type="password" class="w-60" />
+                            <label class="typecho-label" for="confirm-0-12">用户密码确认</label>
+                            <input id="confirm-0-12" name="confirm" type="password" class="form-control" />
                             <p class="description">
                                 请确认你的密码, 与上面输入的密码保持一致.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option typecho-option-submit" id="typecho-option-item-submit-13">
+                    <ul class="" id="">
                         <li>
-                            <button type="submit" class="btn primary">
-                                更新密码</button>
+                            <button type="submit" class="btn btn-default">更新密码</button>
                         </li>
                     </ul>
                 </form>
@@ -115,4 +124,12 @@
         </div>
     </div>
     {{end}}
+
+    <!--active-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_settings").addClass("active")
+            }
+        );
+    </script>
 </div>
