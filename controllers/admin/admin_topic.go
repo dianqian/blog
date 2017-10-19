@@ -7,6 +7,7 @@ import (
     "nest/models/db"
     "time"
     "net/http"
+    "nest/models/html/htmladmin"
 )
 
 
@@ -21,21 +22,33 @@ func (t *TopicEditController) Get ()  {
     // 预加载
     t.AdminBase()
 
+    topicData := htmladmin.HTMLOneTopic{}
+
     // 尝试获取参数
-    topicId, err := t.GetInt("topic_id")
+    topicId, err := t.GetInt("id")
     if err == nil {
         // 是修改，需要保存在topic id值
         topic := new(db.Topic)
         topic.Id = topicId
         err := topic.Read("id")
-        if err == nil {
-            t.SetSession("modify_topic_id", topicId)
-            t.Data["EditTopic"] = topic
+        if err != nil {
+            topicData.ErrorInfo = err.Error()
+            t.Data["HTMLOneTopic"] = topicData
+            t.TplName = "admin/admin_topic.html"
+            return
         }
+
+        // 编辑
+        t.SetSession("modify_topic_id", topicId)
+        topicData.Topic = *topic
+        t.Data["HTMLOneTopic"] = topicData
+        t.TplName = "admin/admin_topic.html"
+        return
     } else {
         // 否则，新增
     }
 
+    t.Data["HTMLOneTopic"] = topicData
     t.TplName = "admin/admin_topic.html"
     return
 }

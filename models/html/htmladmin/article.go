@@ -23,7 +23,7 @@ type TopicOfArticle struct {
 func (t *TopicOfArticle) GetTopics() []*TopicOfArticle {
     var tpOfarticle []*TopicOfArticle
     tp := new(db.Topic)
-    tps, err := tp.SelectAll()
+    tps, err := tp.Select(0,0, 0)
     if err == nil {
         for _, item := range tps {
             tpOfarticle = append(tpOfarticle, &TopicOfArticle{ID: item.Id, Name: item.Name})

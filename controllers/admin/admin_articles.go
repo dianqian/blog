@@ -40,7 +40,7 @@ func (a *ArticleManageController) Get ()  {
     articles = articles
 
     tp := new(db.Topic)
-    tps, err := tp.SelectAll()
+    tps, err := tp.Select(0, 0, 0)
     if err != nil {
         logs.Error(fmt.Sprintf("list all topics failed: %s", err.Error()))
     }

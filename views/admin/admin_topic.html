@@ -1,7 +1,17 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLOneTopic.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLOneTopic.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="">
-        {{if .EditTopic}}
-        <h2>编辑 {{with .EditTopic}}{{.Name}}{{end}}</h2>
+        {{with .HTMLOneTopic.Topic}}
+        <h2>编辑: <span class="title-name">{{.Name}}</span></h2>
         {{else}}
         <h2>新增专题</h2>
         {{end}}
@@ -9,24 +19,24 @@
     <hr>
     <div class="container-fluid" role="form">
         <div class="col-mb-12 col-tb-6 col-tb-offset-3">
-            <form action="/admin/edit-topic" method="post" enctype="application/x-www-form-urlencoded">
+            <form id="post-form">
                 <div class="form-group">
                     <label class="typecho-label" for="name-0">专题名称 *</label>
-                    <input id="name-0" name="name" type="text" class="text form-control" value="{{.EditTopic.Name}}" />
+                    <input id="name-0" name="name" type="text" class="text form-control" value="{{.HTMLOneTopic.Topic.Name}}" />
                 </div>
                 <div class="form-group">
                     <label class="typecho-label" for="slug-0">专题缩略名</label>
-                    <input id="slug-0" name="slug" type="text" class="text form-control" value="{{.EditTopic.Slug}}" />
+                    <input id="slug-0" name="slug" type="text" class="text form-control" value="{{.HTMLOneTopic.Topic.Slug}}" />
                     <p class="description">专题缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</p>
                 </div>
                 <div class="form-group">
                     <label class="typecho-label" for="description-0">专题描述</label>
-                    <textarea id="description-0" name="description" class="form-control" rows="20">{{.EditTopic.Desc}}</textarea>
+                    <textarea id="description-0" name="description" class="form-control" rows="20">{{.HTMLOneTopic.Topic.Desc}}</textarea>
                     <p class="description">此文字用于描述专题, 在有的主题中它会被显示.</p>
                 </div>
-                <input type="hidden" name="topic_id" value="{{.EditTopic.Id}}"/>
-                <button type="submit" class="btn btn-default">确认</button>
             </form>
+
+            <button type="submit" class="btn btn-default">确认</button>
         </div>
     </div>
 
@@ -38,28 +48,3 @@
         );
     </script>
 </div>
-<script>
-    (function () {
-        $(document).ready(function () {
-            var error = $('.typecho-option .error:first');
-
-            if (error.length > 0) {
-                $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
-            }
-
-            $('form').submit(function () {
-                if (this.submitted) {
-                    return false;
-                } else {
-                    this.submitted = true;
-                }
-            });
-
-            $('label input[type=text]').click(function (e) {
-                var check = $('#' + $(this).parents('label').attr('for'));
-                check.prop('checked', true);
-                return false;
-            });
-        });
-    })();
-</script>

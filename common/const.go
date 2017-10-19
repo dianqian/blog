@@ -13,6 +13,7 @@ const (
 const (
     STATUS_VALID = 1
     STATUS_UNVALID = 0
+    STATUS_ALL = -1
 )
 
 /**

@@ -61,7 +61,7 @@ func (t *Topics) getPreSay(tpForMd *TopicsInfoForMd) error {
  */
 func (t *Topics) getTopics(tpForMd *TopicsInfoForMd) error {
     tp := new(db.Topic)
-    tps, err := tp.SelectAll()
+    tps, err := tp.Select(0,0,0)
     if err != nil {
         return fmt.Errorf("read all topic failed: %s", err.Error())
     }

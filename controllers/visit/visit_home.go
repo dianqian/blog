@@ -49,11 +49,11 @@ func (h *HomeController) Get() {
 	}
 
 	// 根据page得到数据
-	page := common.PageUtil(int(cnt), pn, int(pageSize), nil)
-	articles, err := a.Select(page.Offset, page.PageSize, 100)
+	page := common.PageUtil(int(cnt), pn, int(pageSize))
+	articles, err := a.Select(0, page.PageSize, 100)
 	if err != nil {
 		logs.Error(fmt.Sprintf("article select(offset=%d, limit=%d) failed: %s",
-			page.Offset, page.PageSize, err.Error()))
+			0, page.PageSize, err.Error()))
 	}
 
 	var arDesc []htmlvisitor.ArticleIntro
