@@ -6,8 +6,8 @@ import (
     "fmt"
     "nest/models/db"
     "time"
-    "net/http"
     "nest/models/html/htmladmin"
+    "nest/common"
 )
 
 
@@ -16,8 +16,10 @@ type TopicEditController struct {
 }
 
 /**
- 展示topic
- */
+ @Description：获取一个topic的详情
+ @Param:
+ @Return：
+*/
 func (t *TopicEditController) Get ()  {
     // 预加载
     t.AdminBase()
@@ -53,9 +55,12 @@ func (t *TopicEditController) Get ()  {
     return
 }
 
+
 /**
- 提交topic
- */
+ @Description：提交一个Topic的信息
+ @Param:
+ @Return：
+*/
 func (t *TopicEditController) Post()  {
 
     // 预处理的
@@ -63,45 +68,82 @@ func (t *TopicEditController) Post()  {
 
     // 检查入参
     name := t.GetString("name")
+    if name == "" {
+        logMsg := "input name empty"
+        logs.Error(logMsg)
+        t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        t.ServeJSON()
+        return
+    }
     slugName := t.GetString("slug")
     desc := t.GetString("description")
-    // todo: 需要做一个参数检查
-    logs.Debug(fmt.Sprintf("%s, %s, %s", name, slugName, desc))
 
-    // 准备数据，进行处理
-    topic := new(db.Topic)
-    topic.Name = name
-    topic.Slug = slugName
-    topic.Desc = desc
-    topic.Updated = time.Now().Unix()
-
-    var err error
-    err = nil
-    topicInter := t.GetSession("modify_topic_id")
-    if topicInter == nil {
-        // 没有modify topic id值，执行insert
-        topic.Create = time.Now().Unix()
-        topic.Status = 1
-        err = topic.Insert()
+    // id检查
+    idData := t.GetSession("modify_topic_id")
+    if idData == nil {
+        // 新建
+        tp := &db.Topic{
+            Name: name,
+            Slug: slugName,
+            Desc: desc,
+            Create: time.Now().Unix(),
+            Status: common.STATUS_VALID,
+        }
+        tp.Updated = time.Now().Unix()
+        err := tp.Insert()
         if err != nil {
-            logs.Error(fmt.Sprintf("topic insert db failed: %s", err.Error()))
+            logMsg := fmt.Sprintf("insert for `%s` error: %s", name, err.Error())
+            logs.Error(logMsg)
+            t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_SYSTEM_ERR, logMsg, nil)
+            t.ServeJSON()
+            return
         }
     } else {
-        // 是修改，执行update
-        topic.Id = topicInter.(int)
-        err = topic.Update("name", "slug", "desc", "updated")
+        t.DelSession("modify_topic_id")
+        // 修改，如果是修改，则应该有id提交
+        id, err := t.GetInt("id")
         if err != nil {
-            logs.Error(fmt.Sprintf("topic update db failed: %s", err.Error()))
+            logMsg := fmt.Sprintf("when update topic input id error: %s", err.Error())
+            logs.Error(logMsg)
+            t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+            t.ServeJSON()
+            return
+        }
+        idInner := idData.(int)
+        if idInner != id {
+            logMsg := fmt.Sprintf("input id`%d` no equal with session's id``%d", id, idInner)
+            logs.Error(logMsg)
+            t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+            t.ServeJSON()
+            return
+        }
+
+        tp := new(db.Topic)
+        tp.Id = id
+        err = tp.Read("id")
+        if err != nil {
+            logMsg := fmt.Sprintf("select for `%d` error: %s", id, err.Error())
+            logs.Error(logMsg)
+            t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+            t.ServeJSON()
+            return
+        }
+        tp.Name = name
+        tp.Slug = slugName
+        tp.Desc = desc
+        tp.Updated = time.Now().Unix()
+        tp.Status = common.STATUS_VALID
+        err = tp.Update("name", "slug", "desc", "updated", "status")
+        if err != nil {
+            logMsg := fmt.Sprintf("update for `%d` error: %s", id, err.Error())
+            logs.Error(logMsg)
+            t.Data["json"] = common.CreateErrResponse(common.RESP_CODE_SYSTEM_ERR, logMsg, nil)
+            t.ServeJSON()
+            return
         }
     }
 
-    // 跳转操作
-    if err != nil {
-        // todo：编辑失败，需要进行提示和重新操作
-    } else {
-        // 编辑成功，跳转到list中
-        t.Redirect("/admin/topics.html", http.StatusFound)
-    }
-
+    t.Data["json"] = common.CreateOkResponse(nil)
+    t.ServeJSON()
     return
 }

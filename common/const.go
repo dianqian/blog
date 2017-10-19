@@ -11,8 +11,8 @@ const (
 )
 
 const (
-    STATUS_VALID = 1
-    STATUS_UNVALID = 0
+    STATUS_VALID = 0
+    STATUS_UNVALID = 1
     STATUS_ALL = -1
 )
 
