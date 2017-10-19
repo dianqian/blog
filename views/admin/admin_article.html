@@ -1,4 +1,6 @@
 <div class="container-fluid">
+    <div id="response_error_show"></div>
+
     <div class="subtitle">
         {{if .HTMLArticleEditData.Edit.IsEdit}}
         <h2>编辑: "{{.HTMLArticleEditData.Edit.Title}}"</h2>
@@ -7,7 +9,7 @@
         {{end}}
     </div>
 
-    <form action="/admin/article.html" method="post" name="write-post">
+    <form name="write-post" id="post-form">
         <div class="row">
             <!--左侧-->
             <div class="col-sm-9 col-md-9 sidebar form-group" role="main">
@@ -34,15 +36,7 @@
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
                     <!--<textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">{{with .HTMLArticleEditData.Edit}}{{.Content}}{{end}}</textarea>-->
-                    <textarea id="text" name="content" data-provide="markdown"></textarea>
-                </p>
-                <!--确认处-->
-                <p class="submit clearfix">
-                    <span class="navbar-right">
-                        <input type="hidden" name="cid" value="#"/>
-                        <button type="submit" name="do" value="save" id="btn-save" class="btn">保存草稿</button>
-                        <button type="submit" name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
-                    </span>
+                    <textarea id="text" name="text" data-provide="markdown"></textarea>
                 </p>
             </div>
 
@@ -55,7 +49,7 @@
                         </button>
                     </div>
                     <div class="btn-group w-50" role="group">
-                        <button type="button" class="btn btn-secondary w-100">
+                        <button type="button" class="btn btn-secondary w-100 disabled">
                             <a href="#tab-files">上传</a>
                         </button>
                     </div>
@@ -75,7 +69,7 @@
                         <label class="typecho-label">专题</label>
                         <ul>
                             <li>
-                                <input type="radio" id="serie-0" value="0" name="serie" checked="{{.HTMLArticleEditData.DefaultTp}}"/>
+                                <input type="radio" id="serie-0" value="0" name="topic" checked="{{.HTMLArticleEditData.DefaultTp}}"/>
                                 <label for="serie-0">默认专题</label>
                             </li>
                             <!--专题是基于db中的数据动态获取-->
@@ -90,22 +84,8 @@
                     <!--标签, 文章自带的标签显示在这里-->
                     <section class="typecho-post-option tags_typeahead">
                         <label for="input-tags" class="control-label">标签</label>
-                        <!--<p>-->
-                            <!--<select id="input-tags" class="selectpicker show-tick" data-live-search="true" multiple>-->
-                                <!--<option selected>ASD</option>-->
-                                <!--<option>Bla</option>-->
-                                <!--<option>Ble</option>-->
-                                <!--<option>ASD1</option>-->
-                                <!--<option>Bla2</option>-->
-                                <!--<option>Ble3</option>-->
-                                <!--<option>Ble4</option>-->
-                                <!--<option>Ble5</option>-->
-                                <!--<option>Ble6</option>-->
-                            <!--</select>-->
-                        <!--</p>-->
                         <p>
-                            <input id="input-tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} data-role="tagsinput" class="w-100"/>
-                            <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
+                            <input id="input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} data-role="tagsinput" class="w-100"/>
                         </p>
                     </section>
                     <!--其他选项-->
@@ -119,6 +99,7 @@
                         </ul>
                     </section>
                 </div>
+                <!--todo: 文件上传，待实现-->
                 <!--文件上传的id-->
                 <div id="tab-files" class="tab-content hidden">
                     <div id="upload-panel" class="p">
@@ -135,7 +116,14 @@
         </div>
     </form>
 
-    </div>
+    <!--确认处-->
+    <p class="clearfix">
+        <span class="navbar-right">
+            <input type="hidden" name="cid" value="#"/>
+            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+            <button name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
+        </span>
+    </p>
 
     <!--日期设置-->
     <script type="text/javascript">
@@ -157,8 +145,61 @@
     <script>
         $(document).ready(function () {
                 $("#nav_article").addClass("active")
+        });
+    </script>
+
+    <!--数据提交的接口-->
+    <script>
+        $(document).ready(
+            // button click监听
+            function () {
+                // 文章保存处理的
+                $("#btn-save").on("click", function () {
+                    disableButton($(this), "保存中...");
+
+                    var payload = $("#post-form").serializeArray();
+                    payload.push({"name": "do", "value": "save"});
+
+                    var postUrl = "/admin/article.html";
+                    $.post(postUrl, payload).done(function (data) {
+                        if (data.status.code !== 1000) {
+                            // success, 提示错误
+                            makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                        } else {
+                            // success，执行页面跳转
+                            location.href = "/admin/drafts.html";
+                        }
+                    }).fail(function () {
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                    });
+
+                    enableButton($(this), "保存草稿");
+                });
+
+                // 文章发布处理的
+                $("#btn-submit").on("click", function () {
+                    disableButton($(this), "发布中...");
+
+                    var payload = $("#post-form").serializeArray();
+                    payload.push({"name": "do", "value": "save"});
+
+                    var postUrl = "/admin/article.html";
+                    $.post(postUrl, payload).done(function (data) {
+                        if (data.status.code !== 1000) {
+                            // success, 提示错误
+                            makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                        } else {
+                            // success，执行页面跳转
+                            location.href = "/admin/articles.html"
+                        }
+                    }).fail(function () {
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                    });
+
+                    enableButton($(this), "发布文章");
+                })
             }
-        );
+        )
     </script>
 
 </div>

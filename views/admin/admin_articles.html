@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="subtitle">
-        <h2>管理文章<a href="/admin/edit-article">新增</a></h2>
+        <h2>管理文章<a href="/admin/article.html" class="description">新增</a></h2>
     </div>
 
     <hr>
@@ -152,22 +152,3 @@
         );
     </script>
 </div>
-
-
-<script>
-    (function() {
-        $(document).ready(function() {
-            $('.typecho-list-table').tableSelectable({
-                checkEl: 'input[type=checkbox]',
-                rowEl: 'tr',
-                selectAllEl: '.typecho-table-select-all',
-                actionEl: '.dropdown-menu a,button.btn-operate'
-            });
-
-            $('.btn-drop').dropdownMenu({
-                btnEl: '.dropdown-toggle',
-                menuEl: '.dropdown-menu'
-            });
-        });
-    })();
-</script>

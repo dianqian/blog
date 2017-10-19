@@ -1,11 +1,13 @@
 package db
 
-import "github.com/astaxie/beego/orm"
+import (
+    "github.com/astaxie/beego/orm"
+    "nest/common"
+)
 
 /**
  专题相关
  */
-
 /**
  专题处理
  */
@@ -57,17 +59,43 @@ func (t *Topic) Insert() error {
 }
 
 /**
- select出所有的topic
- */
-func (t *Topic) SelectAll() ([]*Topic, error) {
+ @Description：select by status，并且携带offset和limit
+ @Param:
+ @Return：
+*/
+func (t *Topic) Select(offset int, limit int, status int) ([]*Topic, error) {
     var topics []*Topic
 
-    qs := orm.NewOrm().QueryTable(t)
+    qs := orm.NewOrm().QueryTable(t).Offset(offset).Limit(limit)
+    if status != common.STATUS_ALL {
+        qs = qs.Filter("status", status)
+    }
+
     _, err := qs.All(&topics)
     if err != nil {
         return nil, err
     }
     return topics, nil
+}
+
+/**
+ @Description：计算status的count值
+ @Param:
+ @Return：
+ */
+func (t *Topic) Count(status int) (int64, error) {
+
+    qs := orm.NewOrm().QueryTable(t)
+    if status != common.STATUS_ALL {
+        qs = qs.Filter("status", status)
+    }
+
+    count, err := qs.Count()
+    if err != nil {
+        return 0, err
+    }
+
+    return count, nil
 }
 
 /**

@@ -5,7 +5,6 @@ import (
     "nest/common"
     "github.com/astaxie/beego/logs"
     "fmt"
-    "net/http"
     "nest/models/db"
     "time"
     "strconv"
@@ -80,46 +79,39 @@ func (a *ArticleEditController) Get ()  {
 }
 
 /**
- 文章提交的操作
- todo: 参考(https://beego.me/docs/mvc/controller/flash.md)flash数据处理的方式，表单提交错误的处理方式
- */
-func (a *ArticleEditController) Post()  {
-    // 预加载
-    a.AdminBase()
-
+ @Description：草稿保存处理
+ @Param:
+ @Return：
+*/
+func (a *ArticleEditController) dealDrafts() error {
     // 数据获取
     title := a.GetString("title")               // 标题
     slug := a.GetString("slug")                 // 连接url
     text := a.GetString("text")                 // 文本
     date := a.GetString("date")                 // 日期，格式为：2017-07-18 11:26   不涉及到秒
-    serie := a.GetString("serie")               // 专题
+    topic := a.GetString("topic")               // 专题
     tags := a.GetString("tags")                 // 标签
     isUpdate := a.GetString("update")           // 标记是否需要更新时间
 
-    // todo: 检查serie的合法性
-    tpID, err := strconv.Atoi(serie)
+    if title == "" {
+        return fmt.Errorf("`title` input empty")
+    }
+    if slug == "" {
+        return fmt.Errorf("`slug` input empty")
+    }
+    tpID, err := strconv.Atoi(topic)
     if err != nil {
-        logs.Error(fmt.Sprintf("input topic id error: %s", err.Error()))
-        return
+        return fmt.Errorf("`topic` input error")
     }
 
-    // 入参检查
-    if title == "" || slug == "" {
-        logs.Error(fmt.Sprintf("param error: title/slug"))
-        return
+    // 直接执行保存处理
+    article := &db.Article{
+        Title: title,
+        Url: slug,
+        Author: a.UserInfo.Id,
+        Updated: time.Now().Unix(),
+        Content: text,
     }
-    // todo: tags
-    tags = tags
-
-    // 构造数据
-    article := new(db.Article)
-    article.Title = title
-    article.Url = slug
-    article.Author = a.UserInfo.Id
-    article.Updated = time.Now().Unix()
-    article.Content = text
-
-    // 判读是insert还是update处理
     articleID := a.GetSession("articleid")
     if articleID != nil {
         // update
@@ -132,38 +124,123 @@ func (a *ArticleEditController) Post()  {
         article.Id = 0
         article.PublishTime = a.dealPublishTime(date).Unix()
         article.Create = time.Now().Unix()
+        article.Updated = article.Create
     }
 
-    // 动作方式的处理
-    do := a.GetString("do")
-    logs.Debug(fmt.Sprintf("action=%s", do))
+    article.Status = common.ARTICLE_STATUS_DRAFT
+    // todo: tags的处理
+    err = a.saveArticle(article, tpID, tags)
+    if err != nil {
+        return fmt.Errorf("deal drafts error: %s", err.Error())
+    }
+
+    return nil
+}
+
+/**
+ @Description：文章发布处理
+ @Param:
+ @Return：
+*/
+func (a *ArticleEditController) dealPublish () error {
+    // 数据获取
+    title := a.GetString("title")               // 标题
+    slug := a.GetString("slug")                 // 连接url
+    text := a.GetString("text")                 // 文本
+    date := a.GetString("date")                 // 日期，格式为：2017-07-18 11:26   不涉及到秒
+    topic := a.GetString("topic")               // 专题
+    tags := a.GetString("tags")                 // 标签
+    isUpdate := a.GetString("update")           // 标记是否需要更新时间
+
+    if title == "" {
+        return fmt.Errorf("`title` input empty")
+    }
+    if slug == "" {
+        return fmt.Errorf("`slug` input empty")
+    }
+    if text == "" {
+        return fmt.Errorf("`text` input empty")
+    }
+    if date == "" {
+        return fmt.Errorf("`date` input empty")
+    }
+    tpID, err := strconv.Atoi(topic)
+    if err != nil {
+        return fmt.Errorf("`topic` input error")
+    }
+    if tags == "" {
+        return fmt.Errorf("`tags` input empty")
+    }
+
+    article := &db.Article{
+        Title: title,
+        Url: slug,
+        Author: a.UserInfo.Id,
+        Updated: time.Now().Unix(),
+        Content: text,
+    }
+    articleID := a.GetSession("articleid")
+    if articleID != nil {
+        // update
+        article.Id = articleID.(int)
+        if isUpdate == "true" {
+            article.PublishTime = a.dealPublishTime(date).Unix()
+        }
+    } else {
+        // insert
+        article.Id = 0
+        article.PublishTime = a.dealPublishTime(date).Unix()
+        article.Create = time.Now().Unix()
+        article.Updated = article.Create
+    }
+
+    article.Status = common.ARTICLE_STATUS_PUBLISH
+    err = a.saveArticle(article, tpID, tags)
+    if err != nil {
+        return fmt.Errorf("deal publish error: %s", err.Error())
+    }
+
+    return nil
+}
+
+/**
+ @Description：编辑的文章提交
+ @Param:
+ @Return：
+*/
+func (a *ArticleEditController) Post()  {
+    // 预加载
+    a.AdminBase()
+
+    var err error
+    do := a.GetString("do")                     // 处理的动作
     if do == "save" {
-        article.Status = common.ARTICLE_STATUS_DRAFT                                // 草稿
-        err := a.saveArticle(article, tpID)
-        if err != nil {
-            logs.Error(err.Error())
-            return
-        }
-        a.Redirect("/admin/drafts.html", http.StatusFound)
+        err = a.dealDrafts()
     } else if do == "publish" {
-        article.Status = common.ARTICLE_STATUS_PUBLISH                              // 草稿
-        err := a.saveArticle(article, tpID)
-        if err != nil {
-            logs.Error(err.Error())
-            return
-        }
-        a.Redirect("/admin/articles.html", http.StatusFound)
-    } else if do == "auto" {
-        // todo: 自动保存的处理
+        err = a.dealPublish()
+    } else {
+        logMsg := fmt.Sprintf("input `do` type error: `%s`", do)
+        a.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAM_ERR, logMsg, nil)
+        a.ServeJSON()
+        return
     }
 
+    if err != nil {
+        logMsg := fmt.Sprintf("deal article post error: %s", err.Error())
+        a.Data["json"] = common.CreateErrResponse(common.RESP_CODE_SYSTEM_ERR, logMsg, nil)
+        a.ServeJSON()
+        return
+    }
+
+    a.Data["json"] = common.CreateOkResponse(nil)
+    a.ServeJSON()
     return
 }
 
 /**
  对于文章保存的处理
  */
-func (a *ArticleEditController) saveArticle(article *db.Article, tpID int) error {
+func (a *ArticleEditController) saveArticle(article *db.Article, tpID int, tags string) error {
     if article.Id != 0 {
         err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
         if err != nil {
