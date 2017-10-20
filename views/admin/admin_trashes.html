@@ -1,4 +1,14 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLArticleTrashData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLArticleTrashData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="typecho-page-title">
         <h2>回收箱</h2>
     </div>
@@ -43,16 +53,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{range .List}}
+                        {{range .HTMLArticleTrashData.ArticleInfo}}
                         <tr id="mid-article-{{.ID}}">
                             <td>
                                 <input type="checkbox" value="{{.ID}}" name="mid[]" />
                             </td>
-                            <td>{{.Title}}</td>
+                            <td><a href="/admin/article.html?id={{.ID}}">{{.Title}}</a></td>
                             <td>{{.Author}}</td>
-                            <td>{{if gt .SerieID 0}}专题ID:{{.SerieID}}{{else}}--{{end}}</td>
-                            <td>{{dateformat .CreateTime "2006/01/02 15:04"}}</td>
-                            <td>{{dateformat .DeleteTime "2006/01/02 15:04"}}</td>
+                            <td>{{.Topic}}</td>
+                            <td>{{dateformat .Create "2006/01/02 15:04"}}</td>
+                            <td>{{dateformat .Update "2006/01/02 15:04"}}</td>
                         </tr>
                         {{end}}
                         </tbody>
@@ -64,25 +74,29 @@
             <div>
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
-                        <li><span>总10项</span></li>
+                        {{with .HTMLArticleTrashData.PageInfo}}
+                        <li><span>总{{.TotalCount}}项</span></li>
+                        <li><span>总{{.TotalPage}}页</span></li>
                         <!--条件判断是否有上一页-->
+                        {{if .PrePage}}
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="?page_no={{.PrePageNo}}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
+                        {{end}}
+
                         <!--展示具体页码-->
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <li><a href="#">{{.PageNo}}</a></li>
                         <!--条件判断是否有下一页-->
+                        {{if .NextPage}}
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="?page_no={{.NextPageNo}}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
+                        {{end}}
+                        {{end}}
                     </ul>
                 </nav>
             </div>

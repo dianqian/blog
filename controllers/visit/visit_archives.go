@@ -8,6 +8,7 @@ import (
     "nest/models/db"
     "github.com/astaxie/beego/logs"
     "nest/common"
+    "nest/models/html/htmlvisitor"
 )
 
 type ArchiveController struct {
@@ -18,20 +19,35 @@ func (a *ArchiveController) Get()  {
     // 基础的执行
     a.HomeBase()
 
+    htmlData := htmlvisitor.HTMLArchive{}
+
     // 准备数据
     ap := new(ArchivePage)
     err := a.getPreSay(ap)
     if err != nil {
-        logs.Error(fmt.Sprintf("get archive presay failed: %s", err.Error()))
+        logMsg := fmt.Sprintf("get archive presay failed: %s", err.Error())
+        logs.Error(logMsg)
+
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArchive"] = htmlData
+        a.TplName = "visit/visit_archives.html"
+        return
     }
     err = a.getArchivesAndArticles(ap)
     if err != nil {
-        logs.Error(fmt.Sprintf("get archive and article failed: %s", err.Error()))
+        logMsg := fmt.Sprintf("get archive and article failed: %s", err.Error())
+        logs.Error(logMsg)
+
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArchive"] = htmlData
+        a.TplName = "visit/visit_archives.html"
+        return
     }
 
     // 转换为markdown的text
-    a.Data["Header"], a.Data["Content"] = common.GetHeaderAndContent([]byte(ap.generateArchiveMarkdown()))
+    htmlData.Header, htmlData.Content= common.GetHeaderAndContent([]byte(ap.generateArchiveMarkdown()))
 
+    a.Data["HTMLArchive"] = htmlData
     a.TplName = "visit/visit_archives.html"
     return
 }

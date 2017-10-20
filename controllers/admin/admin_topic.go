@@ -99,7 +99,6 @@ func (t *TopicEditController) Post()  {
             return
         }
     } else {
-        t.DelSession("modify_topic_id")
         // 修改，如果是修改，则应该有id提交
         id, err := t.GetInt("id")
         if err != nil {
@@ -141,6 +140,7 @@ func (t *TopicEditController) Post()  {
             t.ServeJSON()
             return
         }
+        t.DelSession("modify_topic_id")
     }
 
     t.Data["json"] = common.CreateOkResponse(nil)

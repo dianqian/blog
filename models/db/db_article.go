@@ -67,17 +67,14 @@ func (a *Article) Insert() (int64, error) {
  */
 func (a *Article) Count(status int) (int64, error) {
     qs := orm.NewOrm().QueryTable(a)
-    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
-        // 输入的status正确，就取具体的status
+    if status != common.ARTICLE_STATUS_ALL {
         qs = qs.Filter("status", status)
-    } else {
-        // todo: 输入不合理的，暂不操作，后期加入error输出
     }
 
     // 得到count
     cnt, err := qs.Count()
     if err != nil {
-        return 0, fmt.Errorf("get article count failed: %s", err.Error())
+        return 0, fmt.Errorf("table Article: %s", err.Error())
     }
 
     return cnt, nil
@@ -90,11 +87,8 @@ func (a *Article) Select(offset int, limit int, status int) ([]*Article, error) 
     var articles []*Article
 
     qs := orm.NewOrm().QueryTable(a).Offset(offset).Limit(limit)
-    if status == common.ARTICLE_STATUS_DELETE || status == common.ARTICLE_STATUS_DRAFT || status == common.ARTICLE_STATUS_PUBLISH {
-        // 输入的status正确，就取具体的status
+    if status != common.ARTICLE_STATUS_ALL {
         qs = qs.Filter("status", status)
-    } else {
-        // todo: 输入不合理的，暂不操作，后期加入error输出
     }
 
     _, err := qs.All(&articles)
@@ -213,6 +207,22 @@ func (a *ArticleTopic) SelectByArticle(aID int) ([]*ArticleTopic, error) {
         return nil, err
     }
     return at, nil
+}
+
+/**
+ 基于article id查相关的文章数
+ */
+func (a *ArticleTopic) CountForArticle(tpID int) (int, error)  {
+    qs := orm.NewOrm().QueryTable(a)
+    qs= qs.Filter("topic_id", tpID)
+
+    // 得到count
+    cnt, err := qs.Count()
+    if err != nil {
+        return 0, fmt.Errorf("table ArticleTopic: %s", err.Error())
+    }
+
+    return int(cnt), nil
 }
 
 /**

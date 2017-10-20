@@ -1,9 +1,19 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLUserData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLUserData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="">
         <h2>个人设置</h2>
     </div>
     <hr>
-    {{with .Account}}
+    {{with .HTMLUserData.User}}
     <div class="container-fluid">
 
         <!--左侧导航栏-->
@@ -34,7 +44,7 @@
             <!--账号信息-->
             <section id="change_user_tab">
                 <h3>账号信息</h3>
-                <form action="/admin/user/account" method="post" enctype="application/x-www-form-urlencoded">
+                <form id="user-post-form">
                     <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="info-0-1">个人邮箱</label>
@@ -76,18 +86,14 @@
                                 简介或格言, 如: 生活百般滋味, 人生需要笑对.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option typecho-option-submit">
-                        <li>
-                            <button type="submit" class="btn btn-default">更新账号信息</button>
-                        </li>
-                    </ul>
                 </form>
+                <button type="submit" id="btn-user-submit" class="btn btn-default">更新账号信息</button>
             </section>
             <hr>
             <!--密码变更-->
             <section id="change_pwd_tab">
                 <h3>密码修改</h3>
-                <form action="/admin/user/password" method="post" enctype="application/x-www-form-urlencoded">
+                <form id="pwd-post-form">
                     <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="password-0-11">
@@ -114,12 +120,8 @@
                                 请确认你的密码, 与上面输入的密码保持一致.</p>
                         </li>
                     </ul>
-                    <ul class="" id="">
-                        <li>
-                            <button type="submit" class="btn btn-default">更新密码</button>
-                        </li>
-                    </ul>
                 </form>
+                <button type="submit" id="btn-pwd-submit" class="btn btn-default">更新密码</button>
             </section>
         </div>
     </div>
@@ -131,5 +133,50 @@
                 $("#nav_settings").addClass("active")
             }
         );
+    </script>
+
+    <!--数据提交的接口-->
+    <script>
+        $(document).ready(function () {
+            $("#btn-user-submit").on("click", function () {
+                disableButton($(this), "更新中...");
+
+                var payload = $("#user-post-form").serializeArray();
+                var postUrl = "/admin/user/account";
+                $.post(postUrl, payload).done(function (data) {
+                    if (data.status.code !== 1000) {
+                        // fail, 提示错误
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                    } else {
+                        // success，执行页面跳转
+                        location.href = "/admin/user.html";
+                    }
+                }).fail(function () {
+                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                });
+
+                enableButton($(this), "更新用户信息");
+            });
+
+            $("#btn-pwd-submit").on("click", function () {
+                disableButton($(this), "更新中...");
+
+                var payload = $("#pwd-post-form").serializeArray();
+                var postUrl = "/admin/user/password";
+                $.post(postUrl, payload).done(function (data) {
+                    if (data.status.code !== 1000) {
+                        // fail, 提示错误
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                    } else {
+                        // success，执行页面跳转
+                        location.href = "/admin/user.html";
+                    }
+                }).fail(function () {
+                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                });
+
+                enableButton($(this), "更新密码");
+            })
+        })
     </script>
 </div>

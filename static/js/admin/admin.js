@@ -6,6 +6,8 @@ function makeAlertShow(element, alertType, alertMsg) {
         '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n<strong>' +
         '</strong> ' + alertMsg + '\n</div>');
     element.append($alertElement);
+
+    location.href = '#' + element.attr("id")
 }
 
 var ALERT_SUCCESS = "alert-success";

@@ -5,7 +5,7 @@ package common
  */
 const (
     PAGE_NO_DEFAULT = 1             // 缺省的页码
-    PAGE_SIZE_DEFAULT = 1          // 缺省页条目size
+    PAGE_SIZE_DEFAULT = 20          // 缺省页条目size
 )
 
 /**

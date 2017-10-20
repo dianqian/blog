@@ -2,7 +2,6 @@ package db
 
 import (
     "github.com/astaxie/beego/orm"
-    "fmt"
 )
 
 /**
@@ -60,6 +59,19 @@ func (tg *Tag) Insert() error {
 }
 
 /**
+ tag delete
+ */
+func (tg *Tag) Delete() error {
+
+    _, err := orm.NewOrm().Delete(tg)
+   if err != nil {
+       return err
+   }
+
+   return nil
+}
+
+/**
  all tags
  todo: 缺少对于status的过滤
  */
@@ -90,7 +102,7 @@ func (tg *Tag) GetByIDs(ids []int) ([]*Tag, error) {
     var tags []*Tag
 
     if len(ids) <= 0 {
-        return nil, fmt.Errorf("no input id")
+        return []*Tag{}, nil
     }
 
     qs := orm.NewOrm().QueryTable(tg).Filter("id__in", ids)

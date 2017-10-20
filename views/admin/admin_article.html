@@ -1,9 +1,17 @@
 <div class="container-fluid">
-    <div id="response_error_show"></div>
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLArticleEditData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLArticleEditData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
 
     <div class="subtitle">
-        {{if .HTMLArticleEditData.Edit.IsEdit}}
-        <h2>编辑: "{{.HTMLArticleEditData.Edit.Title}}"</h2>
+        {{if .HTMLArticleEditData.Article.IsEdit}}
+        <h2>编辑: "{{.HTMLArticleEditData.Article.Title}}"</h2>
         {{else}}
         <h2>撰写文章</h2>
         {{end}}
@@ -14,29 +22,35 @@
             <!--左侧-->
             <div class="col-sm-9 col-md-9 sidebar form-group" role="main">
                 <!--可能是草稿文件-->
-                {{if .HTMLArticleEditData.Edit.IsDraft}}
                 <cite class="edit-draft-notice">
-                    你正在编辑的是草稿，你也可以
-                    <a href="#">删除它</a>
+                    <!--草稿-->
+                    {{if eq 2 .HTMLArticleEditData.Article.Status}}
+                    你正在编辑的是<strong>"草稿"</strong>状态文章，你可以<a href="#button_tab">发布</a> or <a href="#button_tab">继续保存</a> or <a href="#button_tab">删除</a>
+                    <!--回收-->
+                    {{else if eq 0 .HTMLArticleEditData.Article.Status}}
+                    你正在编辑的是<strong>"删除"</strong>状态文章，你可以<a href="#button_tab">继续删除</a> or <a href="#button_tab">存为草稿</a>
+                    <!--发布-->
+                    {{else if eq 1 .HTMLArticleEditData.Article.Status}}
+                    你正在编辑的是<strong>"发布"</strong>状态文章，你可以<a href="#button_tab">继续发布</a> or <a href="#button_tab">存为草稿</a>
+                    {{end}}
                 </cite>
-                {{end}}
+
                 <!--标题title-->
                 <p class="title">
                     <label for="title" class="sr-only">标题</label>
-                    <input type="text" id="title" name="title" autocomplete="off" {{with .HTMLArticleEditData.Edit}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">
+                    <input type="text" id="title" name="title" autocomplete="off" {{with .HTMLArticleEditData.Article}}value="{{.Title}}"{{end}} placeholder="标题" class="w-100 text title">
                 </p>
                 <!--文章url-->
                 <p>
                     <label for="slug" class="sr-only">网址缩略名</label>
                     https://{{.HTMLAdData.Domain}}/post/
-                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .HTMLArticleEditData.Edit}}value="{{.Slug}}"{{end}}/>
+                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .HTMLArticleEditData.Article}}value="{{.Slug}}"{{end}}/>
                     .html
                 </p>
                 <!--文章内容-->
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
-                    <!--<textarea style="height: 900px" autocomplete="off" id="text" name="text" class="w-100 mono">{{with .HTMLArticleEditData.Edit}}{{.Content}}{{end}}</textarea>-->
-                    <textarea id="text" name="text" data-provide="markdown"></textarea>
+                    <textarea id="text" name="text" data-provide="markdown">{{with .HTMLArticleEditData.Article}}{{.Content}}{{end}}</textarea>
                 </p>
             </div>
 
@@ -61,25 +75,18 @@
                     <section class="typecho-post-option" role="application">
                         <label for="date">发布日期</label>
                         <p>
-                            <input readonly class="w-100 form_datetime" type="text" name="date" id="date" {{with .HTMLArticleEditData.Edit}}value="{{dateformat .PublishTime "2006-01-02 15:04"}}"{{end}}/>
+                            <input readonly class="w-100 form_datetime" type="text" name="date" id="date" {{with .HTMLArticleEditData.Article}}value="{{dateformat .PublishTime "2006-01-02 15:04"}}"{{end}}/>
                         </p>
                     </section>
                     <!--专题-->
                     <section class="typecho-post-option category-option">
                         <label class="typecho-label">专题</label>
-                        <ul>
-                            <li>
-                                <input type="radio" id="serie-0" value="0" name="topic" checked="{{.HTMLArticleEditData.DefaultTp}}"/>
-                                <label for="serie-0">默认专题</label>
-                            </li>
+                        <select id="" class="selectpicker show-tick form-control" name="topic" data-live-search="true">
                             <!--专题是基于db中的数据动态获取-->
-                            {{range $index, $item:=.HTMLArticleEditData.Series}}
-                            <li>
-                                <input type="radio" id="serie-{{$item.ID}}" value="{{$item.ID}}" name="serie" checked="{{$item.Checked}}"/>
-                                <label for="serie-{{$item.ID}}">{{$item.Name}}</label>
-                            </li>
+                            {{range $index, $item:=.HTMLArticleEditData.Topics}}
+                            <option {{if .Checked}}selected{{end}}>{{.Name}}</option>
                             {{end}}
-                        </ul>
+                        </select>
                     </section>
                     <!--标签, 文章自带的标签显示在这里-->
                     <section class="typecho-post-option tags_typeahead">
@@ -117,11 +124,23 @@
     </form>
 
     <!--确认处-->
-    <p class="clearfix">
+    <p class="clearfix" id="button_tab">
         <span class="navbar-right">
             <input type="hidden" name="cid" value="#"/>
+            <!--草稿-->
+            {{if eq 2 .HTMLArticleEditData.Article.Status}}
+            <button name="do" value="delete" id="btn-delete" class="btn">删除文章</button>
             <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
             <button name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
+            <!--回收-->
+            {{else if eq 0 .HTMLArticleEditData.Article.Status}}
+            <button name="do" value="delete" id="btn-delete" class="btn">删除文章</button>
+            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+            <!--发布-->
+            {{else if eq 1 .HTMLArticleEditData.Article.Status}}
+            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+            <button name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
+            {{end}}
         </span>
     </p>
 
@@ -153,15 +172,40 @@
         $(document).ready(
             // button click监听
             function () {
+                // 文章发布处理的
+                $("#btn-delete").on("click", function () {
+                    disableButton($(this), "删除中...");
+
+                    var payload = $("#post-form").serializeArray();
+                    payload.push({"name": "do", "value": "delete"});
+
+                    var postUrl = "/admin/article.html";
+                    $.post(postUrl, payload).done(function (data) {
+                        if (data.status.code !== 1000) {
+                            // success, 提示错误
+                            makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                        } else {
+                            // success，执行页面跳转
+                            location.href = "/admin/trashes.html"
+                        }
+                    }).fail(function () {
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                    });
+
+                    enableButton($(this), "删除文章");
+                });
+
                 // 文章保存处理的
                 $("#btn-save").on("click", function () {
                     disableButton($(this), "保存中...");
 
                     var payload = $("#post-form").serializeArray();
                     payload.push({"name": "do", "value": "save"});
+//                    console.log(payload);
 
                     var postUrl = "/admin/article.html";
                     $.post(postUrl, payload).done(function (data) {
+//                        console.log(data);
                         if (data.status.code !== 1000) {
                             // success, 提示错误
                             makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
@@ -181,7 +225,8 @@
                     disableButton($(this), "发布中...");
 
                     var payload = $("#post-form").serializeArray();
-                    payload.push({"name": "do", "value": "save"});
+                    payload.push({"name": "do", "value": "publish"});
+                    console.log(payload);
 
                     var postUrl = "/admin/article.html";
                     $.post(postUrl, payload).done(function (data) {

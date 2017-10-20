@@ -1,4 +1,14 @@
 <div id="content" class="inner">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLTopicsData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLTopicsData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <article class="post post-search">
         <h1 class="title">站内搜索</h1>
         <div class="entry-content">
@@ -20,7 +30,7 @@
                             {{range .Hits.Hits}}
                             <div class="item">
                                 <div class="title">
-                                    <a href="/post/{{.Source.Slug}}.html">{{if .Highlight.Title}}{{str2html (join .Highlight.Title "")}}{{else}}{{.Source.Title}}{{end}}</a>
+                                    <!--<a href="/post/{{.Source.Slug}}.html">{{if .Highlight.Title}}{{str2html .Highlight.Title}}{{else}}{{.Source.Title}}{{end}}</a>-->
                                 </div>
                                 <div class="desc">
                                     {{if .Source.Img}}
@@ -30,7 +40,7 @@
                                     {{end}}
                                     <div class="summary">
                                         <span class="date">{{dateformat .Source.Date "2006-01-02"}}</span>
-                                        ... {{str2html (join .Highlight.Content "...")}} ...
+                                        ... {{str2html .Highlight.Content}} ...
                                     </div>
                                 </div>
                             </div>
