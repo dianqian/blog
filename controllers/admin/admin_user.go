@@ -5,29 +5,9 @@ import (
     "time"
     "github.com/astaxie/beego/logs"
     "fmt"
-    "net/http"
+    "nest/models/html/htmladmin"
+    "nest/common"
 )
-
-/**
- 账号信息
- */
-type Account struct {
-    Name            string
-    NickName        string
-
-    Avatar          string
-    Signature       string
-
-    Email           string
-    WebSite         string
-    Wechat          string
-
-    CreateTime          time.Time
-    LastLoginTime       time.Time
-    LastLogoutTime      time.Time
-
-    LoginIp         string
-}
 
 /**
  用户信息管理
@@ -36,29 +16,34 @@ type UserManageController struct {
     base.AdminCommonCtr
 }
 
+/**
+ @Description：db 初始化设置
+ @Param:
+ @Return：
+ */
 func (u *UserManageController) Get ()  {
     u.AdminBase()
 
-    account := Account{}
+    account := htmladmin.HTMLUserData{}
     if u.UserInfo != nil {
-        account.Name = u.UserInfo.Name
-        account.NickName = u.UserInfo.NickName
+        account.User.Name = u.UserInfo.Name
+        account.User.NickName = u.UserInfo.NickName
 
         //account.Avatar = "/static/img/jiaoshou.jpg"
-        account.Avatar = u.UserInfo.Avatar
+        account.User.Avatar = u.UserInfo.Avatar
 
-        account.Email = u.UserInfo.Email
-        account.WebSite = u.UserInfo.WebSite
-        account.Wechat = u.UserInfo.Wechat
+        account.User.Email = u.UserInfo.Email
+        account.User.WebSite = u.UserInfo.WebSite
+        account.User.Wechat = u.UserInfo.Wechat
 
-        account.Signature = u.UserInfo.Signature
+        account.User.Signature = u.UserInfo.Signature
 
-        account.CreateTime = time.Unix(u.UserInfo.Create, 0)
-        account.LastLoginTime = time.Unix(u.UserInfo.LastLoginTime, 0)
-        account.LastLogoutTime = time.Unix(u.UserInfo.LastLogoutTime, 0)
+        account.User.CreateTime = time.Unix(u.UserInfo.Create, 0)
+        account.User.LastLoginTime = time.Unix(u.UserInfo.LastLoginTime, 0)
+        account.User.LastLogoutTime = time.Unix(u.UserInfo.LastLogoutTime, 0)
     }
 
-    u.Data["Account"] = account
+    u.Data["HTMLUserData"] = account
 
     u.TplName = "admin/admin_user.html"
     return
@@ -75,8 +60,10 @@ func (u *UserManageController) ChangeAvatarInfo()  {
 }
 
 /**
- 修改账户信息
- */
+ @Description：修改账户信息
+ @Param:
+ @Return：
+*/
 func (u *UserManageController) ChangeAccountInfo()  {
 
     u.UserInfo.Email = u.GetString("email")
@@ -89,46 +76,59 @@ func (u *UserManageController) ChangeAccountInfo()  {
 
     err := u.UserInfo.Update("email", "web_site", "wechat", "nick_name", "signature", "updated")
     if err != nil {
-        logs.Error(fmt.Sprintf("update email/web_site/wechat/nick_name/signature failed: %s", err.Error()))
+        logMsg := fmt.Sprintf("update email/web_site/wechat/nick_name/signature failed: %s", err.Error())
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_SYSTEM_ERR, logMsg, nil)
+        u.ServeJSON()
+        return
     }
 
-    u.Redirect("/admin/user.html", http.StatusFound)
-
+    u.Data["json"] = common.CreateOkResponse(nil)
+    u.ServeJSON()
     return
 }
 
-
 /**
- 修改登陆密码
- */
+ @Description：修改登陆密码
+ @Param:
+ @Return：
+*/
 func (u *UserManageController) ChangePassword()  {
 
     oldpw := u.GetString("old")
     newpw := u.GetString("new")
     confirm := u.GetString("confirm")
     if newpw == "" || confirm == "" || oldpw == "" {
-        logs.Error(fmt.Sprintf("input null, old/new/confirm."))
-        u.Redirect("/admin/user.html", http.StatusFound)
+        logMsg := fmt.Sprintf("input null, old/new/confirm.")
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        u.ServeJSON()
         return
     }
 
     if newpw != confirm {
-        logs.Error(fmt.Sprintf("new password not equal confirm password."))
-        u.Redirect("/admin/user.html", http.StatusFound)
+        logMsg := fmt.Sprintf("new password not equal confirm password.")
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        u.ServeJSON()
         return
     }
 
     if oldpw == newpw {
-        logs.Error(fmt.Sprintf("new password equal old password."))
-        u.Redirect("/admin/user.html", http.StatusFound)
+        logMsg := fmt.Sprintf("new password equal old password.")
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        u.ServeJSON()
         return
     }
 
     // 校验old password的合法性
     user, err := Authenticate(u.UserInfo.Name, oldpw)
     if err != nil {
-        logs.Error(fmt.Sprintf("authenticate failed: %s.", err.Error()))
-        u.Redirect("/admin/user.html", http.StatusFound)
+        logMsg := fmt.Sprintf("authenticate failed: %s.", err.Error())
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        u.ServeJSON()
         return
     }
 
@@ -137,13 +137,14 @@ func (u *UserManageController) ChangePassword()  {
     user.Updated = time.Now().Unix()
     err = user.Update("pass_word", "updated")
     if err != nil {
-        logs.Error(fmt.Sprintf("save new password failed: %s.", err.Error()))
-        u.Redirect("/admin/user.html", http.StatusFound)
+        logMsg := fmt.Sprintf("save new password failed: %s.", err.Error())
+        logs.Error(logMsg)
+        u.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAMS_ERR, logMsg, nil)
+        u.ServeJSON()
         return
     }
 
-    logs.Info(fmt.Sprintf("update password ok."))
-    u.DelLogin()
-    u.Redirect("/admin/user.html", http.StatusFound)
+    u.Data["json"] = common.CreateOkResponse(nil)
+    u.ServeJSON()
     return
 }

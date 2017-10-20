@@ -1,14 +1,24 @@
 <div id=content class=inner>
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLArchive.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLArchive.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <article class="post post-archives">
-        <h1 class=title>归档</h1>
+        <!--<h1 class=title>归档</h1>-->
         <div class="entry-content" itemprop=articleBody>
             <div id="toc-container">
                 <div id="toc">
                     <p><strong>归档列表</strong></p>
-                    {{str2html .Header}}
+                    {{str2html .HTMLArchive.Header}}
                 </div>
             </div>
-            {{str2html .Content}}
+            {{str2html .HTMLArchive.Content}}
         </div>
     </article>
 

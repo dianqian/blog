@@ -1,4 +1,14 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLArticlesPublishData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLArticlesPublishData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="subtitle">
         <h2>管理文章<a href="/admin/article.html" class="description">新增</a></h2>
     </div>
@@ -41,39 +51,42 @@
                     <table class="table table-striped">
                         <colgroup>
                             <col width="20" />
-                            <col width="6%" />
-                            <col width="40%" />
-                            <col width="" />
-                            <col width="12%" />
-                            <col width="14%" />
-                            <col width="14%" />
+                            <col width="35%" />
+                            <col width="4%" />
+                            <col width="9%" />
+                            <col width="13%" />
+                            <col width="13%" />
+                            <col width="13%" />
+                            <col width="13%" />
                         </colgroup>
                         <thead>
                         <tr class="alert-success">
                             <th> </th>
-                            <th>评论</th>
                             <th>标题</th>
+                            <th>评论</th>
                             <th>作者</th>
                             <th>专题</th>
                             <th>创建</th>
                             <th>更新</th>
+                            <th>发布</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {{range .List}}
+                        {{range .HTMLArticlesPublishData.Articles}}
                         <tr id="post-{{.ID}}">
                             <td>
                                 <input type="checkbox" value="{{.ID}}" name="cid[]"/>
                             </td>
-                            <td><a href="" class="balloon-button size-1">100</a></td>
                             <td>
-                                <a href="/admin/edit-article?articleid={{.ID}}">{{.Title}}</a>
+                                <a href="/admin/article.html?id={{.ID}}">{{.Title}}</a>
                                 <a target="_black" href="" title="浏览 {{.Title}}"><i class="i-exlink"></i></a>
                             </td>
+                            <td><a href="" class="balloon-button size-1">100</a></td>
                             <td>{{.Author}}</td>
                             <td>{{.Topic}}</td>
                             <td>{{dateformat .Create "2006/01/02 15:04"}}</td>
                             <td>{{dateformat .Update "2006/01/02 15:04"}}</td>
+                            <td>{{dateformat .Publish "2006/01/02 15:04"}}</td>
                         </tr>
                         {{end}}
                         </tbody>
@@ -117,25 +130,29 @@
             <div>
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
-                        <li><span>总10项</span></li>
+                        {{with .HTMLArticlesPublishData.PageInfo}}
+                        <li><span>总{{.TotalCount}}项</span></li>
+                        <li><span>总{{.TotalPage}}页</span></li>
                         <!--条件判断是否有上一页-->
+                        {{if .PrePage}}
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="?page_no={{.PrePageNo}}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
+                        {{end}}
+
                         <!--展示具体页码-->
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <li><a href="#">{{.PageNo}}</a></li>
                         <!--条件判断是否有下一页-->
+                        {{if .NextPage}}
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="?page_no={{.NextPageNo}}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
+                        {{end}}
+                        {{end}}
                     </ul>
                 </nav>
             </div>

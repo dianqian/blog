@@ -1,7 +1,18 @@
 <div id=content class=inner>
-    {{with .About}}
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLAbout.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLAbout.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
+    {{with .HTMLAbout.About}}
     <article class="post post-{{.ID}}" itemscope itemtype="http://schema.org/Article">
-        <h1 class=title itemprop=headline>{{.Title}}</h1>
+        <!--<h1 class=title itemprop=headline>{{.Title}}</h1>-->
+
         <div class="entry-content" itemprop=articleBody>
             <div id="toc-container">
                 <div id="toc">
@@ -12,11 +23,6 @@
             {{str2html .Content}}
         </div>
     </article>
-    <!--评论部分-->
-    <section id=comments>
-        <h1 class=title>Comments</h1>
-        <div class=total_thread data-identifier="post-{{.Slug}}" data-url="https://{{$.Domain}}/post/{{.Slug}}.html"></div>
-    </section>
     {{end}}
 
     <script>

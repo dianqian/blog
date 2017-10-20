@@ -8,12 +8,18 @@ const (
     ARTICLE_STATUS_DRAFT = 2
     ARTICLE_STATUS_DELETE = 0
     ARTICLE_STATUS_PUBLISH = 1
+    ARTICLE_STATUS_ALL = -1
 )
 
 const (
-    STATUS_VALID = 1
-    STATUS_UNVALID = 0
+    STATUS_VALID = 0
+    STATUS_UNVALID = 1
     STATUS_ALL = -1
+)
+
+const (
+    OFFSET_ZEOR = 0
+    LIMIT_ALL = -1
 )
 
 /**
@@ -22,4 +28,9 @@ const (
 const (
     BROTHER_PREV = -1
     BROTHER_NEXT = 1
+)
+
+const (
+    POST_TAG = "/post/"
+    HTML_TAG = ".html"
 )

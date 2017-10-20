@@ -3,6 +3,7 @@ package htmladmin
 
 import (
     "nest/models/db"
+    "nest/common"
     "time"
 )
 
@@ -12,7 +13,7 @@ import (
 type TopicOfArticle struct {
     ID          int                         // 专题id
     Name        string                      // 专题name
-    Checked     string                      // 是否被当前文章选中
+    Checked     bool                       // 是否被当前文章选中
 }
 
 /**
@@ -23,10 +24,10 @@ type TopicOfArticle struct {
 func (t *TopicOfArticle) GetTopics() []*TopicOfArticle {
     var tpOfarticle []*TopicOfArticle
     tp := new(db.Topic)
-    tps, err := tp.Select(0,0, 0)
+    tps, err := tp.Select(common.OFFSET_ZEOR,common.LIMIT_ALL, common.STATUS_ALL)
     if err == nil {
         for _, item := range tps {
-            tpOfarticle = append(tpOfarticle, &TopicOfArticle{ID: item.Id, Name: item.Name})
+            tpOfarticle = append(tpOfarticle, &TopicOfArticle{ID: item.Id, Name: item.Name, Checked: false})
         }
     }
 
@@ -36,24 +37,22 @@ func (t *TopicOfArticle) GetTopics() []*TopicOfArticle {
 /**
  @Description：为article设置checked的topic
  */
-func (t *TopicOfArticle) SetTopicChecked(aID int, tpOfarticle []*TopicOfArticle) ([]*TopicOfArticle, string) {
-    isDefault := "checked"
+func (t *TopicOfArticle) SetTopicChecked(aID int, tpOfarticle []*TopicOfArticle) ([]*TopicOfArticle) {
 
     ar := new(db.ArticleTopic)
     ats, err := ar.SelectByArticle(aID)
-    if err != nil {
+    if err == nil {
         for _, item := range ats {
             for _, tp := range tpOfarticle {
                 if item.TopicId == tp.ID {
-                    tp.Checked = "checked"
-                    isDefault = ""
+                    tp.Checked = true
                     break
                 }
             }
         }
     }
 
-    return tpOfarticle, isDefault
+    return tpOfarticle
 }
 
 /**
@@ -118,10 +117,10 @@ func (t *TagOfArticle) GetTags(arID int) ([]string, error) {
 /**
  @Description：编辑信息
 */
-type Edit struct {
+type ArticleData struct {
     IsEdit          bool                // 是否是编辑，编辑：true；创建：false
     Title           string
-    IsDraft         bool
+    Status          int
     Slug            string
     Content         string
     PublishTime     time.Time
@@ -129,11 +128,80 @@ type Edit struct {
 
 /**
  @Description：html article edit data information
+               编辑的文章
 */
 type HTMLArticleEditData struct {
-    Edit        Edit
-    DefaultTp   string
-    Series      []*TopicOfArticle
+    ErrorInfo   string                      // 错误的提示信息
+    Article     ArticleData
+    Topics      []*TopicOfArticle
     ArticleTags string
-    AllTags     []TagOfArticle
+}
+
+/**
+ @Description：html article edit data information
+               发布的文章数据
+*/
+type HTMLArticlesPublishData struct {
+    ErrorInfo       string
+    PageInfo        common.Page
+    Articles        []*ArticlePublishData
+}
+
+/**
+ @Description: article publish data
+ */
+type ArticlePublishData struct {
+    ID              int
+    Title           string
+    Comment         int                     // 评论数
+    Author          string
+    Topic           string
+    Create          time.Time
+    Update          time.Time
+    Publish         time.Time               // 发布时间
+}
+
+/**
+ @Description：article draft html info
+               回收文章数据
+*/
+type HTMLArticleDraftData struct {
+    ErrorInfo           string
+    PageInfo            common.Page
+    ArticleInfo         []*ArticleDraftInfo
+}
+
+/**
+ @Description: article draft info
+ */
+type ArticleDraftInfo struct {
+    ID              int
+    Title           string
+    Author          string
+    Topic           string
+    Create          time.Time
+    Update          time.Time
+}
+
+
+/**
+ @Description：article trash html info
+               回收站文章数据
+*/
+type HTMLArticleTrashData struct {
+    ErrorInfo           string
+    PageInfo            common.Page
+    ArticleInfo         []*ArticleTrashInfo
+}
+
+/**
+ @Description: article trash info
+ */
+type ArticleTrashInfo struct {
+    ID              int
+    Title           string
+    Author          string
+    Topic           string
+    Create          time.Time
+    Update          time.Time
 }

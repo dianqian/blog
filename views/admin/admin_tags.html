@@ -1,56 +1,64 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLTagsData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLTagsData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="">
         <h2>管理标签</h2>
     </div>
     <hr>
     <div class="container-fluid">
         <div class="container" role="main">
-            <form method="post" name="manage_tags" class="operate-form">
-
+            <form id="post-form">
                 <!--标签, 文章自带的标签显示在这里-->
                 <section class="typecho-post-option tags_typeahead">
                     <label for="input-tags" class="control-label">标签</label>
                     <p>
-                        <input id="input-tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} data-role="tagsinput" class="w-100"/>
+                        <input id="input-tags" name="tags" type="text" value="{{.HTMLTagsData.Tags}}" data-role="tagsinput" class="w-100"/>
                         <!--<input id="token-input-tags" name="tags" type="text" {{with .HTMLArticleEditData}}value="{{.ArticleTags}}" {{end}} class="w-100 text"/>-->
                     </p>
                 </section>
-
-                <button type="submit" class="btn btn-default" style="float: right">确认</button>
-
             </form>
+
+            <button type="submit" class="btn btn-default" id="btn-submit" style="float: right">确认</button>
         </div>
     </div>
 
     <!--active-->
     <script>
         $(document).ready(function () {
-                $("#nav_tags").addClass("active")
-            }
-        );
+            $("#nav_tags").addClass("active")
+        });
+    </script>
+
+    <!--数据提交的接口-->
+    <script>
+        $(document).ready(function () {
+            $("#btn-submit").on("click", function () {
+                disableButton($(this), "确认中...");
+
+                var payload = $("#post-form").serializeArray();
+                var postUrl = "/admin/tags.html";
+                $.post(postUrl, payload).done(function (data) {
+                    if (data.status.code !== 1000) {
+                        // fail, 提示错误
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                    } else {
+                        // success，执行页面跳转
+                        location.href = "/admin/tags.html";
+                    }
+                }).fail(function () {
+                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                });
+
+                enableButton($(this), "确认");
+            })
+        })
     </script>
 </div>
-<script type="text/javascript">
-    (function () {
-        $(document).ready(function () {
-
-            $('.typecho-list-notable').tableSelectable({
-                checkEl     :   'input[type=checkbox]',
-                rowEl       :   'li',
-                selectAllEl :   '.typecho-table-select-all',
-                actionEl    :   '.dropdown-menu a'
-            });
-
-            $('.btn-drop').dropdownMenu({
-                btnEl       :   '.dropdown-toggle',
-                menuEl      :   '.dropdown-menu'
-            });
-
-            $('.dropdown-menu button.merge').click(function () {
-                var btn = $(this);
-                btn.parents('form').attr('action', btn.attr('rel')).submit();
-            });
-
-        });
-    })();
-</script>

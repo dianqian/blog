@@ -10,46 +10,8 @@ import (
     "net/url"
     "nest/models/db"
     "nest/common"
+    "nest/models/html/htmlvisitor"
 )
-
-/**
- 文章展示的相关信息
- */
-type ArticleInfo struct {
-    ID              int                     // 文章ID
-    Title           string                  // 标题
-    Author          string                  // 作者
-    Header          string                  // 开头，实际用于文件目录list
-
-    Tags            []string                // 标签
-    Topic           TopicArticle            // 专题
-
-    Content         string                  // 文章内容
-
-    PublishTime     time.Time               // 发布时间
-    UpdateTime      time.Time               // 更新时间
-
-    CommentCount    int                     // 评论数
-
-    Slug            string                  // 略缩信息
-    Days            int
-
-    Prev            *ArticleBrother          // 上一篇
-    Next            *ArticleBrother          // 下一篇
-}
-
-type ArticleBrother struct {
-    ID              int
-    Title           string
-    Slug            string
-    PublishTime     time.Time
-}
-
-type TopicArticle struct {
-    ID              int                     // topic id值
-    Name            string                  // topic name值
-    Articles        []ArticleBrother        // 同一个topic下文章信息
-}
 
 type ArticleController struct {
     base.HomeCommonCtr
@@ -63,33 +25,57 @@ func (a *ArticleController) Get() {
     a.HomeBase()
 
     // 数据准备处理
-    article := &ArticleInfo{}
+    htmlData := &htmlvisitor.HTMLArticleData{}
 
     // 解析slug
-    err := a.parseURI(article)
+    err := a.parseURI(htmlData)
     if err != nil {
-        logs.Error(fmt.Sprintf("no input article url invalid '%s'.", a.Ctx.Request.RequestURI))
+        logMsg := fmt.Sprintf("no input article url invalid '%s'.", a.Ctx.Request.RequestURI)
+        logs.Error(logMsg)
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArticleData"] = htmlData
+        a.TplName = "visit/visit_article.html"
+        return
     }
-    originAr, err := a.setArticle(article)
+    originAr, err := a.setArticle(htmlData)
     if err != nil {
-        logs.Error(fmt.Sprintf("deal article error: %s", err.Error()))
+        logMsg := fmt.Sprintf("deal article error: %s", err.Error())
+        logs.Error(logMsg)
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArticleData"] = htmlData
+        a.TplName = "visit/visit_article.html"
+        return
     }
-    err = a.setTags(article, originAr)
+    err = a.setTags(htmlData, originAr)
     if err != nil {
-        logs.Error(fmt.Sprintf("set tags error: %s", err.Error()))
+        logMsg := fmt.Sprintf("set tags error: %s", err.Error())
+        logs.Error(logMsg)
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArticleData"] = htmlData
+        a.TplName = "visit/visit_article.html"
+        return
     }
-    err = a.setTopic(article, originAr)
+    err = a.setTopic(htmlData, originAr)
     if err != nil {
-        logs.Error(fmt.Sprintf("set topic error: %s", err.Error()))
+        logMsg := fmt.Sprintf("set topic error: %s", err.Error())
+        logs.Error(logMsg)
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArticleData"] = htmlData
+        a.TplName = "visit/visit_article.html"
+        return
     }
-    err = a.setBrother(article, originAr)
+    err = a.setBrother(htmlData, originAr)
     if err != nil {
-        logs.Error(fmt.Sprintf("set pre/next error: %s", err.Error()))
+        logMsg := fmt.Sprintf("set pre/next error: %s", err.Error())
+        logs.Error(logMsg)
+        htmlData.ErrorInfo = logMsg
+        a.Data["HTMLArticleData"] = htmlData
+        a.TplName = "visit/visit_article.html"
+        return
     }
 
-    a.Data["Article"] = article
-
-    a.Data["Copyright"] = beego.AppConfig.String("common.copyright")
+    htmlData.CopyRight = beego.AppConfig.String("common.copyright")
+    a.Data["HTMLArticleData"] = htmlData
     a.TplName = "visit/visit_article.html"
     return
 }
@@ -97,23 +83,21 @@ func (a *ArticleController) Get() {
 /**
  读取article的信息
  */
-func (a *ArticleController) setArticle(ar *ArticleInfo) (*db.Article, error) {
-    originAr := &db.Article{Url: ar.Slug}
+func (a *ArticleController) setArticle(ar *htmlvisitor.HTMLArticleData) (*db.Article, error) {
+    originAr := &db.Article{Url: ar.ArticleInfo.Slug}
     err := originAr.Read("url")
     if err != nil {
-        return nil, fmt.Errorf("no article for '%s'", ar.Slug)
+        return nil, fmt.Errorf("no article for '%s'", ar.ArticleInfo.Slug)
     }
 
-    ar.ID = originAr.Id
-    ar.Title = originAr.Title
-    ar.PublishTime = time.Unix(originAr.PublishTime, 0)
-    ar.UpdateTime = time.Unix(originAr.Updated, 0)
+    ar.ArticleInfo.ID = originAr.Id
+    ar.ArticleInfo.Title = originAr.Title
+    ar.ArticleInfo.PublishTime = time.Unix(originAr.PublishTime, 0)
+    ar.ArticleInfo.UpdateTime = time.Unix(originAr.Updated, 0)
 
     // markdown转换为html的文档，涉及header/content
-    ar.Header, ar.Content = common.GetHeaderAndContent([]byte(originAr.Content))
-    ar.Days = int(time.Now().Sub(ar.UpdateTime).Hours()) / 24
-
-    ar.CommentCount = 11
+    ar.ArticleInfo.Header, ar.ArticleInfo.Content = common.GetHeaderAndContent([]byte(originAr.Content))
+    ar.ArticleInfo.Days = int(time.Now().Sub(ar.ArticleInfo.UpdateTime).Hours()) / 24
 
     return originAr, nil
 }
@@ -121,7 +105,7 @@ func (a *ArticleController) setArticle(ar *ArticleInfo) (*db.Article, error) {
 /**
  设置prev/next内容
  */
-func (a *ArticleController) setBrother(ar *ArticleInfo, originAr *db.Article) error {
+func (a *ArticleController) setBrother(htmlData *htmlvisitor.HTMLArticleData, originAr *db.Article) error {
 
     // prev
     tmpAr := &db.Article{}
@@ -129,13 +113,13 @@ func (a *ArticleController) setBrother(ar *ArticleInfo, originAr *db.Article) er
     if err != nil {
         logs.Info(fmt.Sprintf("select prev brother failed: %s", err.Error()))
     } else {
-        prev := ArticleBrother{
+        prev := htmlvisitor.ArticleBrother{
             ID: tmpAr.Id,
             Title: tmpAr.Title,
             Slug: tmpAr.Url,
             PublishTime: time.Unix(tmpAr.PublishTime, 0),
         }
-        ar.Prev = &prev
+        htmlData.Extend.Prev = &prev
     }
 
     // next
@@ -144,13 +128,13 @@ func (a *ArticleController) setBrother(ar *ArticleInfo, originAr *db.Article) er
     if err != nil {
         logs.Info(fmt.Sprintf("select next brother failed: %s", err.Error()))
     } else {
-        next := ArticleBrother{
+        next := htmlvisitor.ArticleBrother{
             ID: tmpAr.Id,
             Title: tmpAr.Title,
             Slug: tmpAr.Url,
             PublishTime: time.Unix(tmpAr.PublishTime, 0),
         }
-        ar.Next = &next
+        htmlData.Extend.Next = &next
     }
 
     return nil
@@ -159,7 +143,7 @@ func (a *ArticleController) setBrother(ar *ArticleInfo, originAr *db.Article) er
 /**
  todo: 设置tag内容
  */
-func (a *ArticleController) setTags(ar *ArticleInfo, originAr *db.Article) error {
+func (a *ArticleController) setTags(ar *htmlvisitor.HTMLArticleData, originAr *db.Article) error {
 
     return nil
 }
@@ -168,7 +152,7 @@ func (a *ArticleController) setTags(ar *ArticleInfo, originAr *db.Article) error
 /**
  设置topic内容
  */
-func (a *ArticleController) setTopic(ar *ArticleInfo, originAr *db.Article) error {
+func (a *ArticleController) setTopic(htmlData *htmlvisitor.HTMLArticleData, originAr *db.Article) error {
 
     tp := &db.Topic{Id: originAr.Id}
     err := tp.Read("id")
@@ -182,19 +166,19 @@ func (a *ArticleController) setTopic(ar *ArticleInfo, originAr *db.Article) erro
         return fmt.Errorf("find by topic id failed: %s", err.Error())
     }
 
-    topicArticle := TopicArticle{ID: tp.Id, Name: tp.Name}
+    topicArticle := htmlvisitor.TopicArticle{ID: tp.Id, Name: tp.Name}
     for _, item := range arTps {
         tmpAr := &db.Article{Id: item.ArticleId}
         err = tmpAr.Read("id")
         if err != nil {
             logs.Error(fmt.Sprintf("find article by id'%d' failed: %s", item.ArticleId, err.Error()))
         }
-        topicArticle.Articles = append(topicArticle.Articles, ArticleBrother{
+        topicArticle.Articles = append(topicArticle.Articles, htmlvisitor.ArticleBrother{
             ID: tmpAr.Id, Title: tmpAr.Title, Slug: tmpAr.Url, PublishTime: time.Unix(tmpAr.PublishTime, 0),
         })
     }
 
-    ar.Topic = topicArticle
+    htmlData.Extend.Topic = topicArticle
 
     return nil
 }
@@ -202,7 +186,7 @@ func (a *ArticleController) setTopic(ar *ArticleInfo, originAr *db.Article) erro
 /**
  解析URI得到article的slug的信息
  */
-func (a *ArticleController) parseURI(ar *ArticleInfo) error {
+func (a *ArticleController) parseURI(ar *htmlvisitor.HTMLArticleData) error {
 
     u, err := url.Parse(a.Ctx.Request.URL.EscapedPath())
     if err != nil {
@@ -210,15 +194,18 @@ func (a *ArticleController) parseURI(ar *ArticleInfo) error {
     }
     inputURI := u.Path
 
-    if strings.HasPrefix(inputURI, "/post/") != true ||
-        strings.HasSuffix(inputURI, ".html") != true {
+    if strings.HasPrefix(inputURI, common.POST_TAG) != true ||
+        strings.HasSuffix(inputURI, common.HTML_TAG) != true {
         return fmt.Errorf("input uri invalid: %s", inputURI)
     }
 
-    result := strings.TrimLeft(inputURI, "/post/")
-    result = strings.TrimRight(result, ".html")
+    begin := strings.Index(inputURI, common.POST_TAG) + len(common.POST_TAG)
+    end := strings.LastIndex(inputURI, common.HTML_TAG)
+    if begin >= end {
+        return fmt.Errorf("input uri invalid: %s", inputURI)
+    }
 
-    ar.Slug = result
+    ar.ArticleInfo.Slug = inputURI[begin: end]
 
     return nil
 }

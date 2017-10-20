@@ -8,6 +8,7 @@ import (
     "nest/models/db"
     "github.com/astaxie/beego/logs"
     "nest/common"
+    "nest/models/html/htmlvisitor"
 )
 
 type Topics struct {
@@ -21,24 +22,46 @@ func (t *Topics) Get() {
     // 基础的执行
     t.HomeBase()
 
+    htmlData := htmlvisitor.HTMLTopicData{}
+
     // 准备数据
     tpForMd := new(TopicsInfoForMd)
     err := t.getPreSay(tpForMd)
     if err != nil {
-        logs.Error(fmt.Sprintf("get topic presay error, %s", err.Error()))
+        logMsg := fmt.Sprintf("get topic presay error, %s", err.Error())
+        logs.Error(logMsg)
+
+        htmlData.ErrorInfo = logMsg
+        t.Data["HTMLTopicData"] = htmlData
+        t.TplName = "visit/visit_topics.html"
+        return
     }
     err = t.getTopics(tpForMd)
     if err != nil {
-        logs.Error(fmt.Sprintf("get topics error, %s", err.Error()))
+        logMsg := fmt.Sprintf("get topics error, %s", err.Error())
+        logs.Error(logMsg)
+
+        htmlData.ErrorInfo = logMsg
+        t.Data["HTMLTopicData"] = htmlData
+        t.TplName = "visit/visit_topics.html"
+        return
     }
     err = t.getArticles(tpForMd)
     if err != nil {
+        logMsg := fmt.Sprintf("get article info error, %s", err.Error())
+        logs.Error(logMsg)
 
+        htmlData.ErrorInfo = logMsg
+        t.Data["HTMLTopicData"] = htmlData
+        t.TplName = "visit/visit_topics.html"
+        return
     }
 
-    t.Data["Header"], t.Data["Content"] = common.GetHeaderAndContent([]byte(tpForMd.generateTopicsMarkdown()))
+    htmlData.Header, htmlData.Content = common.GetHeaderAndContent([]byte(tpForMd.generateTopicsMarkdown()))
 
-    t.TplName = "visit/visit_series.html"
+    t.Data["HTMLTopicData"] = htmlData
+    t.TplName = "visit/visit_topics.html"
+    return
 }
 
 /**

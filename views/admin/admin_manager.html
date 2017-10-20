@@ -1,10 +1,20 @@
 <div class="container-fluid">
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLBlogData.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLBlogData.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
     <div class="">
         <h2>设置</h2>
     </div>
 
     <hr>
-    {{with .Blogger}}
+    {{with .HTMLBlogData.Blogger}}
     <div class="container-fluid">
         <!--标题-->
         <div id="header" class="col-sm-4 col-md-3 sidebar">
@@ -30,7 +40,7 @@
             <section id="change_blog_tab">
                 <!--博客信息-->
                 <h3>博客信息</h3>
-                <form action="/admin/manager/info" method="post" enctype="application/x-www-form-urlencoded">
+                <form id="blog-post-form">
                     <ul class="form-group">
                         <li>
                             <label class="typecho-label" for="blog-0-1">
@@ -76,16 +86,43 @@
                                 此文字用于归档前述, 会在归档最前方显示.</p>
                         </li>
                     </ul>
-                    <ul class="typecho-option typecho-option-submit" id="typecho-option-item-submit-4">
-                        <li>
-                            <button type="submit" class="btn btn-default">更新博客信息</button>
-                        </li>
-                    </ul>
                 </form>
+                <button type="submit" id="btn-blog-submit" class="btn btn-default">更新博客信息</button>
             </section>
         </div>
     </div>
     {{end}}
 
+    <!--active-->
+    <script>
+        $(document).ready(function () {
+                $("#nav_settings").addClass("active")
+            }
+        );
+    </script>
 
+    <!--数据提交的接口-->
+    <script>
+        $(document).ready(function () {
+            $("#btn-blog-submit").on("click", function () {
+                disableButton($(this), "更新中...");
+
+                var payload = $("#blog-post-form").serializeArray();
+                var postUrl = "/admin/manager/info";
+                $.post(postUrl, payload).done(function (data) {
+                    if (data.status.code !== 1000) {
+                        // fail, 提示错误
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                    } else {
+                        // success，执行页面跳转
+                        location.href = "/admin/manager.html";
+                    }
+                }).fail(function () {
+                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                });
+
+                enableButton($(this), "更新博客信息");
+            })
+        })
+    </script>
 </div>

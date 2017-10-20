@@ -30,7 +30,7 @@ func init()  {
     // 编辑文档页
     beego.Router("/admin/article.html", &admin.ArticleEditController{})
     // 管理文档页
-    beego.Router("/admin/articles.html", &admin.ArticleManageController{})
+    beego.Router("/admin/articles.html", &admin.PublishManageController{})
     // 草稿箱管理
     beego.Router("/admin/drafts.html", &admin.DraftManageController{})
     // 回收箱管理
@@ -45,6 +45,7 @@ func init()  {
     /*** 标签相关 ***/
     // 管理标签tags
     beego.Router("/admin/tags.html", &admin.TagManageController{})
+    beego.Router("/admin/tags/list", &admin.TagManageController{}, "get:TagsList")
 
     // todo: 待确认，具体是否需要
     beego.Router("/admin/manager.html", &admin.BlogMgController{})

@@ -25,7 +25,7 @@ func (l * LoginBaseCtr) Prepare() {
 
     l.IsLogin = l.GetSession("user_info") != nil              // 没有该session，则认为没有登陆过
     if l.IsLogin {
-        logs.Debug("the user is login")
+        //logs.Debug("the user is login")
         // 获取该用户的相关信息
         user := l.GetLogin()
         if user != nil {
@@ -34,7 +34,7 @@ func (l * LoginBaseCtr) Prepare() {
             // todo: 获取登陆用户信息失败
         }
     } else {
-        logs.Debug("the user is no login")
+        //logs.Debug("the user is no login")
     }
 
     return

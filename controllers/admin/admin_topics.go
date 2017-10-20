@@ -63,11 +63,19 @@ func (t *TopicManageController) Get ()  {
             Id: item.Id,
             Name: item.Name,
             Slug: item.Slug,
-            ArticleCount: item.ArticleCount,
             Created: time.Unix(item.Create, 0),
             Updated: time.Unix(item.Updated, 0),
             Status: item.Status,
         }
+
+        // 计算topic对应的article count
+        tpAr := db.ArticleTopic{}
+        articleCnt, err := tpAr.CountForArticle(item.Id)
+        if err != nil {
+            articleCnt = 0
+        }
+        one.ArticleCount = articleCnt
+
         tpData.TopicInfo = append(tpData.TopicInfo, one)
     }
     tpData.PageInfo = common.PageUtil(int(count), pageNo, pageSize)

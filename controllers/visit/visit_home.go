@@ -5,7 +5,6 @@ import (
 	"nest/controllers/base"
 	"fmt"
 	"nest/models/db"
-	"github.com/astaxie/beego"
 	"nest/common"
 	"time"
 	"nest/models/html/htmlvisitor"
@@ -22,38 +21,41 @@ func (h *HomeController) Get() {
 	// 基础的执行
 	h.HomeBase()
 
-	var htmlData htmlvisitor.HTMLHomeData
+	// 解析参数
+	pageNo, err := h.GetInt("page_no")
+	if err != nil {
+		pageNo = common.PAGE_NO_DEFAULT
+	}
+	pageSize, err := h.GetInt("page_size")
+	if err != nil {
+		pageSize = common.PAGE_SIZE_DEFAULT
+	}
+	offset, limit := common.GetOffsetLimit(pageNo, pageSize)
 
+	var htmlData htmlvisitor.HTMLHomeData
 	h.Data["Website"] = "beego.me"
 	h.Data["Email"] = "astaxie@gmail.com"
 
 	// 首页文章列表
 	a := new(db.Article)
-	cnt, err := a.Count(100)
+	cnt, err := a.Count(common.ARTICLE_STATUS_PUBLISH)
 	if err != nil {
-		// todo: 错误处理
-		logs.Error(fmt.Sprintf("home article count failed: %s", err.Error()))
+		logMsg := fmt.Sprintf("home article count failed: %s", err.Error())
+		logs.Error(logMsg)
+		htmlData.ErrorInfo = logMsg
+		h.Data["HTMLHomeData"] = htmlData
+		h.TplName = "visit/visit_home.html"
+		return
 	}
 
-	// 指定页码
-	pn, err := h.GetInt("pn")
+	articles, err := a.Select(offset, limit, common.ARTICLE_STATUS_PUBLISH)
 	if err != nil {
-		logs.Debug(fmt.Sprintf("no input page number"))
-		pn = 1
-	}
-	// 每页的值
-	pageSize, err := beego.AppConfig.Int(beego.AppConfig.String("runmode") + "::page_size")
-	if err != nil {
-		logs.Debug(fmt.Sprintf("no page size config."))
-		pageSize = 10
-	}
-
-	// 根据page得到数据
-	page := common.PageUtil(int(cnt), pn, int(pageSize))
-	articles, err := a.Select(0, page.PageSize, 100)
-	if err != nil {
-		logs.Error(fmt.Sprintf("article select(offset=%d, limit=%d) failed: %s",
-			0, page.PageSize, err.Error()))
+		logMsg := fmt.Sprintf("article select(offset=%d, limit=%d) failed: %s", offset, limit, err.Error())
+		logs.Error(logMsg)
+		htmlData.ErrorInfo = logMsg
+		h.Data["HTMLHomeData"] = htmlData
+		h.TplName = "visit/visit_home.html"
+		return
 	}
 
 	var arDesc []htmlvisitor.ArticleIntro
@@ -67,11 +69,10 @@ func (h *HomeController) Get() {
 		}
 		arDesc = append(arDesc, one)
 	}
-	htmlData.List = arDesc
-	htmlData.Prev = page.PageNo - 1
-	htmlData.Next = page.PageNo + 1
+	htmlData.Articles = arDesc
+	htmlData.PageInfo = common.PageUtil(int(cnt), pageNo, pageSize)
 
-	h.Data["HTMLData"] = htmlData
+	h.Data["HTMLHomeData"] = htmlData
 	h.TplName = "visit/visit_home.html"
 	return
 }
