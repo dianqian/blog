@@ -40,6 +40,7 @@
                             <col width="12%" />
                             <col width="14%" />
                             <col width="14%" />
+                            <col width="5%"  />
                         </colgroup>
                         <thead>
                         <tr class="alert-success">
@@ -49,6 +50,7 @@
                             <th>专题</th>
                             <th>创建</th>
                             <th>保存</th>
+                            <th>预览</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -62,6 +64,7 @@
                             <td>{{.Topic}}</td>
                             <td>{{dateformat .Create "2006/01/02 15:04"}}</td>
                             <td>{{dateformat .Update "2006/01/02 15:04"}}</td>
+                            <td><a href="/admin/preview.html?id={{.ID}}"><i class="material-icons">visibility</i></a></td>
                         </tr>
                         {{end}}
                         </tbody>

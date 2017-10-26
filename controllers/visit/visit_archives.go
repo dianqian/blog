@@ -73,7 +73,7 @@ func (a *ArchiveController) getPreSay(ap *ArchivePage) error {
 func (a *ArchiveController) getArchivesAndArticles(ap *ArchivePage) error {
     // 取出所有的文章
     ar := new(db.Article)
-    ars, err := ar.Select(0, 1000, 100)
+    ars, err := ar.Select(common.OFFSET_ZEOR, common.LIMIT_ALL, common.ARTICLE_STATUS_PUBLISH)
     if err != nil {
         return fmt.Errorf("find article error: %s", err.Error())
     }

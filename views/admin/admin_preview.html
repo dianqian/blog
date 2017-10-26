@@ -1,0 +1,52 @@
+<div id=content class=inner>
+    <div id="response_error_show">
+        <!--可能的错误提示-->
+        {{if .HTMLArticlePreview.ErrorInfo}}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{.HTMLArticlePreview.ErrorInfo}}.
+        </div>
+        {{end}}
+    </div>
+
+    {{with .HTMLArticlePreview}}
+    <article class="post post-{{.ArticleInfo.ID}}" itemscope itemtype="http://schema.org/Article">
+        <!--文章标题-->
+        <!--<h1 class=title itemprop=headline>{{.ArticleInfo.Title}}</h1>-->
+        <!--附加信息-->
+        <div class="meta">
+            <!--发布时间-->
+            <div class="date" style="display: inline-block">
+                <label>发布时间:</label>
+                <time itemprop=datePublished content="{{dateformat .ArticleInfo.PublishTime "2006-01-02T15:04:05Z07:00"}}">{{dateformat .ArticleInfo.PublishTime "Jan 02, 2006"}}</time>
+            </div>
+            <span>|</span>
+            <!--展示评论数-->
+            <div class="comment" style="display: inline-block;">
+                <label>评论数:</label>
+                <a href="#comments">0 Comments</a>
+            </div>
+        </div>
+
+        <!--文章内容-->
+        <div class="entry-content" itemprop=articleBody>
+            <!--文章目录-->
+            <div id="toc-container">
+                <div id="toc">
+                    <p><strong>文章目录</strong></p>
+                    {{str2html .ArticleInfo.Header}}
+                </div>
+            </div>
+            <!--文章内容-->
+            {{str2html .ArticleInfo.Content}}
+        </div>
+    </article>
+    {{end}}
+
+    <script>
+        $(document).ready(function () {
+                $("#home").addClass("active")
+            }
+        );
+    </script>
+</div>

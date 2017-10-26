@@ -106,7 +106,7 @@ func (a *Article) Select(offset int, limit int, status int) ([]*Article, error) 
  */
 func (a *Article) SelectBrother(direction int, publishTime int64) (error) {
 
-    qs := orm.NewOrm().QueryTable(a)
+    qs := orm.NewOrm().QueryTable(a).Filter("status", common.ARTICLE_STATUS_PUBLISH)
 
     if direction == common.BROTHER_PREV {
         qs = qs.Filter("publish_time__lt", publishTime)

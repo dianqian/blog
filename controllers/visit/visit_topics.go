@@ -120,6 +120,9 @@ func (t *Topics) getArticles(tpForMd *TopicsInfoForMd) error {
                 logs.Error(fmt.Sprintf("read article(id=%d) failed: %s", i.ArticleId, err.Error()))
                 continue
             }
+            if ar.Status != common.ARTICLE_STATUS_PUBLISH {
+                continue
+            }
 
             ab := ArticleBriefForTopic{Name: ar.Title, Slug: ar.Url, PublishTime: time.Unix(ar.PublishTime, 0)}
             item.ArticleBrief = append(item.ArticleBrief, &ab)

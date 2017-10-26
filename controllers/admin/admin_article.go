@@ -92,13 +92,14 @@ func (a *ArticleEditController) Post()  {
     a.AdminBase()
 
     var err error
+    var articleId int64
     do := a.GetString("do")                     // 处理的动作
     if do == "save" {
-        err = a.dealDrafts()
+        articleId, err = a.dealDrafts()
     } else if do == "publish" {
-        err = a.dealPublish()
+        articleId, err = a.dealPublish()
     } else if do == "delete" {
-        err = a.dealDelete()
+        articleId, err = a.dealDelete()
     } else {
         logMsg := fmt.Sprintf("input `do` type error: `%s`", do)
         a.Data["json"] = common.CreateErrResponse(common.RESP_CODE_PARAM_ERR, logMsg, nil)
@@ -115,7 +116,8 @@ func (a *ArticleEditController) Post()  {
 
     // 成功了就删除session
     a.DelSession("article_id")
-    a.Data["json"] = common.CreateOkResponse(nil)
+    data := map[string]int64{"id": articleId}
+    a.Data["json"] = common.CreateOkResponse(data)
     a.ServeJSON()
     return
 }
@@ -125,7 +127,7 @@ func (a *ArticleEditController) Post()  {
  @Param:
  @Return：
 */
-func (a *ArticleEditController) dealDelete() error {
+func (a *ArticleEditController) dealDelete() (int64, error) {
     // 数据获取
     title := a.GetString("title")               // 标题
     slug := a.GetString("slug")                 // 连接url
@@ -136,13 +138,13 @@ func (a *ArticleEditController) dealDelete() error {
     isUpdate := a.GetString("update")           // 标记是否需要更新时间
 
     if title == "" {
-        return fmt.Errorf("`title` input empty")
+        return 0, fmt.Errorf("`title` input empty")
     }
     if slug == "" {
-        return fmt.Errorf("`slug` input empty")
+        return 0, fmt.Errorf("`slug` input empty")
     }
     if topic == "" {
-        return fmt.Errorf("`topic` input empty")
+        return 0, fmt.Errorf("`topic` input empty")
     }
 
     // 直接执行保存处理
@@ -169,12 +171,12 @@ func (a *ArticleEditController) dealDelete() error {
     }
 
     article.Status = common.ARTICLE_STATUS_DELETE
-    err := a.saveArticle(article, topic, tags)
+    id, err := a.saveArticle(article, topic, tags)
     if err != nil {
-        return fmt.Errorf("deal drafts error: %s", err.Error())
+        return 0, fmt.Errorf("deal drafts error: %s", err.Error())
     }
 
-    return nil
+    return id, nil
 }
 
 /**
@@ -182,7 +184,7 @@ func (a *ArticleEditController) dealDelete() error {
  @Param:
  @Return：
 */
-func (a *ArticleEditController) dealDrafts() error {
+func (a *ArticleEditController) dealDrafts() (int64, error) {
     // 数据获取
     title := a.GetString("title")               // 标题
     slug := a.GetString("slug")                 // 连接url
@@ -193,13 +195,13 @@ func (a *ArticleEditController) dealDrafts() error {
     isUpdate := a.GetString("update")           // 标记是否需要更新时间
 
     if title == "" {
-        return fmt.Errorf("`title` input empty")
+        return 0, fmt.Errorf("`title` input empty")
     }
     if slug == "" {
-        return fmt.Errorf("`slug` input empty")
+        return 0, fmt.Errorf("`slug` input empty")
     }
     if topic == "" {
-        return fmt.Errorf("`topic` input empty")
+        return 0, fmt.Errorf("`topic` input empty")
     }
 
     // 直接执行保存处理
@@ -226,12 +228,12 @@ func (a *ArticleEditController) dealDrafts() error {
     }
 
     article.Status = common.ARTICLE_STATUS_DRAFT
-    err := a.saveArticle(article, topic, tags)
+    id, err := a.saveArticle(article, topic, tags)
     if err != nil {
-        return fmt.Errorf("deal drafts error: %s", err.Error())
+        return 0, fmt.Errorf("deal drafts error: %s", err.Error())
     }
 
-    return nil
+    return id, nil
 }
 
 /**
@@ -239,7 +241,7 @@ func (a *ArticleEditController) dealDrafts() error {
  @Param:
  @Return：
 */
-func (a *ArticleEditController) dealPublish () error {
+func (a *ArticleEditController) dealPublish () (int64, error) {
     // 数据获取
     title := a.GetString("title")               // 标题
     slug := a.GetString("slug")                 // 连接url
@@ -250,22 +252,22 @@ func (a *ArticleEditController) dealPublish () error {
     isUpdate := a.GetString("update")           // 标记是否需要更新时间
 
     if title == "" {
-        return fmt.Errorf("`title` input empty")
+        return 0, fmt.Errorf("`title` input empty")
     }
     if slug == "" {
-        return fmt.Errorf("`slug` input empty")
+        return 0, fmt.Errorf("`slug` input empty")
     }
     if text == "" {
-        return fmt.Errorf("`text` input empty")
+        return 0, fmt.Errorf("`text` input empty")
     }
     if date == "" {
-        return fmt.Errorf("`date` input empty")
+        return 0, fmt.Errorf("`date` input empty")
     }
     if topic == "" {
-        return fmt.Errorf("`topic` input empty")
+        return 0, fmt.Errorf("`topic` input empty")
     }
     if tags == "" {
-        return fmt.Errorf("`tags` input empty")
+        return 0, fmt.Errorf("`tags` input empty")
     }
 
     article := &db.Article{
@@ -291,43 +293,47 @@ func (a *ArticleEditController) dealPublish () error {
     }
 
     article.Status = common.ARTICLE_STATUS_PUBLISH
-    err := a.saveArticle(article, topic, tags)
+    id, err := a.saveArticle(article, topic, tags)
     if err != nil {
-        return fmt.Errorf("deal publish error: %s", err.Error())
+        return 0, fmt.Errorf("deal publish error: %s", err.Error())
     }
 
-    return nil
+    return id, nil
 }
 
 /**
  对于文章保存的处理
  */
-func (a *ArticleEditController) saveArticle(article *db.Article, tp string, tags string) error {
+func (a *ArticleEditController) saveArticle(article *db.Article, tp string, tags string) (int64, error) {
+    var id int64
     if article.Id != 0 {
         err := article.Update("title", "url", "author", "publish_time", "content", "create", "updated", "status")
         if err != nil {
-            return fmt.Errorf("article'%d' update failed: %s", article.Title, err.Error())
+            return 0, fmt.Errorf("article'%d' update failed: %s", article.Title, err.Error())
         }
         // 处理article topic
         err = a.dealTopic(article.Id, tp)
         if err != nil {
-            return fmt.Errorf("when update article, deal topic failed: %s", err.Error())
+            return 0, fmt.Errorf("when update article, deal topic failed: %s", err.Error())
         }
+        id = int64(article.Id)
     } else {
         // 新建文章
         arID, err := article.Insert()
         if err != nil {
-            return fmt.Errorf("article'%s' insert failed: %s", err.Error(), article.Title)
+            return 0, fmt.Errorf("article'%s' insert failed: %s", err.Error(), article.Title)
         }
         // 处理article topic
         err = a.dealTopic(int(arID), tp)
         if err != nil {
-            return fmt.Errorf("when insert article, deal topic failed: %s", err.Error())
+            return 0, fmt.Errorf("when insert article, deal topic failed: %s", err.Error())
         }
         // todo: 新建ArticleTag数据
+
+        id = arID
     }
 
-    return nil
+    return id, nil
 }
 
 /**

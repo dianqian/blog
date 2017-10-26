@@ -42,15 +42,14 @@
                 </p>
                 <!--文章url-->
                 <p>
-                    <label for="slug" class="sr-only">网址缩略名</label>
-                    https://{{.HTMLAdData.Domain}}/post/
-                    <input type="text" id="slug" name="slug" autocomplete="off" class="mono" {{with .HTMLArticleEditData.Article}}value="{{.Slug}}"{{end}}/>
-                    .html
+                    <label for="slug" class="sr-only">网址缩略名</label>https://{{.HTMLAdData.Domain}}/post/
+                    <input type="text" id="slug" name="slug" autocomplete="off" {{with .HTMLArticleEditData.Article}}value="{{.Slug}}"{{end}} readonly/>.html
+
                 </p>
                 <!--文章内容-->
                 <p>
                     <label for="text" class="sr-only">文章内容</label>
-                    <textarea id="text" name="text" data-provide="markdown">{{with .HTMLArticleEditData.Article}}{{.Content}}{{end}}</textarea>
+                    <textarea id="text" name="text">{{with .HTMLArticleEditData.Article}}{{.Content}}{{end}}</textarea>
                 </p>
             </div>
 
@@ -129,18 +128,21 @@
             <input type="hidden" name="cid" value="#"/>
             <!--草稿-->
             {{if eq 2 .HTMLArticleEditData.Article.Status}}
-            <button name="do" value="delete" id="btn-delete" class="btn">删除文章</button>
-            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
-            <button name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
+            <button name="do" value="delete" id="btn-delete" class="btn btn-danger">删除文章</button>
+            <button name="do" value="save" id="btn-save" class="btn btn-default">保存草稿</button>
+            <button name="do" value="publish" id="btn-submit" class="btn btn-primary">发布文章</button>
             <!--回收-->
             {{else if eq 0 .HTMLArticleEditData.Article.Status}}
-            <button name="do" value="delete" id="btn-delete" class="btn">删除文章</button>
-            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
+            <button name="do" value="delete" id="btn-delete" class="btn btn-danger">删除文章</button>
+            <button name="do" value="save" id="btn-save" class="btn btn-default">保存草稿</button>
             <!--发布-->
             {{else if eq 1 .HTMLArticleEditData.Article.Status}}
-            <button name="do" value="save" id="btn-save" class="btn">保存草稿</button>
-            <button name="do" value="publish" id="btn-submit" class="btn">发布文章</button>
+            <button name="do" value="save" id="btn-save" class="btn btn-default">保存草稿</button>
+            <button name="do" value="publish" id="btn-submit" class="btn btn-primary">发布文章</button>
             {{end}}
+
+            <!--执行预览-->
+            <button name="preview" value="preview" id="btn-preview" class="btn btn-success">生成预览</button>
         </span>
     </p>
 
@@ -201,11 +203,9 @@
 
                     var payload = $("#post-form").serializeArray();
                     payload.push({"name": "do", "value": "save"});
-//                    console.log(payload);
 
                     var postUrl = "/admin/article.html";
                     $.post(postUrl, payload).done(function (data) {
-//                        console.log(data);
                         if (data.status.code !== 1000) {
                             // success, 提示错误
                             makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
@@ -226,7 +226,6 @@
 
                     var payload = $("#post-form").serializeArray();
                     payload.push({"name": "do", "value": "publish"});
-                    console.log(payload);
 
                     var postUrl = "/admin/article.html";
                     $.post(postUrl, payload).done(function (data) {
@@ -242,9 +241,42 @@
                     });
 
                     enableButton($(this), "发布文章");
+                });
+
+                // 提交预处理的
+                $("#btn-preview").on("click", function () {
+                    disableButton($(this), "生成预览中...");
+
+                    var payload = $("#post-form").serializeArray();
+                    payload.push({"name": "do", "value": "save"});
+
+                    var postUrl = "/admin/article.html";
+                    $.post(postUrl, payload).done(function (data) {
+                        if (data.status.code !== 1000) {
+                            // success, 提示错误
+                            makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+                        } else {
+                            // success，执行页面跳转
+                            window.open("/admin/preview.html?id=" + data.result.id)
+//                            location.href = "/admin/preview.html?id=" + data.result.id;
+                        }
+                    }).fail(function () {
+                        makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+                    });
+
+                    enableButton($(this), "生成预览");
                 })
             }
         )
+    </script>
+
+    <!--title同步到slug中-->
+    <script>
+        $(document).ready(function () {
+            $("#title").on("input propertychange", function () {
+                $("#slug").val($("#title").val());
+            })
+        })
     </script>
 
 </div>

@@ -55,7 +55,7 @@
 
             <!--更新说明-->
             {{if gt .ArticleInfo.Days 0}}
-            <p class="expire-tips">提醒：本文最后更新于 {{.Days}} 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+            <p class="expire-tips">提醒：本文最后更新于 {{.ArticleInfo.Days}} 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
             {{end}}
 
             <!--评论引导-->

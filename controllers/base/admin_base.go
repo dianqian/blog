@@ -40,3 +40,25 @@ func (a *AdminCommonCtr) AdminBase() {
     a.Data["HTMLAdData"] = htmlAdData
     a.Layout = "admin/admin_layout.html"
 }
+
+/**
+ @Description：针对preview预览的admin登陆检查处理
+ @Param:
+ @Return：
+ */
+func (a *AdminCommonCtr) AdminForPreview() {
+    // 执行基础内容
+    a.CommonBase()
+
+    // 进行在线判断
+    if !a.IsLogin {
+        // 将当前的ur获取，存入session中，然后在login之后，从session中取出，恢复指定页面
+        if a.Ctx.Request.RequestURI != "/admin/login.html" {
+            a.SetSession("next_uri", a.Ctx.Request.RequestURI)
+        }
+        a.Redirect("/admin/login.html", http.StatusFound)
+        a.StopRun()
+        return
+    }
+    return
+}

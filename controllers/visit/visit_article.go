@@ -172,7 +172,12 @@ func (a *ArticleController) setTopic(htmlData *htmlvisitor.HTMLArticleData, orig
         err = tmpAr.Read("id")
         if err != nil {
             logs.Error(fmt.Sprintf("find article by id'%d' failed: %s", item.ArticleId, err.Error()))
+            continue
         }
+        if tmpAr.Status != common.ARTICLE_STATUS_PUBLISH {
+            continue
+        }
+
         topicArticle.Articles = append(topicArticle.Articles, htmlvisitor.ArticleBrother{
             ID: tmpAr.Id, Title: tmpAr.Title, Slug: tmpAr.Url, PublishTime: time.Unix(tmpAr.PublishTime, 0),
         })

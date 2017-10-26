@@ -205,3 +205,21 @@ type ArticleTrashInfo struct {
     Create          time.Time
     Update          time.Time
 }
+
+/**
+ @Description：预览文章的article
+*/
+type HTMLArticlePreview struct {
+    ErrorInfo           string
+    ArticleInfo         Article
+}
+
+// @Description：文章信息
+type Article struct {
+    ID              int                     // 文章ID
+    Title           string                  // 标题
+    Slug            string                  // 略缩信息，即用于url
+    Header          string                  // 文章目录
+    Content         string                  // 文章内容
+    PublishTime     time.Time               // 发布时间
+}

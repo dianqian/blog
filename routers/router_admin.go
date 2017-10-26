@@ -16,7 +16,7 @@ func init()  {
     beego.Router("/admin/logout.html", &admin.LogoutController{})
 
     // 管理首页
-    beego.Router("/admin", &admin.ArticleEditController{})
+    beego.Router("/admin", &admin.PublishManageController{})
     beego.Router("/admin/manager.html", &admin.BlogMgController{})
 
     // 管理员user信息管理
@@ -29,6 +29,7 @@ func init()  {
     /*** 文档管理 ***/
     // 编辑文档页
     beego.Router("/admin/article.html", &admin.ArticleEditController{})
+    beego.Router("/admin/preview.html", &admin.PreviewController{})
     // 管理文档页
     beego.Router("/admin/articles.html", &admin.PublishManageController{})
     // 草稿箱管理
