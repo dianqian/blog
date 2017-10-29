@@ -336,3 +336,8 @@ article h1.title {
         padding-left: 40px;
     }
 }
+
+.description {
+    color: #adadad;
+    font-size: 12px;
+}

@@ -37,6 +37,13 @@ func (h *HomeCommonCtr) HomeBase() {
                     visitHTML.Icon = u.Avatar
                     visitHTML.Name = u.NickName
                     visitHTML.Description = u.Signature
+                    visitHTML.Email = u.Email
+                    if strings.HasPrefix(u.WebSite, "http") == false {
+                        visitHTML.WebSite = "http://" + u.WebSite
+                    } else {
+                        visitHTML.WebSite = u.WebSite
+                    }
+                    visitHTML.Contact = u.Wechat
                 }
             }
         }

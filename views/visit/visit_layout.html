@@ -48,13 +48,15 @@
         <header id="header" class="col-sm-3 col-md-2 sidebar">
             <!--头像、标题、签名-->
             <div class="row">
-                <div class="thumbnail col-md-12 col-xs-12">
-                    <img src="{{.HTMLVisitData.Icon}}">
-                    <div class="caption">
-                        <h4>{{.HTMLVisitData.Name}}</h4>
-                        <span class="subtitle text-muted">{{.HTMLVisitData.Description}}</span>
+                <a href="#myModal" data-toggle="modal">
+                    <div class="thumbnail col-md-12 col-xs-12">
+                        <img src="{{.HTMLVisitData.Icon}}">
+                        <div class="caption">
+                            <h4>{{.HTMLVisitData.Name}}</h4>
+                            <span class="subtitle text-muted">{{.HTMLVisitData.Description}}</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!--分类导航栏-->
@@ -100,6 +102,56 @@
             </footer>
         </main>
     </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--框头-->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        作者信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="thumbnail col-md-12 col-xs-12">
+                        <img src="{{.HTMLVisitData.Icon}}">
+                        <div class="caption">
+                            <h4>{{.HTMLVisitData.Name}}</h4>
+                            <span class="subtitle text-muted">{{.HTMLVisitData.Description}}</span>
+                        </div>
+                        {{if .HTMLVisitData.Email}}
+                        <div class="caption">
+                            <label for="email">邮箱</label>
+                            <div id="email" class="subtitle text-muted">{{.HTMLVisitData.Email}}</div>
+                        </div>
+                        {{end}}
+                        {{if .HTMLVisitData.WebSite}}
+                        <div class="caption">
+                            <label for="webSite">站点</label>
+                            <div id="webSite" class="subtitle text-muted">
+                                <a target="_blank" href="{{.HTMLVisitData.WebSite}}">{{.HTMLVisitData.WebSite}}</a>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{if .HTMLVisitData.Contact}}
+                        <div class="caption">
+                            <label for="contact">社交</label>
+                            <div id="contact" class="subtitle text-muted">{{.HTMLVisitData.Contact}}</div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <label class="description">按下 ESC 按钮退出。</label>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
 
 <!-- Bootstrap core JavaScript

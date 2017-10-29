@@ -7,4 +7,7 @@ type HTMLVisitData struct {
     Icon            string
     Name            string
     Description     string
+    Email           string
+    WebSite         string
+    Contact         string
 }

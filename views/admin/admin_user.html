@@ -47,6 +47,27 @@
                 <form id="user-post-form">
                     <ul class="form-group">
                         <li>
+                            <label class="typecho-label" for="icon-0-0">图标 *</label>
+                            <!-- image-preview-filename input [CUT FROM HERE]-->
+                            <div class="input-group image-preview">
+                                <input type="text" id="icon-0-0" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                                <span class="input-group-btn">
+                                    <!-- image-preview-clear button -->
+                                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                                        <span class="glyphicon glyphicon-remove"></span> Clear
+                                    </button>
+                                    <!-- image-preview-input -->
+                                    <div class="btn btn-default image-preview-input">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                        <span class="image-preview-input-title">Browse</span>
+                                        <input type="file" accept="image/png, image/jpeg, image/gif" name="input-file-preview"/> <!-- rename it -->
+                                    </div>
+                                </span>
+                            </div><!-- /input-group image-preview [TO HERE]-->
+                        </li>
+                    </ul>
+                    <ul class="form-group">
+                        <li>
                             <label class="typecho-label" for="info-0-1">个人邮箱</label>
                             <input id="info-0-1" name="email" type="text" class="text form-control" value="{{.Email}}" />
                             <p class="description">用于发送告警邮件及其它通知, 建议填写, 如: example@163.com.</p>
