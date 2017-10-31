@@ -43,10 +43,10 @@
                 <form id="blog-post-form">
                     <ul class="form-group">
                         <li>
-                            <label class="typecho-label" for="icon-0-0">图标 *</label>
+                            <label class="typecho-label" for="icon-0-0">图标</label>
                             <!-- image-preview-filename input [CUT FROM HERE]-->
                             <div class="input-group image-preview">
-                                <input type="text" id="icon-0-0" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                                <input type="text" id="icon-0-0" name="icon" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
                                 <span class="input-group-btn">
                                     <!-- image-preview-clear button -->
                                     <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
@@ -129,18 +129,19 @@
                 disableButton($(this), "更新中...");
 
                 var payload = $("#blog-post-form").serializeArray();
-                var postUrl = "/admin/manager/info";
-                $.post(postUrl, payload).done(function (data) {
-                    if (data.status.code !== 1000) {
-                        // fail, 提示错误
-                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
-                    } else {
-                        // success，执行页面跳转
-                        location.href = "/admin/manager.html";
-                    }
-                }).fail(function () {
-                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
-                });
+                console.log(payload);
+//                var postUrl = "/admin/manager/info";
+//                $.post(postUrl, payload).done(function (data) {
+//                    if (data.status.code !== 1000) {
+//                        // fail, 提示错误
+//                        makeAlertShow($("#response_error_show"), ALERT_DANGER, data.status.msg);
+//                    } else {
+//                        // success，执行页面跳转
+//                        location.href = "/admin/manager.html";
+//                    }
+//                }).fail(function () {
+//                    makeAlertShow($("#response_error_show"), ALERT_DANGER, "后端未响应");
+//                });
 
                 enableButton($(this), "更新博客信息");
             })

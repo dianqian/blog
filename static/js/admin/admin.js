@@ -46,14 +46,14 @@ $(function() {
         type:"button",
         text: 'x',
         id: 'close-preview',
-        style: 'font-size: initial;',
+        style: 'font-size: initial;'
     });
     closebtn.attr("class","close pull-right");
     // Set the popover default content
     $('.image-preview').popover({
         trigger:'manual',
         html:true,
-        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        title: "<strong>预览</strong>"+$(closebtn)[0].outerHTML,
         content: "There's no image",
         placement:'bottom'
     });
@@ -67,11 +67,15 @@ $(function() {
     });
     // Create the preview image
     $(".image-preview-input input:file").change(function (){
-        var img = $('<img/>', {
-            id: 'dynamic',
-            width:250,
-            height:200
+        var img_div = $('<div/>', {
+            id: 'thumb'
         });
+        img_div.attr('class', "thumbnail col-md-12 col-xs-12");
+        var img = $('<img/>', {
+            id: 'dynamic'
+        });
+        img_div.append(img);
+
         var file = this.files[0];
         var reader = new FileReader();
         // Set preview image into the popover data-content
@@ -80,8 +84,8 @@ $(function() {
             $(".image-preview-clear").show();
             $(".image-preview-filename").val(file.name);
             img.attr('src', e.target.result);
-            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
-        }
+            $(".image-preview").attr("data-content",$(img_div)[0].outerHTML).popover("show");
+        };
         reader.readAsDataURL(file);
     });
 });
